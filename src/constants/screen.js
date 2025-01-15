@@ -1,3 +1,4 @@
 export const AbsoluteScreenPath = {
-  Entry: "/", // Entry screen
+  Entry: "/",
+  GarageRegistrationPage: "/garageRegistration", // Entry screen
 };
