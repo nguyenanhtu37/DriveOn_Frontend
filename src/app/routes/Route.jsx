@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../../common/layouts/MainLayout";
 import { AbsoluteScreenPath } from "../../constants/screen";
 import HomePage from "../../pages/HomePage/HomePage";
+import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
 
 const router = createBrowserRouter(
   [
@@ -9,6 +10,10 @@ const router = createBrowserRouter(
       path: AbsoluteScreenPath.Entry,
       element: <MainLayout />,
       children: [{ index: true, element: <HomePage /> }],
+    },
+    {
+      path: AbsoluteScreenPath.GarageRegistrationPage,
+      element: <GarageRegistrationPage />,
     },
   ],
   {
