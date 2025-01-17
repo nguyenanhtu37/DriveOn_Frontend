@@ -1,5 +1,4 @@
-import GarageList from "@/common/components/GarageList/GarageList";
-import React from "react";
+import GarageList from "@/components/GarageList/GarageList";
 
 function HomePage() {
   return (
