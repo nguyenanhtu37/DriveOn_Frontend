@@ -3,6 +3,7 @@ import MainLayout from "../../common/layouts/MainLayout";
 import { AbsoluteScreenPath } from "../../constants/screen";
 import HomePage from "../../pages/HomePage/HomePage";
 import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
+import Dashboard from "@/pages/AdminDashboard/Dashboard";
 
 const router = createBrowserRouter(
   [
@@ -14,6 +15,10 @@ const router = createBrowserRouter(
     {
       path: AbsoluteScreenPath.GarageRegistrationPage,
       element: <GarageRegistrationPage />,
+    },
+    {
+      path: AbsoluteScreenPath.AdminDashBoard,
+      element: <Dashboard />,
     },
   ],
   {
