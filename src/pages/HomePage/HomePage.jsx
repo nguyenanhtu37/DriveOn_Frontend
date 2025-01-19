@@ -1,4 +1,4 @@
-import GarageList from "@/components/GarageList/GarageList";
+import GarageList from "@/components/GarageList";
 
 function HomePage() {
   return (

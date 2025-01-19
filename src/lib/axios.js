@@ -1,13 +1,25 @@
-import baseAxios from "axios";
+import axios from "axios";
 
-const token = localStorage.getItem("token");
-
-const axios = baseAxios.create({
-  timeout: 10000, // Thời gian timeout (ms)
+// Tạo instance Axios
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:5000/api/",
+  timeout: 10000,
   headers: {
-    Authorization: `Bearer ${token}`, // Token xác thực
-    "Content-Type": "application/json", // Loại dữ liệu gửi đi
+    "Content-Type": "application/json",
   },
 });
 
-export { axios };
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export { axiosInstance as axios };

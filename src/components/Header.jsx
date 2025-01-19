@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import Filter from "./Filter/Filter";
+import Filter from "./Filter";
 
 export default function Header() {
   return (
