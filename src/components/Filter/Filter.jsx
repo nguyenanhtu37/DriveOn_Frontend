@@ -21,7 +21,7 @@ export default function Filter() {
           </span>
         </div>
       </div>
-      <div className="hidden md:flex w-1/5  items-center justify-end">
+      <div className="hidden md:flex w-[20%] items-center justify-end">
         <div className=" w-full ml-4 flex items-center gap-2 p-4 border border-[#DDDDDD] rounded-full hover:border-[#22222] hover:bg-zinc-100 cursor-pointer transition-all ease-in-out group">
           <span className="text-sm text-nowrap text-[#22222] font-bold group-hover:text-black">
             View NearBy

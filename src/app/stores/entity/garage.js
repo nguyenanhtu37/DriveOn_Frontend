@@ -1,17 +1,29 @@
 // import { cartServices } from '@app/services';
 
-// import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { garageService } from "@/app/services";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-// export const useGetGarage = () => {
-//   const query = useQuery({
-//     queryKey: ['myCart'],
-//     queryFn: garageService.getGarage,
-//     placeholderData: keepPreviousData,
-//   });
+export const useRegisterGarage = () => {
+  const mutation = useMutation({
+    mutationFn: (garage) => {
+      return garageService.registerGarage(garage);
+    },
+  });
 
-//   return {
-//     ...query,
-//     data: query.data?.data,
-//     meta: query.data?.meta ?? null,
-//   };
-// };
+  return mutation;
+};
+
+export const useGetGarage = () => {
+  const query = useQuery({
+    queryKey: "garage",
+    queryFn: async () => {
+      const data = await garageService.getGarage();
+      return data;
+    },
+  });
+  return {
+    ...query,
+    data: query.data?.data ?? [],
+    meta: query.data?.meta ?? null,
+  };
+};
