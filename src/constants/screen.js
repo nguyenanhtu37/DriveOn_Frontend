@@ -1,5 +1,11 @@
+
+
 export const AbsoluteScreenPath = {
-  Entry: "/",
+  Entry: "/", // Entry screen
+  Login: "/login", //Login screen
+  ForgotPassword: "/forgot-password",
+  NewPassword:"/new-password",
+  CarOwnerPage:"/car-owner",
   GarageRegistrationPage: "/garageRegistration",
   AdminDashBoard: "/adminDashboard/",
   viewRegisterGarage: "viewRegisterGarage",
