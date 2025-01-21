@@ -1,5 +1,4 @@
 import { Wrench } from "lucide-react";
-import React from "react";
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 
 export default function GarageRegistrationPage() {

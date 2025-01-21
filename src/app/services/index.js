@@ -1,3 +1,1 @@
-// file export services .
-
-// export garageService from "./garageService";
+export * as garageService from "./garage";
