@@ -1,20 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "../../common/layouts/MainLayout";
+import MainLayout from "@/common/layouts/MainLayout";
 import { AbsoluteScreenPath } from "../../constants/screen";
 import HomePage from "../../pages/HomePage/HomePage";
-import LoginPage from "../../pages/Login";  // Make sure the path is correct
-
+import Login from "@/pages/Login/Login";
+import ForgotPassword from "../../pages/forgot-password/Forgot-password";
+import NewPassword from "../../pages/forgot-password/New-password"; 
+import CarOwnerPage from "@/pages/CarOwner/CarOwnerPage";
 const router = createBrowserRouter(
   [
     {
-      path: AbsoluteScreenPath.Entry,
+      path: AbsoluteScreenPath.Entry, 
       element: <MainLayout />,
       children: [
-        { index: true, element: <HomePage /> }, // HomePage as the default index page
-        {
-          path: "/login",  // Define a route for LoginPage
-          element: <LoginPage />, 
-        },
+        { index: true, element: <HomePage /> },
+        { path: AbsoluteScreenPath.Login, element: <Login /> },
+        { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
+        { path: AbsoluteScreenPath.CarOwnerPage, element: <CarOwnerPage/>},
+        { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
       ],
     },
   ],
