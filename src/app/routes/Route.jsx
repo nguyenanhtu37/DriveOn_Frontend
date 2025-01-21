@@ -1,7 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "../../common/layouts/MainLayout";
+import MainLayout from "@/common/layouts/MainLayout";
 import { AbsoluteScreenPath } from "../../constants/screen";
 import HomePage from "../../pages/HomePage/HomePage";
+import Login from "@/pages/Login/Login";
+import ForgotPassword from "../../pages/forgot-password/Forgot-password";
+import NewPassword from "../../pages/forgot-password/New-password";
+import CarOwnerPage from "@/pages/CarOwner/CarOwnerPage";
 import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
@@ -11,7 +15,13 @@ const router = createBrowserRouter(
     {
       path: AbsoluteScreenPath.Entry,
       element: <MainLayout />,
-      children: [{ index: true, element: <HomePage /> }],
+      children: [
+        { index: true, element: <HomePage /> },
+        { path: AbsoluteScreenPath.Login, element: <Login /> },
+        { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
+        { path: AbsoluteScreenPath.CarOwnerPage, element: <CarOwnerPage/>},
+        { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
+      ],
     },
     {
       path: AbsoluteScreenPath.GarageRegistrationPage,
@@ -30,9 +40,6 @@ const router = createBrowserRouter(
     },
   ],
   {
-    /**
-     * See https://reactrouter.com/en/6.27.0/upgrading/future
-     */
     future: {
       v7_normalizeFormMethod: true,
       v7_partialHydration: true,
