@@ -7,6 +7,7 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Vite configuration
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
