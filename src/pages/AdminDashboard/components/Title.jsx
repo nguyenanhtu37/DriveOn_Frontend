@@ -5,6 +5,3 @@ export const Title = ({ title }) => {
     <div className=" py-1 text-sm text-[#1C1C1C] text-opacity-40">{title}</div>
   );
 };
-Title.propTypes = {
-  title: PropTypes.string,
-};

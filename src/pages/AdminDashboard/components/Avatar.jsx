@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 export const Avatar = ({ image, name }) => {
   return (
     <div className=" w-full h-8 px-1 gap-2 flex justify-start items-center">
@@ -11,9 +9,4 @@ export const Avatar = ({ image, name }) => {
       <span className=" text-sm text-start text-black">{name}</span>
     </div>
   );
-};
-
-Avatar.propTypes = {
-  image: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
 };

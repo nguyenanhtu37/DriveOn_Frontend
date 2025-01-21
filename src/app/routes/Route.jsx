@@ -4,6 +4,7 @@ import { AbsoluteScreenPath } from "../../constants/screen";
 import HomePage from "../../pages/HomePage/HomePage";
 import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
+import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
 
 const router = createBrowserRouter(
   [
@@ -19,6 +20,13 @@ const router = createBrowserRouter(
     {
       path: AbsoluteScreenPath.AdminDashBoard,
       element: <Dashboard />,
+      children: [
+        { index: true, element: <HomePage /> },
+        {
+          path: AbsoluteScreenPath.viewRegisterGarage,
+          element: <ViewRegisterGarage />,
+        },
+      ],
     },
   ],
   {
