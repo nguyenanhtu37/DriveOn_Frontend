@@ -1,4 +1,11 @@
-// folder này sẽ bao gôm các service liên quan đến việc gọi API
+import { axios } from "@/lib/axios";
 
-// const getGarage = async () => {};
-// export { getGarage };
+export const registerGarage = async (garage) => {
+  const response = await axios.post("manager/register-garage", garage);
+  return response.data;
+};
+
+export const getGarages = async () => {
+  const response = await axios.get("manager/garages");
+  return response;
+};

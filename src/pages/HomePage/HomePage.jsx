@@ -1,10 +1,10 @@
-import React from "react";
+import GarageList from "@/components/GarageList/GarageList";
 
 function HomePage() {
   return (
-    <div className=" w-[500px] aspect-square bg-blue-600 font-archivo">
-      asfdasdf
-    </div>
+    <>
+      <GarageList />
+    </>
   );
 }
 

@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -11,18 +9,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formSchema } from "@/schema";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent } from "@/components/ui/card";
 import FileIcon from "@/components/ui/FileIcon";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
+import { useRegisterGarage } from "@/app/stores/entity/garage";
 
 export default function RegistrationForm() {
-  const [isLoading, setIsLoading] = React.useState(false);
   const [images, setImages] = useState([]);
-  console.log(images);
+
+  const register = useRegisterGarage();
 
   const handleImageChange = (event) => {
     const selectedFiles = event.target.files;
@@ -39,21 +38,18 @@ export default function RegistrationForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ownerName: "",
-      email: "",
-      password: "",
-      garageName: "",
+      name: "",
       address: "",
-      phoneNumber: "",
-      services: [],
+      phone: "",
+      description: "",
+      workingHours: "",
     },
   });
 
   const onSubmit = (data) => {
-    setIsLoading(true);
-
-    console.log(data);
-    setIsLoading(false);
+    register.mutate(data);
+    form.reset();
+    setImages([]);
   };
   return (
     <Form {...form}>
@@ -62,7 +58,7 @@ export default function RegistrationForm() {
           <div className="animate-fade-up animate-once animate-duration-500 animate-ease-linear">
             <FormField
               control={form.control}
-              name="garageName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Garage Name</FormLabel>
@@ -81,7 +77,7 @@ export default function RegistrationForm() {
           <div className="animate-fade-up animate-once animate-duration-500 animate-ease-linear">
             <FormField
               control={form.control}
-              name="phoneNumber"
+              name="phone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
@@ -101,13 +97,30 @@ export default function RegistrationForm() {
         <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
           <FormField
             control={form.control}
-            name="address"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Address</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="123 Main St, City, State, ZIP"
+                    {...field}
+                    className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
+          <FormField
+            control={form.control}
+            name="workingHours"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Working Hours</FormLabel>
+                <FormControl>
+                  <Input
                     {...field}
                     className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
                   />
@@ -136,7 +149,7 @@ export default function RegistrationForm() {
             )}
           />
         </div>
-        <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
+        {/* <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
           <FormField
             control={form.control}
             name="services"
@@ -194,7 +207,7 @@ export default function RegistrationForm() {
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
 
         <div className="animate-fade-up animate-once animate-duration-800 animate-ease-linear">
           <Card>
@@ -251,10 +264,10 @@ export default function RegistrationForm() {
         <div className="animate-fade-up animate-once animate-duration-800 animate-ease-linear">
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={register.isLoading}
             className="w-full transition-all duration-200 hover:bg-red-400 hover:scale-105"
           >
-            {isLoading ? "Registering..." : "Register Garage"}
+            {register.isLoading ? "Registering..." : "Register Garage"}
           </Button>
         </div>
       </form>
