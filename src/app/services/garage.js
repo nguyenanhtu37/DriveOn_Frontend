@@ -5,7 +5,7 @@ export const registerGarage = async (garage) => {
   return response.data;
 };
 
-export const getGarage = async () => {
-  const response = await axios.get("manager/garage");
+export const getGarages = async () => {
+  const response = await axios.get("manager/garages");
   return response;
 };

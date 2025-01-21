@@ -1,5 +1,3 @@
-import { Sidebar } from "lucide-react";
-import PropTypes from "prop-types";
 import React from "react";
 import { SidebarItem } from "./SidebarItem";
 
@@ -19,8 +17,4 @@ export const Dropdown = ({ children, listItem = [] }) => {
       </div>
     </div>
   );
-};
-Dropdown.propTypes = {
-  children: PropTypes.node,
-  listItem: PropTypes.array,
 };

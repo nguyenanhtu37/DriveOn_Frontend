@@ -13,13 +13,10 @@ export const useRegisterGarage = () => {
   return mutation;
 };
 
-export const useGetGarage = () => {
+export const useGetGarages = () => {
   const query = useQuery({
-    queryKey: "garage",
-    queryFn: async () => {
-      const data = await garageService.getGarage();
-      return data;
-    },
+    queryKey: ["garage"],
+    queryFn: garageService.getGarages,
   });
   return {
     ...query,
