@@ -15,14 +15,12 @@ const router = createBrowserRouter(
     {
       path: AbsoluteScreenPath.Entry,
       element: <MainLayout />,
-      children: [
-        { index: true, element: <HomePage /> },
-        { path: AbsoluteScreenPath.Login, element: <Login /> },
-        { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
-        { path: AbsoluteScreenPath.CarOwnerPage, element: <CarOwnerPage/>},
-        { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
-      ],
+      children: [{ index: true, element: <HomePage /> }],
     },
+    { path: AbsoluteScreenPath.Login, element: <Login /> },
+    { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
+    { path: AbsoluteScreenPath.CarOwnerPage, element: <CarOwnerPage /> },
+    { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     {
       path: AbsoluteScreenPath.GarageRegistrationPage,
       element: <GarageRegistrationPage />,
