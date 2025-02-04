@@ -4,7 +4,7 @@ import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 export default function GarageRegistrationPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-200 to-white">
-      <div className="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
+      <div className="container flex flex-col mx-auto py-10 px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 animate-fade-up animate-once animate-ease-in-out">
           <Wrench className="mx-auto h-16 w-16 text-accent mb-4 animate-rotate-y animate-infinite animate-duration-[2500ms] animate-ease-in-out" />
           <h1 className="text-4xl font-extrabold font-archivo text-gray-900 sm:text-5xl md:text-6xl">
@@ -15,7 +15,7 @@ export default function GarageRegistrationPage() {
             business more efficiently today.
           </p>
         </div>
-        <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden animate-slide-up">
+        <div className="max-w-2xl w-full mx-auto bg-white shadow-xl rounded-lg overflow-hidden animate-slide-up">
           <div className="px-4 py-5 sm:p-6">
             <RegistrationForm />
           </div>
