@@ -2,40 +2,22 @@ import { AlignCenter, ArrowDownUp, Plus, Search } from "lucide-react";
 import React from "react";
 import { Cell, Row } from "../components/Row";
 import { useGetGarages } from "@/app/stores/entity/garage";
-
-const data = [
-  {
-    id: "1",
-    image: "https://via.placeholder.com/150",
-    username: "John Doe",
-    garage: "Garage Lorem Ipsum",
-    address: "123 Main St Los Angeles, CA 90012",
-    date: "2025-01-01",
-    status: "Active",
-  },
-  {
-    id: "2",
-    image: "https://via.placeholder.com/150",
-    username: "Jane Smith",
-    garage: "Garage Lorem Ipsum",
-    address: "456 Elm St",
-    date: "2025-01-02",
-    status: "Inactive",
-  },
-  {
-    id: "3",
-    image: "https://via.placeholder.com/150",
-    username: "Sam Wilson",
-    garage: "Garage Lorem Ipsum",
-    address: "789 Oak St",
-    date: "2025-01-03",
-    status: "Pending",
-  },
-];
+import { formatDate } from "@/lib/formatDate";
 
 export const ViewRegisterGarage = () => {
   const listRegisterGarage = useGetGarages();
-  console.log(listRegisterGarage);
+  // const [searchGarage, setSearchGarage] = React.useState(
+  //   listRegisterGarage.data
+  // );
+  // const handleSearchGarage = (e) => {
+  //   const value = e.target.value;
+  //   setSearchGarage(
+  //     listRegisterGarage.data.filter((item) =>
+  //       item.name.toLowerCase().includes(value.toLowerCase())
+  //     )
+  //   );
+  // };
+
   return (
     <div className=" px-7 pt-7 w-full flex flex-col gap-y-5 items-start">
       <div className=" px-2 py-1 flex justify-center items-center text-sm font-medium">
@@ -61,6 +43,7 @@ export const ViewRegisterGarage = () => {
               type="text"
               placeholder="Search garage"
               className=" text-xs w-full h-full bg-transparent outline-none"
+              // onChange={handleSearchGarage}
             />
           </div>
         </div>
@@ -88,15 +71,15 @@ export const ViewRegisterGarage = () => {
             <div className="col-start-12"></div>
           </div>
           {/* row table */}
-          {listRegisterGarage.data?.map((item) => (
+          {listRegisterGarage.data.map((item) => (
             <Row
-              key={item.id}
-              id={item.id}
+              key={item._id}
+              id={item._id}
               image={item.user[0].avatar}
               username={item.user[0].name}
               garage={item.name}
               address={item.address}
-              date={item.createdAt}
+              date={formatDate(item.createdAt)}
               status={item.status}
             />
           ))}

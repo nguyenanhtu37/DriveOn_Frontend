@@ -1,5 +1,8 @@
-import { Ellipsis } from "lucide-react";
 import React from "react";
+
+import { Button } from "@/components/ui/button";
+import { useApproveGarage, useRejectGarage } from "@/app/stores/entity/garage";
+import { cn } from "@/lib/utils";
 
 export const Cell = ({ children }) => {
   return (
@@ -9,11 +12,26 @@ export const Cell = ({ children }) => {
   );
 };
 export const Row = ({ id, image, username, garage, address, date, status }) => {
+  const { mutate: approveGarage } = useApproveGarage();
+  const { mutate: rejectGarage } = useRejectGarage();
+  const handleApprove = () => {
+    approveGarage(id);
+  };
+  const handleReject = () => {
+    rejectGarage(id);
+  };
+  let statusClassName;
+  if (status === "pending") {
+    statusClassName = "text-yellow-200";
+  } else if (status === "approved") {
+    statusClassName = "text-green-300";
+  } else {
+    statusClassName = "text-red-300";
+  }
+
   return (
     <div className="grid grid-cols-12 grid-rows-1 gap-0 border-b-[1px] border-black/5 cursor-pointer ">
-      <div className="">
-        <Cell>{id}</Cell>
-      </div>
+      <div className=""></div>
       <div className="col-span-2 ">
         <Cell>
           <div className=" flex items-center flex-wrap justify-start gap-1">
@@ -36,11 +54,28 @@ export const Row = ({ id, image, username, garage, address, date, status }) => {
         <Cell>{date}</Cell>
       </div>
       <div className="col-start-11">
-        <Cell>{status}</Cell>
+        <Cell>
+          <span className={cn("font-medium text-sm", statusClassName)}>
+            {status}
+          </span>
+        </Cell>
       </div>
       <div className="col-start-12">
         <Cell>
-          <Ellipsis size={16} />
+          <div className=" flex justify-start items-center gap-x-1 ">
+            <Button
+              className=" w-full p-2 bg-green-300 hover:bg-green-300 hover:bg-opacity-50"
+              onClick={handleApprove}
+            >
+              Accept
+            </Button>
+            <Button
+              className=" w-full p-2 bg-red-300 hover:bg-red-300 hover:bg-opacity-50"
+              onClick={handleReject}
+            >
+              Reject
+            </Button>
+          </div>
         </Cell>
       </div>
     </div>
