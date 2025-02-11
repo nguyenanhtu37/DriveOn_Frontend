@@ -3,7 +3,7 @@ import Card from "@/components/Card";
 export default function GarageList() {
   return (
     <div className=" px-4 md:px-10 mt-4 animate-fade animate-once animate-ease-in-out">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4  ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3 md:gap-4  ">
         {Array.from({ length: 20 }).map((_, index) => (
           <Card
             key={index}

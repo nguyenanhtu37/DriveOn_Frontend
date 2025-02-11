@@ -8,3 +8,13 @@ export const AbsoluteScreenPath = {
   AdminDashBoard: "/adminDashboard/",
   viewRegisterGarage: "viewRegisterGarage",
 };
+
+export const GarageManagementScreenPath = {
+  GarageManagement: "/garageManagement",
+  garageDashboard: "dashboard",
+  appointment: "appointments",
+  appointmentScheduler: "appointmentScheduler",
+  appointmentDetail: "appointments/:id",
+  services: "services",
+  settings: "settings",
+};

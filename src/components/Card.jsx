@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Heart, Star } from "lucide-react";
 import CarouselButton from "./CarouselButton";
+import { useRef } from "react";
 function Card(props) {
   const {
     garageName,
@@ -13,11 +14,28 @@ function Card(props) {
     imgs,
     isFavourited,
   } = props;
+
+  const swiperRef = useRef(null);
+
+  const handlePrev = () => {
+    if (swiperRef.current) {
+      swiperRef.current.swiper.slidePrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (swiperRef.current) {
+      swiperRef.current.swiper.slideNext();
+    }
+  };
   return (
     <div className=" flex flex-col items-center justify-center cursor-pointer gap-y-3 group">
       {/* images */}
       <div className=" relative w-full aspect-[1.06] rounded-xl overflow-hidden">
-        <Swiper className="mySwiper w-full h-full group-hover:scale-105 transition-transform ease-in-out origin-center">
+        <Swiper
+          ref={swiperRef}
+          className="mySwiper w-full h-full group-hover:scale-105 transition-transform ease-in-out origin-center"
+        >
           {imgs?.map((img, index) => (
             <SwiperSlide key={index}>
               <img
@@ -32,10 +50,10 @@ function Card(props) {
           <Heart size={24} color={isFavourited ? "red" : "white"} />
         </div>
         <div className=" absolute top-[50%] left-2 -translate-y-[50%] z-10 hidden group-hover:flex animate-fade animate-once">
-          <CarouselButton type="prev" />
+          <CarouselButton type="prev" onClick={handlePrev} />
         </div>
         <div className=" absolute top-[50%] right-2 -translate-y-[50%] z-10 hidden group-hover:flex animate-fade animate-once">
-          <CarouselButton type="next" />
+          <CarouselButton type="next" onClick={handleNext} />
         </div>
       </div>
       {/* info */}
