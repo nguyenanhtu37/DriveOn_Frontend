@@ -1,10 +1,26 @@
 import { garageService } from "@/app/services";
+import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useRegisterGarage = () => {
+  const { toast } = useToast();
+
   const mutation = useMutation({
     mutationFn: (garage) => {
       return garageService.registerGarage(garage);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Garage registered successfully",
+        duration: 2000, // Toast will close after 5 seconds
+      });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Garage registered failed",
+        duration: 2000, // Toast will close after 5 seconds
+      });
     },
   });
 
@@ -24,7 +40,6 @@ export const useGetGarages = () => {
 };
 export const useApproveGarage = () => {
   const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.approveGarage(garageId),
     onSuccess: (data) => {

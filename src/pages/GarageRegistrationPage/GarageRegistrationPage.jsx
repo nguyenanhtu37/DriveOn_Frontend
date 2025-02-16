@@ -1,11 +1,12 @@
 import { Wrench } from "lucide-react";
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function GarageRegistrationPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-200 to-white">
       <div className="container flex flex-col mx-auto py-10 px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 animate-fade-up animate-once animate-ease-in-out">
+        <div className=" text-center mb-12 animate-fade-up animate-once animate-ease-in-out">
           <Wrench className="mx-auto h-16 w-16 text-accent mb-4 animate-rotate-y animate-infinite animate-duration-[2500ms] animate-ease-in-out" />
           <h1 className="text-4xl font-extrabold font-archivo text-gray-900 sm:text-5xl md:text-6xl">
             Register Your Garage
@@ -21,6 +22,7 @@ export default function GarageRegistrationPage() {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

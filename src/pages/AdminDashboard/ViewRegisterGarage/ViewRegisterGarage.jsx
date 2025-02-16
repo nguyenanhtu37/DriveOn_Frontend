@@ -6,17 +6,6 @@ import { formatDate } from "@/lib/formatDate";
 
 export const ViewRegisterGarage = () => {
   const listRegisterGarage = useGetGarages();
-  // const [searchGarage, setSearchGarage] = React.useState(
-  //   listRegisterGarage.data
-  // );
-  // const handleSearchGarage = (e) => {
-  //   const value = e.target.value;
-  //   setSearchGarage(
-  //     listRegisterGarage.data.filter((item) =>
-  //       item.name.toLowerCase().includes(value.toLowerCase())
-  //     )
-  //   );
-  // };
 
   return (
     <div className=" px-7 pt-7 w-full flex flex-col gap-y-5 items-start">
