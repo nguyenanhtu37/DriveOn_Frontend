@@ -17,10 +17,12 @@ import FileIcon from "@/components/ui/FileIcon";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 import { useRegisterGarage } from "@/app/stores/entity/garage";
+import { Textarea } from "@/components/ui/textarea";
+import { useNavigate } from "react-router-dom";
 
 export default function RegistrationForm() {
   const [images, setImages] = useState([]);
-
+  const navigate = useNavigate();
   const register = useRegisterGarage();
 
   const handleImageChange = (event) => {
@@ -42,15 +44,41 @@ export default function RegistrationForm() {
       address: "",
       phone: "",
       description: "",
-      workingHours: "",
+      openTime: "",
+      closeTime: "",
     },
   });
 
   const onSubmit = (data) => {
-    register.mutate(data);
-    form.reset();
-    setImages([]);
+    console.log(data);
+    const newGarage = {
+      name: data.name,
+      phone: data.phone,
+      description: data.description,
+      openTime: data.openTime,
+      closeTime: data.closeTime,
+      workingHours: `${data.openTime} - ${data.closeTime} hours`,
+      operating_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      images: [
+        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      address: data.address,
+    };
+    console.log(newGarage);
+    register.mutate(newGarage, {
+      onSuccess: () => {
+        setTimeout(() => {
+          form.reset();
+          setImages([]);
+          navigate("/");
+        }, 2500);
+      },
+    });
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -102,7 +130,7 @@ export default function RegistrationForm() {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input
+                  <Textarea
                     {...field}
                     className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
                   />
@@ -113,22 +141,42 @@ export default function RegistrationForm() {
           />
         </div>
         <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
-          <FormField
-            control={form.control}
-            name="workingHours"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Working Hours</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex justify-start items-center gap-2">
+            <FormField
+              control={form.control}
+              name="openTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Open</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      {...field}
+                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="closeTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Close</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      {...field}
+                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
         <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
           <FormField
@@ -208,7 +256,6 @@ export default function RegistrationForm() {
             )}
           />
         </div> */}
-
         <div className="animate-fade-up animate-once animate-duration-800 animate-ease-linear">
           <Card>
             <CardContent className="p-6 space-y-4">
@@ -217,17 +264,16 @@ export default function RegistrationForm() {
                   {images.map((img, index) => (
                     <div
                       key={index}
-                      className=" relative w-full animate-fade-up animate-ease-in-out "
+                      className="relative w-full animate-fade-up animate-ease-in-out"
                     >
                       <img
-                        className=" w-full sm:h-[100px] md:h-[120px]  object-cover rounded-md"
+                        className="w-full sm:h-[100px] md:h-[120px] object-cover rounded-md"
                         src={img}
                       />
                       <button
                         type="button"
                         onClick={() => handleDeleteImage(index)}
-                        className="absolute top-0 right-0 p-0.5 bg-white rounded-full shadow-sm
-                        "
+                        className="absolute top-0 right-0 p-0.5 bg-white rounded-full shadow-sm"
                       >
                         <X size={12} />
                       </button>
