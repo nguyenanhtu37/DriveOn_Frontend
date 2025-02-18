@@ -9,7 +9,7 @@ import { Slash } from "lucide-react";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-export const BreadcumbWrapper = () => {
+export const BreadcrumbWrapper = () => {
   const param = useLocation();
   const [path, setPath] = React.useState([]);
 

@@ -6,9 +6,10 @@ import {
   Star,
   Sun,
 } from "lucide-react";
-import React from "react";
-import { BreadcumbWrapper } from "./BreadcumbWrapper";
+
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { BreadcrumbWrapper } from "./BreadcrumbWrapper";
+import PopoverNotification from "@/components/PopoverNotification";
 
 export const Header = () => {
   return (
@@ -18,7 +19,7 @@ export const Header = () => {
         <div className=" w-7 h-7 flex justify-center items-center cursor-pointer">
           <Star size={20} color="black" />
         </div>
-        <BreadcumbWrapper />
+        <BreadcrumbWrapper />
       </div>
 
       <div className="flex justify-end items-center gap-x-2">
@@ -37,9 +38,7 @@ export const Header = () => {
           <div className=" hidden lg:flex w-7 h-7  justify-center items-center">
             <History size={20} />
           </div>
-          <div className=" hidden lg:flex w-7 h-7 justify-center items-center">
-            <Bell size={20} />
-          </div>
+          <PopoverNotification />
           <div className=" flex lg:hidden w-7 h-7  justify-center items-center">
             <LayoutDashboard size={20} />
           </div>

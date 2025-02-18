@@ -1,5 +1,3 @@
-import React from "react";
-
 export const ItemAvatarText = ({ image, icon, content, time }) => {
   return (
     <div className=" w-full p-2 flex items-start gap-x-2 cursor-pointer hover:opacity-90 ">

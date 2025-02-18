@@ -2,7 +2,7 @@ import React from "react";
 
 import { Bug } from "lucide-react";
 import { Box } from "./Box";
-import { ItemAvatarText } from "./Notification";
+import { ItemAvatarText } from "@/components/ItemAvatarText";
 
 export const SidebarRight = () => {
   return (
