@@ -38,13 +38,25 @@ export const useGetGarages = () => {
     meta: query.data?.meta ?? null,
   };
 };
+
+export const useGetRegisterGarages = () => {
+  const query = useQuery({
+    queryKey: ["registerGarage"],
+    queryFn: garageService.viewRegisterGarage,
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+    meta: query.data?.meta ?? null,
+  };
+};
 export const useApproveGarage = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.approveGarage(garageId),
     onSuccess: (data) => {
       console.log("Garage approved successfully", data);
-      queryClient.invalidateQueries(["garage"]);
+      queryClient.invalidateQueries(["registerGarage"]);
     },
     onError: (error) => {
       console.error("Error approving garage:", error.message);

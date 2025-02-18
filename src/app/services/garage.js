@@ -5,16 +5,23 @@ export const registerGarage = async (garage) => {
   return response.data;
 };
 
+export const viewRegisterGarage = async () => {
+  const response = await axios.get("garage/garage-registrations");
+  return response.data;
+};
+
 export const getGarages = async () => {
-  const response = await axios.get("garage/");
+  const response = await axios.get("garage/garages");
   return response;
 };
 
 export const approveGarage = async (id) => {
-  const response = await axios.post(`admin/garage-registrations/${id}/approve`);
+  const response = await axios.post(
+    `garage/garage-registrations/${id}/approve`
+  );
   return response.data;
 };
 export const rejectGarage = async (id) => {
-  const response = await axios.post(`admin/garage-registrations/${id}/reject`);
+  const response = await axios.post(`garage/garage-registrations/${id}/reject`);
   return response.data;
 };

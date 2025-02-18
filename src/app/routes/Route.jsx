@@ -9,6 +9,7 @@ import CarOwnerPage from "@/pages/CarOwner/CarOwnerPage";
 import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
+import { ViewExitsGarage } from "@/pages/AdminDashboard/ViewExitsGararge/ViewExitsGarage";
 
 const router = createBrowserRouter(
   [
@@ -33,6 +34,10 @@ const router = createBrowserRouter(
         {
           path: AbsoluteScreenPath.viewRegisterGarage,
           element: <ViewRegisterGarage />,
+        },
+        {
+          path: AbsoluteScreenPath.viewExitsGarage,
+          element: <ViewExitsGarage />,
         },
       ],
     },

@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar } from "./Avatar";
-import { Car, ChartPieIcon, ChevronRight } from "lucide-react";
+import { Car, ChartPieIcon, ChevronRight, File } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { Title } from "./Title";
 import { Dropdown } from "./Dropdown";
@@ -49,11 +49,16 @@ export const SidebarLeft = () => {
 
             <div className=" flex flex-col gap-y-2">
               <Title title="Garages" />
-              <div className=" flex flex-col gap-y-1">
+              <div className=" flex flex-col gap-y-2">
                 <SidebarItem
-                  icon={<Car />}
+                  icon={<File />}
                   title="Register Garage"
                   link={"viewRegisterGarage"}
+                />
+                <SidebarItem
+                  icon={<Car />}
+                  title="Exits Garage"
+                  link={"viewExitsGarage"}
                 />
               </div>
             </div>
