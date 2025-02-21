@@ -18,6 +18,7 @@ import GarageDashboard from "@/pages/GarageManagement/Dashboard/GarageDashboard"
 import Appointment from "@/pages/GarageManagement/Appointment/Tab/Appointment";
 import AppointmentDetail from "@/pages/GarageManagement/Appointment/AppointmentDetail";
 import { AppointmentScheduler } from "@/pages/GarageManagement/Appointment/Tab/AppointmentScheduler";
+import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGarageDetail/ViewRegisterGarageDetail";
 
 const router = createBrowserRouter(
   [
@@ -42,6 +43,10 @@ const router = createBrowserRouter(
         {
           path: AbsoluteScreenPath.viewRegisterGarage,
           element: <ViewRegisterGarage />,
+        },
+        {
+          path: AbsoluteScreenPath.viewRegisterGarageDetail,
+          element: <ViewRegisterGarageDetail />,
         },
         {
           path: AbsoluteScreenPath.viewExitsGarage,

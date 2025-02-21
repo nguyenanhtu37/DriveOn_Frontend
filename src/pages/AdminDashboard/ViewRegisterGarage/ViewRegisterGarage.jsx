@@ -10,11 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useNavigate } from "react-router-dom";
 
 export const ViewRegisterGarage = () => {
   const listRegisterGarage = useGetRegisterGarages();
-  console.log(listRegisterGarage);
-
+  const navigate = useNavigate();
+  const handleClick = (id) => {
+    navigate(`/adminDashboard/viewRegisterGarage/${id}`);
+  };
+  if (listRegisterGarage.isLoading) return <div>Loading...</div>;
   return (
     <div className=" px-7 pt-7 w-full flex flex-col gap-y-5 items-start">
       <div className=" px-2 py-1 flex justify-center items-center text-sm font-medium">
@@ -44,7 +48,6 @@ export const ViewRegisterGarage = () => {
             />
           </div>
         </div>
-
         <Table>
           <TableCaption>A list of garage register.</TableCaption>
           <TableHeader>
@@ -69,6 +72,7 @@ export const ViewRegisterGarage = () => {
                 address={item.address}
                 date={formatDate(item.createdAt)}
                 status={item.status}
+                onClick={() => handleClick(item._id)}
               />
             ))}
           </TableBody>

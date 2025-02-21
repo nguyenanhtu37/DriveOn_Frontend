@@ -1,5 +1,5 @@
 import { garageService } from "@/app/services";
-import { useToast } from "@/hooks/use-toast";
+import { toast, useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useRegisterGarage = () => {
@@ -54,12 +54,18 @@ export const useApproveGarage = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.approveGarage(garageId),
-    onSuccess: (data) => {
-      console.log("Garage approved successfully", data);
-      queryClient.invalidateQueries(["registerGarage"]);
+    onSuccess: () => {
+      queryClient.invalidateQueries(["garage"]);
+      toast({
+        title: "Garage approved successfully",
+        duration: 2000,
+      });
     },
-    onError: (error) => {
-      console.error("Error approving garage:", error.message);
+    onError: () => {
+      toast({
+        title: "Garage approved failed",
+        duration: 2000,
+      });
     },
   });
 
@@ -70,14 +76,32 @@ export const useRejectGarage = () => {
 
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.rejectGarage(garageId),
-    onSuccess: (data) => {
-      console.log("Garage reject successfully", data);
+    onSuccess: () => {
       queryClient.invalidateQueries(["garage"]);
+      toast({
+        title: "Garage rejected successfully",
+        duration: 2000,
+      });
     },
-    onError: (error) => {
-      console.error("Error rejecting garage:", error.message);
+    onError: () => {
+      toast({
+        title: "Garage rejected failed",
+        duration: 2000,
+      });
     },
   });
 
   return mutation;
+};
+
+export const useGetRegisterGarageDetail = (id) => {
+  const query = useQuery({
+    queryKey: ["registerGarageDetail", id],
+    queryFn: () => garageService.viewRegisterGarageDetail(id),
+  });
+
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
 };

@@ -46,6 +46,7 @@ export default function RegistrationForm() {
       description: "",
       openTime: "",
       closeTime: "",
+      email: "",
     },
   });
 
@@ -59,6 +60,7 @@ export default function RegistrationForm() {
       closeTime: data.closeTime,
       workingHours: `${data.openTime} - ${data.closeTime} hours`,
       operating_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      email: data.email,
       images: [
         "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
         "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -125,6 +127,24 @@ export default function RegistrationForm() {
         <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
           <FormField
             control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
+          <FormField
+            control={form.control}
             name="description"
             render={({ field }) => (
               <FormItem>
@@ -140,6 +160,7 @@ export default function RegistrationForm() {
             )}
           />
         </div>
+
         <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
           <div className="flex justify-start items-center gap-2">
             <FormField

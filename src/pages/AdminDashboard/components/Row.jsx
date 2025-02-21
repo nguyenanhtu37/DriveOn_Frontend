@@ -5,6 +5,7 @@ import { useApproveGarage, useRejectGarage } from "@/app/stores/entity/garage";
 import { cn } from "@/lib/utils";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Check, X } from "lucide-react";
 
 export const Cell = ({ children }) => {
   return (
@@ -13,7 +14,16 @@ export const Cell = ({ children }) => {
     </div>
   );
 };
-export const Row = ({ id, image, username, garage, address, date, status }) => {
+export const Row = ({
+  id,
+  image,
+  username,
+  garage,
+  address,
+  date,
+  status,
+  onClick,
+}) => {
   const { mutate: approveGarage } = useApproveGarage();
   const { mutate: rejectGarage } = useRejectGarage();
   const handleApprove = () => {
@@ -33,7 +43,9 @@ export const Row = ({ id, image, username, garage, address, date, status }) => {
 
   return (
     <TableRow>
-      <TableCell className="font-medium">INV001</TableCell>
+      <TableCell className="font-medium cursor-pointer" onClick={onClick}>
+        INV001
+      </TableCell>
       <TableCell>
         <div className=" flex items-center flex-wrap justify-start gap-1">
           <img
@@ -51,24 +63,20 @@ export const Row = ({ id, image, username, garage, address, date, status }) => {
         <Badge>{status}</Badge>
       </TableCell>
       <TableCell className={statusClassName}>
-        <div className=" flex items-center gap-2">
+        <div className=" flex items-center gap-x-1 ">
           <Button
             onClick={handleApprove}
-            className={cn(
-              " bg-green-500 hover:bg-green-600",
-              status === "approved" && "bg-green-300"
-            )}
+            variant="ghost"
+            className=" text-green-500 hover:text-green-600 font-semibold p-1"
           >
-            Approve
+            <Check className=" h-4 w-4" /> Approve
           </Button>
           <Button
             onClick={handleReject}
-            className={cn(
-              " bg-red-500 hover:bg-red-600",
-              status === "rejected" && "bg-red-300"
-            )}
+            variant="ghost"
+            className="font-semibold text-red-500 hover:text-red-600 p-1"
           >
-            Reject
+            <X className=" h-4 w-4" /> Reject
           </Button>
         </div>
       </TableCell>

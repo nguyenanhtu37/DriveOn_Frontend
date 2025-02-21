@@ -7,6 +7,7 @@ export const AbsoluteScreenPath = {
   GarageRegistrationPage: "/garageRegistration",
   AdminDashBoard: "/adminDashboard/",
   viewRegisterGarage: "viewRegisterGarage",
+  viewRegisterGarageDetail: "viewRegisterGarage/:id",
   viewExitsGarage: "viewExitsGarage",
 };
 

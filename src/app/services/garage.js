@@ -10,6 +10,11 @@ export const viewRegisterGarage = async () => {
   return response.data;
 };
 
+export const viewRegisterGarageDetail = async (id) => {
+  const response = await axios.get(`garage/garage-registrations/${id}`);
+  return response.data;
+};
+
 export const getGarages = async () => {
   const response = await axios.get("garage/garages");
   return response;
