@@ -10,6 +10,11 @@ export const viewRegisterGarage = async () => {
   return response.data;
 };
 
+export const viewRegisterGarageDetail = async (id) => {
+  const response = await axios.get(`garage/garage-registrations/${id}`);
+  return response.data;
+};
+
 export const getGarages = async () => {
   const response = await axios.get("garage/garages");
   return response;
@@ -23,5 +28,10 @@ export const approveGarage = async (id) => {
 };
 export const rejectGarage = async (id) => {
   const response = await axios.post(`garage/garage-registrations/${id}/reject`);
+  return response.data;
+};
+
+export const viewGarageExits = async () => {
+  const response = await axios.get("garage/existing");
   return response.data;
 };

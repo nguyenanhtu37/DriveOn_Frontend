@@ -5,6 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import clsx from "clsx";
 import { Slash } from "lucide-react";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -16,13 +17,17 @@ export const BreadcrumbWrapper = () => {
   useEffect(() => {
     const pathName = param.pathname.split("/");
     const path = pathName.map((item, index) => {
+      const href = pathName.slice(0, index + 1).join("/");
       return {
         name: item,
         key: index,
+        href,
       };
     });
     setPath(path);
   }, [param]);
+
+  console.log(path);
 
   return (
     <Breadcrumb>
@@ -31,7 +36,7 @@ export const BreadcrumbWrapper = () => {
           return (
             <>
               <BreadcrumbItem key={item.key}>
-                <BreadcrumbLink href="#">{item.name}</BreadcrumbLink>
+                <BreadcrumbLink href={item.href}>{item.name}</BreadcrumbLink>
               </BreadcrumbItem>
               {item.key !== path.length - 1 && (
                 <BreadcrumbSeparator className={"opacity-40"}>

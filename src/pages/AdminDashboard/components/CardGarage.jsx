@@ -17,7 +17,7 @@ import React from "react";
 import { Switch } from "@/components/ui/switch";
 import { EnableModal } from "./EnableModal";
 
-export const CardGarage = () => {
+export const CardGarage = ({ garage }) => {
   const [isEnabled, setIsEnabled] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -57,12 +57,14 @@ export const CardGarage = () => {
               className=" w-6 h-6 object-cover rounded-full ring-1 ring-white"
             />
             <span className=" text-sm text-start text-black">
-              Tran Viet Ngoc Tam
+              {garage.user.name}
             </span>
           </div>
-          <p className="text-sm text-muted-foreground mb-2">Sdt: 0944549140</p>
           <p className="text-sm text-muted-foreground mb-2">
-            32 khai dong 4, hoa hai, ngu hanh son, da nang
+            Phone: {garage.phone}
+          </p>
+          <p className="text-sm text-muted-foreground mb-2">
+            Address: {garage.address}
           </p>
         </CardContent>
         <CardFooter>

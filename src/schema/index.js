@@ -8,4 +8,5 @@ export const formSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   openTime: z.string().nonempty("Open time is required"),
   closeTime: z.string().nonempty("Close time is required"),
+  email: z.string().email("Invalid email address"),
 });
