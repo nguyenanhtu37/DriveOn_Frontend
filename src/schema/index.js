@@ -10,3 +10,18 @@ export const formSchema = z.object({
   closeTime: z.string().nonempty("Close time is required"),
   email: z.string().email("Invalid email address"),
 });
+
+export const staffSchema = z
+  .object({
+    name: z.string().min(2, "Garage name must be at least 2 characters"),
+    phone: z.string().min(10, "Phone number must be at least 10 characters"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Password must be at least 6 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });

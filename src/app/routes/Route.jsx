@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "@/common/layouts/MainLayout";
 import {
   AbsoluteScreenPath,
+  AdminScreenPath,
   GarageManagementScreenPath,
 } from "../../constants/screen";
 import HomePage from "../../pages/HomePage/HomePage";
@@ -19,6 +20,8 @@ import Appointment from "@/pages/GarageManagement/Appointment/Tab/Appointment";
 import AppointmentDetail from "@/pages/GarageManagement/Appointment/AppointmentDetail";
 import { AppointmentScheduler } from "@/pages/GarageManagement/Appointment/Tab/AppointmentScheduler";
 import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGarageDetail/ViewRegisterGarageDetail";
+import { Staff } from "@/pages/GarageManagement/Staff/Staff";
+import ProtectedRoute from "./ProtectRoute";
 
 const router = createBrowserRouter(
   [
@@ -35,46 +38,66 @@ const router = createBrowserRouter(
       path: AbsoluteScreenPath.GarageRegistrationPage,
       element: <GarageRegistrationPage />,
     },
+    //Admin route
     {
-      path: AbsoluteScreenPath.AdminDashBoard,
-      element: <Dashboard />,
+      path: AdminScreenPath.AdminDashBoard,
+      element: <ProtectedRoute />,
       children: [
-        { index: true, element: <HomePage /> },
         {
-          path: AbsoluteScreenPath.viewRegisterGarage,
-          element: <ViewRegisterGarage />,
-        },
-        {
-          path: AbsoluteScreenPath.viewRegisterGarageDetail,
-          element: <ViewRegisterGarageDetail />,
-        },
-        {
-          path: AbsoluteScreenPath.viewExitsGarage,
-          element: <ViewExitsGarage />,
+          element: <Dashboard />,
+          children: [
+            { index: true, element: <HomePage /> },
+            {
+              path: AdminScreenPath.ViewRegisterGarage,
+              element: <ViewRegisterGarage />,
+            },
+            {
+              path: AdminScreenPath.ViewRegisterGarageDetail,
+              element: <ViewRegisterGarageDetail />,
+            },
+            {
+              path: AdminScreenPath.ViewExitsGarage,
+              element: <ViewExitsGarage />,
+            },
+          ],
         },
       ],
     },
 
+    //Garage Management route
+
     {
       path: GarageManagementScreenPath.GarageManagement,
-      element: <GarageManagement />,
+      element: <ProtectedRoute />,
       children: [
         {
-          index: true,
-          path: GarageManagementScreenPath.garageDashboard,
-          element: <GarageDashboard />,
-        },
-        {
-          path: GarageManagementScreenPath.appointment,
-          element: <Appointment />,
-        },
-        {
-          path: GarageManagementScreenPath.appointmentScheduler,
-          element: <AppointmentScheduler />,
-        },
-        {
-          path: GarageManagementScreenPath.appointmentDetail,
-          element: <AppointmentDetail />,
+          element: <GarageManagement />,
+          children: [
+            {
+              index: true,
+              element: <GarageDashboard />,
+            },
+            {
+              path: GarageManagementScreenPath.GarageDashboard,
+              element: <GarageDashboard />,
+            },
+            {
+              path: GarageManagementScreenPath.Appointment,
+              element: <Appointment />,
+            },
+            {
+              path: GarageManagementScreenPath.AppointmentScheduler,
+              element: <AppointmentScheduler />,
+            },
+            {
+              path: GarageManagementScreenPath.AppointmentDetail,
+              element: <AppointmentDetail />,
+            },
+            {
+              path: GarageManagementScreenPath.Staff,
+              element: <Staff />,
+            },
+          ],
         },
       ],
     },

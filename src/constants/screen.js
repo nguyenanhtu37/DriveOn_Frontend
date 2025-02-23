@@ -5,18 +5,23 @@ export const AbsoluteScreenPath = {
   NewPassword: "/new-password",
   CarOwnerPage: "/car-owner",
   GarageRegistrationPage: "/garageRegistration",
-  AdminDashBoard: "/adminDashboard/",
-  viewRegisterGarage: "viewRegisterGarage",
-  viewRegisterGarageDetail: "viewRegisterGarage/:id",
-  viewExitsGarage: "viewExitsGarage",
 };
 
 export const GarageManagementScreenPath = {
   GarageManagement: "/garageManagement",
-  garageDashboard: "dashboard",
-  appointment: "appointments",
-  appointmentScheduler: "appointmentScheduler",
-  appointmentDetail: "appointments/:id",
-  services: "services",
-  settings: "settings",
+  GarageDashboard: "dashboard",
+  Appointment: "appointments",
+  AppointmentScheduler: "appointmentScheduler",
+  AppointmentDetail: "appointments/:id",
+  Services: "services",
+  Settings: "settings",
+  Staff: "staff",
+  StaffDetail: "staff/:id",
+};
+
+export const AdminScreenPath = {
+  AdminDashBoard: "/adminDashboard/",
+  ViewRegisterGarage: "viewRegisterGarage",
+  ViewRegisterGarageDetail: "viewRegisterGarage/:id",
+  ViewExitsGarage: "viewExitsGarage",
 };

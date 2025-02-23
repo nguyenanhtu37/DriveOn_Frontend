@@ -17,7 +17,6 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <Toaster />
     </SidebarProvider>
   );
 }

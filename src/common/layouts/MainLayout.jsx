@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "../../components/Header";
 import NavbarMobile from "@/components/NavbarMobile";
-import { Toaster } from "@/components/ui/toaster";
 
 function MainLayout() {
   return (
@@ -9,7 +8,6 @@ function MainLayout() {
       <Header />
       <Outlet />
       <NavbarMobile />
-      <Toaster />
     </div>
   );
 }

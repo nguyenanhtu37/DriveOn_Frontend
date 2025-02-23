@@ -1,6 +1,5 @@
 import { Wrench } from "lucide-react";
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
-import { Toaster } from "@/components/ui/toaster";
 
 export default function GarageRegistrationPage() {
   return (
@@ -22,7 +21,6 @@ export default function GarageRegistrationPage() {
           </div>
         </div>
       </div>
-      <Toaster />
     </div>
   );
 }
