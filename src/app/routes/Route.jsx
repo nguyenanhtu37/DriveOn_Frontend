@@ -1,6 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "@/common/layouts/MainLayout";
-import { AbsoluteScreenPath } from "../../constants/screen";
+import {
+  AbsoluteScreenPath,
+  GarageManagementScreenPath,
+} from "../../constants/screen";
 import HomePage from "../../pages/HomePage/HomePage";
 import Login from "@/pages/Login/Login";
 import ForgotPassword from "../../pages/forgot-password/Forgot-password";
@@ -9,6 +12,13 @@ import CarOwnerPage from "@/pages/CarOwner/CarOwnerPage";
 import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
+import { ViewExitsGarage } from "@/pages/AdminDashboard/ViewExitsGararge/ViewExitsGarage";
+import { GarageManagement } from "@/pages/GarageManagement/GarageManagement";
+import GarageDashboard from "@/pages/GarageManagement/Dashboard/GarageDashboard";
+import Appointment from "@/pages/GarageManagement/Appointment/Tab/Appointment";
+import AppointmentDetail from "@/pages/GarageManagement/Appointment/AppointmentDetail";
+import { AppointmentScheduler } from "@/pages/GarageManagement/Appointment/Tab/AppointmentScheduler";
+import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGarageDetail/ViewRegisterGarageDetail";
 
 const router = createBrowserRouter(
   [
@@ -33,6 +43,38 @@ const router = createBrowserRouter(
         {
           path: AbsoluteScreenPath.viewRegisterGarage,
           element: <ViewRegisterGarage />,
+        },
+        {
+          path: AbsoluteScreenPath.viewRegisterGarageDetail,
+          element: <ViewRegisterGarageDetail />,
+        },
+        {
+          path: AbsoluteScreenPath.viewExitsGarage,
+          element: <ViewExitsGarage />,
+        },
+      ],
+    },
+
+    {
+      path: GarageManagementScreenPath.GarageManagement,
+      element: <GarageManagement />,
+      children: [
+        {
+          index: true,
+          path: GarageManagementScreenPath.garageDashboard,
+          element: <GarageDashboard />,
+        },
+        {
+          path: GarageManagementScreenPath.appointment,
+          element: <Appointment />,
+        },
+        {
+          path: GarageManagementScreenPath.appointmentScheduler,
+          element: <AppointmentScheduler />,
+        },
+        {
+          path: GarageManagementScreenPath.appointmentDetail,
+          element: <AppointmentDetail />,
         },
       ],
     },

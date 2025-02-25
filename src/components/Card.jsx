@@ -68,7 +68,7 @@ export function GarageCard({
             <h3 className="text-lg font-semibold text-primary">{garageName}</h3>
             <Badge variant="secondary" className="flex items-center gap-1">
               <Star className="h-4 w-4" />
-              <span>{rating.toFixed(1)}</span>
+              {/* <span>{rating.toFixed(1)}</span> */}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mb-2">{address}</p>

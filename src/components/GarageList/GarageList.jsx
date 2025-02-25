@@ -14,8 +14,8 @@ export default function GarageList() {
             rating={garage.rating}
             address={garage.address}
             imgs={garage.images}
-            openTime={garage.working.openTime}
-            closeTime={garage.working.closeTime}
+            openTime={garage.openTime}
+            closeTime={garage.closeTime}
           />
         ))}
       </div>
