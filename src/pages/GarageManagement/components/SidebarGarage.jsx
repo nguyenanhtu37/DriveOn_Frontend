@@ -6,13 +6,13 @@ import {
   MessageCircle,
   Settings,
   Star,
-  User,
+  Users,
   Wallet,
 } from "lucide-react";
 
 const sidebarItem = [
   { icon: <LayoutDashboard />, title: "Dashboard", link: "dashboard" },
-  { icon: <User />, title: "Staff", link: "staff" },
+  { icon: <Users />, title: "Staff", link: "staff" },
   { icon: <CalendarDays />, title: "Appointments", link: "appointments" },
   { icon: <Settings />, title: "Services", link: "services" },
   { icon: <Star />, title: "Feedback", link: "feedback" },

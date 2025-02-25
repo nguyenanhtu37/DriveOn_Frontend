@@ -218,65 +218,7 @@ export default function RegistrationForm() {
             )}
           />
         </div>
-        {/* <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
-          <FormField
-            control={form.control}
-            name="services"
-            render={() => (
-              <FormItem>
-                <div className="mb-4">
-                  <FormLabel className="text-base">Services Offered</FormLabel>
-                  <FormDescription>
-                    Select the services your garage offers.
-                  </FormDescription>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:grid-cols-3">
-                  {[
-                    "Oil Change",
-                    "Tire Rotation",
-                    "Brake Service",
-                    "Engine Repair",
-                    "Transmission Service",
-                    "Car Wash",
-                  ].map((service) => (
-                    <FormField
-                      key={service}
-                      control={form.control}
-                      name="services"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={service}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(service)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, service])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== service
-                                        )
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {service}
-                            </FormLabel>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div> */}
+
         <div className="animate-fade-up animate-once animate-duration-800 animate-ease-linear">
           <Card>
             <CardContent className="p-6 space-y-4">
