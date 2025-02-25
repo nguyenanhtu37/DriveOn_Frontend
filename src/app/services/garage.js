@@ -35,3 +35,12 @@ export const viewGarageExits = async () => {
   const response = await axios.get("garage/existing");
   return response.data;
 };
+
+export const enableGarage = async (id) => {
+  const response = await axios.post(`garage/${id}/enable`);
+  return response.data;
+};
+export const disableGarage = async (id) => {
+  const response = await axios.post(`garage/${id}/disable`);
+  return response.data;
+};
