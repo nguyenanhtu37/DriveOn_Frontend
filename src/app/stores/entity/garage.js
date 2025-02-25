@@ -105,3 +105,61 @@ export const useGetRegisterGarageDetail = (id) => {
     data: query.data ?? {},
   };
 };
+
+export const useGetGarageExits = () => {
+  const query = useQuery({
+    queryKey: ["garageExits"],
+    queryFn: garageService.viewGarageExits,
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+    meta: query.data?.meta ?? null,
+  };
+};
+
+export const useEnableGarage = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (id) => garageService.enableGarage(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["garageExits"]);
+      toast({
+        title: "Garage enabled successfully",
+        duration: 2000,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Garage enabled failed",
+        duration: 2000,
+      });
+    },
+  });
+
+  return mutation;
+};
+
+export const useDisableGarage = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (id) => garageService.disableGarage(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["garageExits"]);
+      toast({
+        title: "Garage disabled successfully",
+        duration: 2000,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Garage disabled failed",
+        duration: 2000,
+      });
+    },
+  });
+
+  return mutation;
+};
