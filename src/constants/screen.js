@@ -2,7 +2,10 @@ export const AbsoluteScreenPath = {
   Entry: "/", // Entry screen
   Login: "/login", //Login screen
   ForgotPassword: "/forgot-password",
-  NewPassword: "/new-password",
+  NewPassword: "/reset-password",
+  SignUp: "/signup",
+  AdminDashBoard: "/adminDashboard/",
+  viewRegisterGarage: "viewRegisterGarage",
   CarOwnerPage: "/car-owner",
   GarageRegistrationPage: "/garageRegistration",
 };

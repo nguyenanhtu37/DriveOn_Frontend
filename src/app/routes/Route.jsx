@@ -9,10 +9,11 @@ import HomePage from "../../pages/HomePage/HomePage";
 import Login from "@/pages/Login/Login";
 import ForgotPassword from "../../pages/forgot-password/Forgot-password";
 import NewPassword from "../../pages/forgot-password/New-password";
-import CarOwnerPage from "@/pages/CarOwner/CarOwnerPage";
-import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
+// import ProfilePage from "@/pages/CarOwner/Profile/index";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
+import SignUp from "../../pages/SignUp/SignUp";
+import CarOwnerPage from "@/pages/CarOwner/CarOwnerPage";
 import { ViewExitsGarage } from "@/pages/AdminDashboard/ViewExitsGararge/ViewExitsGarage";
 import { GarageManagement } from "@/pages/GarageManagement/GarageManagement";
 import GarageDashboard from "@/pages/GarageManagement/Dashboard/GarageDashboard";
@@ -23,6 +24,7 @@ import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGar
 import { Staff } from "@/pages/GarageManagement/Staff/Staff";
 import ProtectedRoute from "./ProtectRoute";
 import { ViewServiceSystem } from "@/pages/AdminDashboard/ViewServiceSystem/ViewServiceSystem";
+import GarageRegistrationPage from "@/pages/GarageRegistrationPage/GarageRegistrationPage";
 
 const router = createBrowserRouter(
   [
@@ -33,6 +35,9 @@ const router = createBrowserRouter(
     },
     { path: AbsoluteScreenPath.Login, element: <Login /> },
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
+    { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
+    { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
+    // { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage/> },
     { path: AbsoluteScreenPath.CarOwnerPage, element: <CarOwnerPage /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     {

@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import ForgotPasswordForm from "../../components/forgot-password/ForgotPasswordForm";
 import backgroundImage from "../../assets/background.png";
-import ArrowLeftIcon from "../../assets/arrow-left.svg"; 
+import ArrowLeftIcon from "../../assets/arrow-left.svg";
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
 
   const handleBackToLogin = () => {
-    navigate("/loginlogin");
+    navigate("/login");
   };
 
   return (
