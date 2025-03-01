@@ -23,17 +23,18 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { serviceSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { Edit } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-export const EditService = ({ garage, isOpen }) => {
+export const EditService = ({ service }) => {
   const editService = useUpdateService();
   const { files, progressList, handleFileChange, handleUpload } = useUpload();
   const form = useForm({
     resolver: zodResolver(serviceSchema),
     defaultValues: {
-      name: garage.name,
-      description: garage.description,
+      name: service.name,
+      description: service.description,
     },
   });
 
@@ -44,28 +45,25 @@ export const EditService = ({ garage, isOpen }) => {
     }
     const newService = {
       ...data,
-      image: uploadedUrls.length > 0 ? uploadedUrls[0] : "",
+      image: uploadedUrls.length > 0 ? uploadedUrls[0] : service.image,
     };
     console.log(newService);
-    editService.mutate(garage._id, newService);
-    // form.reset();
+    editService.mutate({ id: service._id, service: newService });
+    form.reset();
   };
   return (
-    <Dialog isOpen={isOpen}>
+    <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className=" bg-red-100 flex justify-center items-center gap-2 hover:bg-red-200 transition-colors duration-100 ease-in-out"
-        >
-          <Plus size={18} />
-          Create service
-        </Button>
+        <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition-colors flex items-center">
+          <Edit size={16} className="mr-2" />
+          Edit
+        </button>
       </DialogTrigger>
       <DialogContent className=" min-w-[378px] max-w-[600px] w-full">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>New Service</DialogTitle>
+              <DialogTitle>Edit Service</DialogTitle>
               <DialogDescription>
                 Edit service here. Click save when you're done.
               </DialogDescription>
@@ -79,7 +77,7 @@ export const EditService = ({ garage, isOpen }) => {
                     <FormLabel>Service</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={garage.name}
+                        placeholder={service.name}
                         {...field}
                         className="col-span-3"
                       />
@@ -96,7 +94,7 @@ export const EditService = ({ garage, isOpen }) => {
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={garage.description}
+                        placeholder={service.description}
                         {...field}
                         className="col-span-3"
                       />
@@ -127,12 +125,18 @@ export const EditService = ({ garage, isOpen }) => {
               <div className="grid grid-cols-4 items-center">
                 <FormLabel>Progress</FormLabel>
                 <div className="col-span-3">
-                  {files.map((file) => (
-                    <div key={file.name} className=" flex flex-col gap-y-1">
-                      <img src={URL.createObjectURL(file)} alt="" />
-                      <Progress value={progressList[file.name]} />
+                  {files.length > 0 ? (
+                    files.map((file) => (
+                      <div key={file.name} className=" flex flex-col gap-y-1">
+                        <img src={URL.createObjectURL(file)} alt="" />
+                        <Progress value={progressList[file.name]} />
+                      </div>
+                    ))
+                  ) : (
+                    <div className=" flex flex-col gap-y-1">
+                      <img src={service.image} alt="" />
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </div>
@@ -142,7 +146,7 @@ export const EditService = ({ garage, isOpen }) => {
                 className="bg-red-200 hover:bg-red-300 transition-colors duration-100 ease-in-out"
                 type="submit"
               >
-                Create
+                Update
               </Button>
             </DialogFooter>
           </form>

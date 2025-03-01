@@ -11,11 +11,12 @@ export const addService = async (service) => {
 };
 
 export const updateService = async (id, service) => {
-  const response = await axios.put(`service/${id}s`, service);
+  console.log(id, service);
+  const response = await axios.put(`service/${id}`, service);
   return response.data;
 };
 
 export const deleteService = async (id) => {
-  const response = await axios.delete(`service/delete/${id}`);
+  const response = await axios.delete(`service/${id}`);
   return response.data;
 };

@@ -12,21 +12,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Cog, Edit, Info, Trash2 } from "lucide-react";
-import React from "react";
+import { Cog, Edit, Trash2 } from "lucide-react";
+import { EditService } from "../ViewServiceSystem/components/EditService";
+import { DeleteService } from "../ViewServiceSystem/components/DeleteService";
 
 const AccordionService = ({
   id,
-  service,
+  name,
   description,
   image,
   createAt,
   updateAt,
-  setSelectedService,
+  service,
 }) => {
-  const handleSelected = () => {
-    setSelectedService(id);
-  };
   return (
     <Card className="w-full border border-gray-300 dark:border-gray-700 transition-shadow hover:shadow-lg">
       <AccordionItem value={`item-${id}`}>
@@ -34,7 +32,7 @@ const AccordionService = ({
           <CardHeader className="w-full flex flex-row items-center gap-3">
             <CardTitle className="flex items-center text-lg font-semibold">
               <Cog className="w-5 h-5 mr-2 text-red-500" />
-              {service}
+              {name}
             </CardTitle>
           </CardHeader>
         </AccordionTrigger>
@@ -63,14 +61,8 @@ const AccordionService = ({
           </CardContent>
           <CardFooter>
             <div className="mt-6 flex space-x-3">
-              <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition-colors flex items-center">
-                <Edit size={16} className="mr-2" />
-                Edit
-              </button>
-              <button className="px-4 py-2 bg-red-50 hover:bg-red-100 rounded-lg text-sm font-medium text-red-600 transition-colors flex items-center">
-                <Trash2 size={16} className="mr-2" />
-                Remove
-              </button>
+              <EditService service={service} />
+              <DeleteService serviceId={service._id} />
             </div>
           </CardFooter>
         </AccordionContent>

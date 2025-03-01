@@ -38,7 +38,7 @@ export const useAddService = () => {
 export const useUpdateService = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async (id, service) =>
+    mutationFn: async ({ id, service }) =>
       serviceService.updateService(id, service),
     onSuccess: () => {
       queryClient.invalidateQueries(["garage"]);
