@@ -5,10 +5,11 @@ import HomePage from "../../pages/HomePage/HomePage";
 import Login from "@/pages/Login/Login";
 import ForgotPassword from "../../pages/forgot-password/Forgot-password";
 import NewPassword from "../../pages/forgot-password/New-password";
-import CarOwnerPage from "@/pages/CarOwner/CarOwnerPage";
+// import ProfilePage from "@/pages/CarOwner/Profile/index";
 import GarageRegistrationPage from "../../pages/GarageRegistrationPage/GarageRegistrationPage";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
+import SignUp from '../../pages/SignUp/SignUp';
 
 const router = createBrowserRouter(
   [
@@ -19,8 +20,9 @@ const router = createBrowserRouter(
     },
     { path: AbsoluteScreenPath.Login, element: <Login /> },
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
-    { path: AbsoluteScreenPath.CarOwnerPage, element: <CarOwnerPage /> },
+    { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
+    // { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage/> },
     {
       path: AbsoluteScreenPath.GarageRegistrationPage,
       element: <GarageRegistrationPage />,

@@ -7,7 +7,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate("/car-owner");
+    navigate("/signup");
   };
 
   const handleBackToHome = () => {

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import CarOwnerForm from "../../components/car-owner/CarOwnerForm";
 import backgroundImage from "../../assets/background.png"; 
 import ArrowLeftIcon from "../../assets/arrow-left.svg"; 
+import SignUpForm from "../../components/sign-up/SignUpForm";
 
-const CarOwnerPage = () => {
+const SignUp = () => {
   const navigate = useNavigate();
 
   const handleBackToHome = () => {
@@ -33,10 +33,10 @@ const CarOwnerPage = () => {
         <p className="text-sm text-gray-600">
           Please provide your details to register
         </p>
-        <CarOwnerForm />
+        <SignUpForm />
       </div>
     </div>
   );
 };
 
-export default CarOwnerPage;
+export default SignUp;

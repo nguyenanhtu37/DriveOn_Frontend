@@ -6,7 +6,7 @@ const ForgotPasswordPage = () => {
   const navigate = useNavigate();
 
   const handleBackToLogin = () => {
-    navigate("/loginlogin");
+    navigate("/login");
   };
 
   return (
