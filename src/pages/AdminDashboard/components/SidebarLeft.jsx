@@ -1,5 +1,5 @@
 import { Avatar } from "./Avatar";
-import { Car, ChartPieIcon, ChevronRight, File } from "lucide-react";
+import { Car, ChartPieIcon, ChevronRight, File, ServerCog } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { Title } from "./Title";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
@@ -35,7 +35,7 @@ export const SidebarLeft = () => {
             </div> */}
 
             <div className=" flex flex-col gap-y-2">
-              <Title title="Garages" />
+              <Title title="Management Garage" />
               <div className=" flex flex-col gap-y-2">
                 <SidebarItem
                   icon={<File />}
@@ -46,6 +46,11 @@ export const SidebarLeft = () => {
                   icon={<Car />}
                   title="Exits Garage"
                   link={"viewExitsGarage"}
+                />
+                <SidebarItem
+                  icon={<ServerCog />}
+                  title="Service System"
+                  link={"viewServiceSystem"}
                 />
               </div>
             </div>

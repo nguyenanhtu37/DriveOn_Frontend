@@ -22,6 +22,7 @@ import { AppointmentScheduler } from "@/pages/GarageManagement/Appointment/Tab/A
 import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGarageDetail/ViewRegisterGarageDetail";
 import { Staff } from "@/pages/GarageManagement/Staff/Staff";
 import ProtectedRoute from "./ProtectRoute";
+import { ViewServiceSystem } from "@/pages/AdminDashboard/ViewServiceSystem/ViewServiceSystem";
 
 const router = createBrowserRouter(
   [
@@ -58,6 +59,10 @@ const router = createBrowserRouter(
             {
               path: AdminScreenPath.ViewExitsGarage,
               element: <ViewExitsGarage />,
+            },
+            {
+              path: AdminScreenPath.viewServiceSystem,
+              element: <ViewServiceSystem />,
             },
           ],
         },

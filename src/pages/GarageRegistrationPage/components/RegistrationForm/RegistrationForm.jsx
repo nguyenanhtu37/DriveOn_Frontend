@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formSchema } from "@/schema";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,24 +18,17 @@ import { X } from "lucide-react";
 import { useRegisterGarage } from "@/app/stores/entity/garage";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
+import useUpload from "@/app/services/Cloudinary/upload";
+import { Progress } from "@/components/ui/progress";
+import { Loading } from "@/components/Loading";
 
 export default function RegistrationForm() {
-  const [images, setImages] = useState([]);
   const navigate = useNavigate();
   const register = useRegisterGarage();
 
-  const handleImageChange = (event) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles) {
-      const newFiles = Array.from(selectedFiles).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setImages((prev) => [...prev, ...newFiles]);
-    }
-  };
-  const handleDeleteImage = (index) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
+  const { files, imageUrls, progressList, handleFileChange, handleUpload } =
+    useUpload();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,8 +42,11 @@ export default function RegistrationForm() {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    let uploadedUrls = [];
+    if (files.length > 0) {
+      uploadedUrls = await handleUpload();
+    }
     const newGarage = {
       name: data.name,
       phone: data.phone,
@@ -61,12 +56,7 @@ export default function RegistrationForm() {
       workingHours: `${data.openTime} - ${data.closeTime} hours`,
       operating_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       email: data.email,
-      images: [
-        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800",
-      ],
+      interiorImages: uploadedUrls,
       address: data.address,
     };
     console.log(newGarage);
@@ -74,7 +64,6 @@ export default function RegistrationForm() {
       onSuccess: () => {
         setTimeout(() => {
           form.reset();
-          setImages([]);
           navigate("/");
         }, 2500);
       },
@@ -222,20 +211,23 @@ export default function RegistrationForm() {
         <div className="animate-fade-up animate-once animate-duration-800 animate-ease-linear">
           <Card>
             <CardContent className="p-6 space-y-4">
-              {images.length > 0 ? (
+              {files.length > 0 ? (
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                  {images.map((img, index) => (
+                  {files.map((file) => (
                     <div
-                      key={index}
+                      key={file.name}
                       className="relative w-full animate-fade-up animate-ease-in-out"
                     >
-                      <img
-                        className="w-full sm:h-[100px] md:h-[120px] object-cover rounded-md"
-                        src={img}
-                      />
+                      <div className="w-full flex flex-col gap-y-2">
+                        <img
+                          className="w-full sm:h-[100px] md:h-[120px] object-cover rounded-md"
+                          src={URL.createObjectURL(file)}
+                          alt=""
+                        />
+                        <Progress value={progressList[file.name]} />
+                      </div>
                       <button
                         type="button"
-                        onClick={() => handleDeleteImage(index)}
                         className="absolute top-0 right-0 p-0.5 bg-white rounded-full shadow-sm"
                       >
                         <X size={12} />
@@ -264,7 +256,7 @@ export default function RegistrationForm() {
                   multiple
                   placeholder="File"
                   accept="image/*"
-                  onChange={handleImageChange}
+                  onChange={handleFileChange}
                 />
               </div>
             </CardContent>
