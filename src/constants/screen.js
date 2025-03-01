@@ -27,4 +27,5 @@ export const AdminScreenPath = {
   ViewRegisterGarage: "viewRegisterGarage",
   ViewRegisterGarageDetail: "viewRegisterGarage/:id",
   ViewExitsGarage: "viewExitsGarage",
+  viewServiceSystem: "viewServiceSystem",
 };

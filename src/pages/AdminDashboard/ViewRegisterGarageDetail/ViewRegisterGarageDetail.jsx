@@ -3,6 +3,7 @@ import {
   useGetRegisterGarageDetail,
   useRejectGarage,
 } from "@/app/stores/entity/garage";
+import { Loading } from "@/components/Loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+
 import {
   ActivitySquare,
   Check,
@@ -43,7 +44,7 @@ export const ViewRegisterGarageDetail = () => {
   const handleReject = () => {
     rejectGarage.mutate(id, {});
   };
-  if (garageFetch.isLoading) return <div>Loading...</div>;
+  if (garageFetch.isLoading) return <Loading />;
   return (
     <div className=" px-7 pt-7 w-full flex flex-col gap-y-5 items-start">
       <Card className="w-full  mx-auto overflow-hidden transition-shadow duration-300 hover:shadow-lg">
@@ -163,10 +164,10 @@ export const ViewRegisterGarageDetail = () => {
               Garage Image
             </h3>
             <div className=" flex justify-start items-center flex-wrap gap-4">
-              {Array.from({ length: 6 }).map((_, index) => (
+              {garage.interiorImages.map((image) => (
                 <img
-                  key={index}
-                  src="https://images.pexels.com/photos/640781/pexels-photo-640781.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  key={image}
+                  src={image}
                   alt="garage"
                   className=" size-36 object-cover rounded-lg"
                 />

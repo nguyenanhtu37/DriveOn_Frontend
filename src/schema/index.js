@@ -25,3 +25,8 @@ export const staffSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
+export const serviceSchema = z.object({
+  name: z.string().min(2, "Service name must be at least 2 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+});
