@@ -9,7 +9,7 @@ import { forgotPasswordSchema } from "../../schema/forgotPasswordSchema";
 
 const ForgotPasswordForm = () => {
   const { handleRequestPasswordReset, isLoading, error, success } = useAuth();
-  
+
   const {
     register,
     handleSubmit,
@@ -35,15 +35,15 @@ const ForgotPasswordForm = () => {
           register={register("email")}
           error={errors.email}
         />
-        <SubmitButton 
-          isLoading={isLoading} 
+        <SubmitButton
+          isLoading={isLoading}
           variant="primary"
           size="md"
         >
           Reset Password
         </SubmitButton>
       </form>
-      
+
       {error && (
         <p className="mt-2 text-sm text-red-600" role="alert">
           {error}

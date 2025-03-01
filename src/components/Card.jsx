@@ -1,78 +1,102 @@
-import PropTypes from "prop-types";
+"use client";
+
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
-import { Heart, Star } from "lucide-react";
-import CarouselButton from "./CarouselButton";
-function Card(props) {
-  const {
-    garageName,
-    rating,
-    address,
-    openTime,
-    closeTime,
-    imgs,
-    isFavourited,
-  } = props;
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Heart, Star, Clock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+export function GarageCard({
+  garageName,
+  rating,
+  address,
+  openTime,
+  closeTime,
+  imgs,
+  isFavourited,
+}) {
+  const [isHovered, setIsHovered] = React.useState(false);
+
   return (
-    <div className=" flex flex-col items-center justify-center cursor-pointer gap-y-3 group">
-      {/* images */}
-      <div className=" relative w-full aspect-[1.06] rounded-xl overflow-hidden">
-        <Swiper className="mySwiper w-full h-full group-hover:scale-105 transition-transform ease-in-out origin-center">
-          {imgs?.map((img, index) => (
-            <SwiperSlide key={index}>
-              <img
-                src={img}
-                alt=""
-                className=" w-full h-full object-cover   "
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <div className=" absolute top-2 right-2 z-10 ">
-          <Heart size={24} color={isFavourited ? "red" : "white"} />
-        </div>
-        <div className=" absolute top-[50%] left-2 -translate-y-[50%] z-10 hidden group-hover:flex animate-fade animate-once">
-          <CarouselButton type="prev" />
-        </div>
-        <div className=" absolute top-[50%] right-2 -translate-y-[50%] z-10 hidden group-hover:flex animate-fade animate-once">
-          <CarouselButton type="next" />
-        </div>
-      </div>
-      {/* info */}
-      <div className=" w-full flex flex-col gap-2">
-        <div className=" flex flex-col items-start gap-y-[2px]">
-          <div className=" w-full flex justify-between gap-1 items-center">
-            <span className=" text-sm font-medium text-[#222222]">
-              {garageName}
+    <Card
+      className="w-full  mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-lg hover:-translate-y-1"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <CardContent className="p-0">
+        <div className="relative">
+          <Swiper className="aspect-[4/3]">
+            {imgs?.map((img, index) => (
+              <SwiperSlide key={index}>
+                <img
+                  src={img || "/placeholder.svg"}
+                  className="w-full h-full object-cover"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`absolute top-2 right-2 z-10 transition-colors duration-300 ${
+              isFavourited
+                ? "text-red-500 hover:text-red-600"
+                : "text-white hover:text-red-300"
+            }`}
+          >
+            <Heart
+              className={`h-6 w-6 ${isFavourited ? "fill-current" : ""}`}
+            />
+            <span className="sr-only">
+              {isFavourited ? "Remove from favorites" : "Add to favorites"}
             </span>
-            <div className=" flex items-center w-fit justify-center gap-1">
-              <Star size={12} />
-              <span className=" text-sm font-medium text-[#222222]">
-                {rating}
-              </span>
-            </div>
-          </div>
-          <span className=" text-sm  text-[#717171]">{address}</span>
-          <div className="flex items-center justify-start gap-1">
-            <span className=" text-sm  text-[#717171]">{openTime}</span>
-            <span className=" text-sm  text-[#717171]">{closeTime}</span>
-          </div>
+          </Button>
         </div>
-        <span className=" text-sm text-[#22222] font-medium underline cursor-pointer group-hover:animate-bounce animate-infinite animate-ease-in-out">
-          Status: Open
-        </span>
-      </div>
-    </div>
+        <div className="p-4">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-lg font-semibold text-primary">{garageName}</h3>
+            <Badge variant="secondary" className="flex items-center gap-1">
+              <Star className="h-4 w-4" />
+              {/* <span>{rating.toFixed(1)}</span> */}
+            </Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mb-2">{address}</p>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+            <Clock className="h-4 w-4" />
+            <span>
+              {openTime} - {closeTime}
+            </span>
+          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  variant="outline"
+                  className={`transition-colors duration-300 ${
+                    isHovered ? "bg-green-100 text-green-800" : ""
+                  }`}
+                >
+                  Status: Open
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>This garage is currently open for business</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
-Card.propTypes = {
-  garageName: PropTypes.string.isRequired,
-  rating: PropTypes.number.isRequired,
-  address: PropTypes.string.isRequired,
-  openTime: PropTypes.string.isRequired,
-  closeTime: PropTypes.string.isRequired,
-  isFavourited: PropTypes.bool.isRequired,
-  imgs: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
-
-export default Card;

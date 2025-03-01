@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const SidebarItem = ({ icon, title, link, props }) => {
   return (
@@ -31,7 +31,7 @@ export const SidebarItem = ({ icon, title, link, props }) => {
             />
           )}
         </div>
-        <span className=" text-sm text-start text-black group-hover/item:opacity-40 ">
+        <span className=" text-sm text-start text-black font-medium group-hover/item:opacity-40 ">
           {title}
         </span>
       </div>

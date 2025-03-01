@@ -47,9 +47,9 @@ const NewPasswordForm = () => {
           register={register("confirmPassword")}
           error={errors.confirmPassword}
         />
-        <SubmitButton 
-          isLoading={isLoading} 
-          disabled={!token} 
+        <SubmitButton
+          isLoading={isLoading}
+          disabled={!token}
           variant="primary"
           size="md"
         >
