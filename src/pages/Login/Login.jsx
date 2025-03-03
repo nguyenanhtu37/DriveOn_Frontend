@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 import LoginForm from "../../components/login/LoginForm";
 import FooterSection from "../../components/login/FooterSection";
 import backgroundImage from "../../assets/background.png";
