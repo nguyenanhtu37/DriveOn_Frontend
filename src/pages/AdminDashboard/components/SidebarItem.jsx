@@ -31,7 +31,7 @@ export const SidebarItem = ({ icon, title, link, props }) => {
             />
           )}
         </div>
-        <span className=" text-sm text-start text-black font-medium group-hover/item:opacity-40 ">
+        <span className=" text-md text-start text-black font-medium group-hover/item:opacity-40 ">
           {title}
         </span>
       </div>

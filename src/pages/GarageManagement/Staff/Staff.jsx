@@ -24,18 +24,19 @@ import {
 } from "@/app/stores/entity/staff";
 import { Switch } from "@/components/ui/switch";
 import { Loading } from "@/components/Loading";
+import { useParams } from "react-router-dom";
 
 export const Staff = () => {
-  const id = "67bb634f59b90e058fc12c21";
-  const staffs = useGetStaffs(id);
+  const { garageId } = useParams();
+  const staffs = useGetStaffs(garageId);
   const enabledStaff = useEnableStaff();
   const disabledStaff = useDisableStaff();
 
   const handleSwitch = (staffId, status) => {
     if (status == "active") {
-      disabledStaff.mutate({ garageId: id, staffId });
+      disabledStaff.mutate({ garageId: garageId, staffId });
     } else {
-      enabledStaff.mutate({ garageId: id, staffId });
+      enabledStaff.mutate({ garageId: garageId, staffId });
     }
   };
 
@@ -93,7 +94,7 @@ export const Staff = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {staffs.data.map((staff, index) => (
+          {staffs.data?.map((staff, index) => (
             <TableRow key={staff._id}>
               <TableCell className="w-[100px]">{index}</TableCell>
               <TableCell>{staff.name}</TableCell>

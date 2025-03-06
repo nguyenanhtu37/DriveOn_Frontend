@@ -19,3 +19,8 @@ export const deleteServiceGarage = async (id) => {
   const response = await axios.delete(`service-detail/${id}`);
   return response.data;
 };
+
+export const getServiceDetailById = async (id) => {
+  const response = await axios.get(`service-detail/${id}`);
+  return response.data;
+};

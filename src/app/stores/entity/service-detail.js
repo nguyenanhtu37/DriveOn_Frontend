@@ -1,11 +1,12 @@
 import { serviceDetailService } from "@/app/services";
 import { toast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const useGetService = () => {
+export const useGetService = (id) => {
   const query = useQuery({
-    queryKey: ["serviceGarage"],
-    queryFn: serviceDetailService.viewServiceGarage,
+    queryKey: ["serviceGarage", id],
+    queryFn: () => serviceDetailService.viewServiceGarage(id),
   });
   return {
     ...query,
@@ -36,12 +37,15 @@ export const useAddServiceGarage = () => {
   return mutation;
 };
 export const useUpdateServiceGarage = () => {
+  const { garageId, serviceId } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async ({ id, service }) =>
       serviceDetailService.updateServiceGarage(id, service),
     onSuccess: () => {
       queryClient.invalidateQueries(["serviceGarage"]);
+      navigate(`/garageManagement/${garageId}/services/${serviceId}`);
       toast({
         title: "Update service successfully",
         duration: 2000,
@@ -58,11 +62,15 @@ export const useUpdateServiceGarage = () => {
   return mutation;
 };
 export const useRemoveServiceGarage = () => {
+  const { garageId } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async ({ id }) => serviceDetailService.deleteServiceGarage(id),
+    mutationFn: async (serviceId) =>
+      serviceDetailService.deleteServiceGarage(serviceId),
     onSuccess: () => {
       queryClient.invalidateQueries(["serviceGarage"]);
+      navigate(`/garageManagement/${garageId}/services`);
       toast({
         title: "Delete service successfully",
         duration: 2000,
@@ -77,4 +85,15 @@ export const useRemoveServiceGarage = () => {
   });
 
   return mutation;
+};
+
+export const useGetServiceDetailById = (id) => {
+  const query = useQuery({
+    queryKey: ["serviceDetail", id],
+    queryFn: () => serviceDetailService.getServiceDetailById(id),
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
 };

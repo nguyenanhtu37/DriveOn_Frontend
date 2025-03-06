@@ -16,9 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 const AddStaff = () => {
-  const garageId = "67bb634f59b90e058fc12c21";
+  const { garageId } = useParams();
   const form = useForm({
     resolver: zodResolver(staffSchema),
     defaultValues: {

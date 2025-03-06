@@ -12,6 +12,10 @@ const useUpload = () => {
     }
   };
 
+  const handleRemove = (file) => {
+    setFiles((prev) => prev.filter((f) => f.name !== file.name));
+  };
+
   const handleUpload = async () => {
     if (files.length === 0) return;
 
@@ -39,6 +43,7 @@ const useUpload = () => {
     progressList,
     handleFileChange,
     handleUpload,
+    handleRemove,
   };
 };
 

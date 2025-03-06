@@ -9,7 +9,7 @@ import HomePage from "../../pages/HomePage/HomePage";
 import Login from "@/pages/Login/Login";
 import ForgotPassword from "../../pages/forgot-password/Forgot-password";
 import NewPassword from "../../pages/forgot-password/New-password";
-// import ProfilePage from "@/pages/CarOwner/Profile/index";
+
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
 import SignUp from "../../pages/SignUp/SignUp";
@@ -25,6 +25,9 @@ import { Staff } from "@/pages/GarageManagement/Staff/Staff";
 import ProtectedRoute from "./ProtectRoute";
 import { ViewServiceSystem } from "@/pages/AdminDashboard/ViewServiceSystem/ViewServiceSystem";
 import GarageRegistrationPage from "@/pages/GarageRegistrationPage/GarageRegistrationPage";
+import Service from "@/pages/GarageManagement/Service/Service";
+import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
+import CreateService from "@/pages/GarageManagement/Service/CreateService";
 
 const router = createBrowserRouter(
   [
@@ -106,6 +109,20 @@ const router = createBrowserRouter(
             {
               path: GarageManagementScreenPath.Staff,
               element: <Staff />,
+            },
+            {
+              path: GarageManagementScreenPath.Service,
+              element: <Service />,
+              children: [
+                {
+                  path: GarageManagementScreenPath.ServiceDetail,
+                  element: <ServiceDetail />,
+                },
+              ],
+            },
+            {
+              path: GarageManagementScreenPath.CreateService,
+              element: <CreateService />,
             },
           ],
         },

@@ -30,3 +30,12 @@ export const serviceSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
 });
+
+export const serviceDetailSchema = z.object({
+  name: z.string().min(2, "Service name must be at least 2 characters"),
+  serviceSystem: z.string().nonempty("Service system is required"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  price: z.number().min(0, "Price must be at least 0"),
+  duration: z.string().min(1, "Duration must be at least 1"),
+  warranty: z.string().min(1, "Warranty must be at least 1"),
+});

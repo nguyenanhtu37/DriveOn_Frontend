@@ -11,7 +11,7 @@ export const AbsoluteScreenPath = {
 };
 
 export const GarageManagementScreenPath = {
-  GarageManagement: "/garageManagement",
+  GarageManagement: "/garageManagement/:garageId",
   GarageDashboard: "dashboard",
   Appointment: "appointments",
   AppointmentScheduler: "appointmentScheduler",
@@ -20,6 +20,9 @@ export const GarageManagementScreenPath = {
   Settings: "settings",
   Staff: "staff",
   StaffDetail: "staff/:id",
+  Service: "services/",
+  ServiceDetail: ":serviceId",
+  CreateService: "createService",
 };
 
 export const AdminScreenPath = {

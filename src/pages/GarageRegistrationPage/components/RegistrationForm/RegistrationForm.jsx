@@ -20,14 +20,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
 import useUpload from "@/app/services/Cloudinary/upload";
 import { Progress } from "@/components/ui/progress";
-import { Loading } from "@/components/Loading";
 
 export default function RegistrationForm() {
   const navigate = useNavigate();
   const register = useRegisterGarage();
 
-  const { files, imageUrls, progressList, handleFileChange, handleUpload } =
-    useUpload();
+  const { files, progressList, handleFileChange, handleUpload } = useUpload();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
