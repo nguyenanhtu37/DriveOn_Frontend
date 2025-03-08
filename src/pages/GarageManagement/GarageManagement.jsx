@@ -6,12 +6,12 @@ import { Header } from "../AdminDashboard/components/Header";
 export const GarageManagement = () => {
   return (
     <SidebarProvider>
-      <div className=" min-w-[378px] w-full min-h-screen h-full m-auto  flex items-start shadow-md bg-white border border-black/60 rounded-2xl overflow-hidden">
+      <div className=" min-w-[378px] w-full h-full  m-auto  flex items-start shadow-md bg-[#f5f5f5] border border-black/60  overflow-hidden">
         <SidebarGarage />
 
         <div className=" relative flex-1 flex-col ">
           <Header />
-          <div className=" overflow-y-auto  scrollbar-hide">
+          <div className=" h-full bg-[#f5f5f5]">
             <Outlet />
           </div>
         </div>

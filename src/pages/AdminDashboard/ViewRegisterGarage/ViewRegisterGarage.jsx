@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
+import { Loading } from "@/components/Loading";
 
 export const ViewRegisterGarage = () => {
   const listRegisterGarage = useGetRegisterGarages();
@@ -18,7 +19,7 @@ export const ViewRegisterGarage = () => {
   const handleClick = (id) => {
     navigate(`/adminDashboard/viewRegisterGarage/${id}`);
   };
-  if (listRegisterGarage.isLoading) return <div>Loading...</div>;
+  if (listRegisterGarage.isLoading) return <Loading />;
   return (
     <div className=" px-7 pt-7 w-full flex flex-col gap-y-5 items-start">
       <div className=" px-2 py-1 flex justify-center items-center text-sm font-medium">
