@@ -10,24 +10,40 @@ const SignUpForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(carOwnerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      bankAccount: "",
+      bankName: "",
+    },
+    mode: "onChange",
   });
 
-  const { handleSignup, error: authError } = useAuth();
+  const { handleSignup, error: authError, success } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      // Exclude confirmPassword directly in the object sent to handleSignup
-      const submitData = { ...data };
-      delete submitData.confirmPassword;
-      console.log("Data to send to backend:", submitData);
+      const submitData = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        roles: [{ roleName: "carowner" }], // Match backend expectation
+        bankAccount: data.bankAccount || undefined,
+        bankName: data.bankName || undefined,
+      };
+      console.log("Validated form data:", submitData);
       await handleSignup(submitData);
     } catch (err) {
-      console.error("Signup error:", err);
+      console.error("Submission error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -35,9 +51,8 @@ const SignUpForm = () => {
 
   return (
     <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
-      {authError && (
-        <div className="mb-4 text-red-600 text-sm">{authError}</div>
-      )}
+      {authError && <div className="mb-4 text-red-600 text-sm">{authError}</div>}
+      {success && <div className="mb-4 text-green-600 text-sm">{success}</div>}
       <InputField
         label="Full Name"
         type="text"
@@ -73,7 +88,7 @@ const SignUpForm = () => {
         register={register("confirmPassword")}
         error={errors.confirmPassword}
       />
-      <SubmitButton isLoading={isLoading} />
+      <SubmitButton isLoading={isLoading} disabled={!isValid} />
     </form>
   );
 };

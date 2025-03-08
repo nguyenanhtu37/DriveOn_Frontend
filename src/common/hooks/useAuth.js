@@ -17,36 +17,44 @@ export const useAuth = () => {
     setError(null);
     try {
       const response = await login(credentials);
+      if (!response.token || typeof response.token !== 'string') {
+        throw new Error("Invalid token received");
+      }
       localStorage.setItem("token", response.token);
       navigate("/");
       return response;
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Login failed";
+      const errorMessage = err.message || "Login failed";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
-
-  // Handle signup
   const handleSignup = async (credentials) => {
     setIsLoading(true);
     setError(null);
+    setSuccess(null);
     try {
+      console.log("Signup credentials sent:", credentials);
       const response = await signup(credentials);
-      localStorage.setItem("token", response.token);
-      navigate("/login");
+      console.log("Signup response received:", response);
+      setSuccess(response.message || "Please check your email to verify your account.");
+      // Do not redirect to login since the user isn't created yet
       return response;
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Signup failed";
+      const errorMessage = err.response?.data?.message || err.message || "Signup failed";
+      console.error("Signup error details:", {
+        message: errorMessage,
+        stack: err.stack,
+        response: err.response?.data,
+      });
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
-
   // Handle logout
   const handleLogout = async () => {
     setIsLoading(true);
@@ -102,12 +110,11 @@ export const useAuth = () => {
     }
   };
 
-  // Handle Google OAuth login callback
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
-    if (token) {
+    if (token && !window.location.pathname.includes("reset-password")) {
       localStorage.setItem("token", token);
       navigate("/");
     }

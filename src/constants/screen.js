@@ -1,13 +1,13 @@
 export const AbsoluteScreenPath = {
   Entry: "/", // Entry screen
-  Login: "/login", //Login screen
+  Login: "/login", // Login screen
   ForgotPassword: "/forgot-password",
   NewPassword: "/reset-password",
   SignUp: "/signup",
-  AdminDashBoard: "/adminDashboard/",
-  viewRegisterGarage: "viewRegisterGarage",
-  CarOwnerPage: "/car-owner",
+  AdminDashBoard: "/adminDashboard/", // This might be redundant with AdminScreenPath
+  viewRegisterGarage: "viewRegisterGarage", // Should be in AdminScreenPath
   GarageRegistrationPage: "/garageRegistration",
+  ProfilePage: "/profile", 
 };
 
 export const GarageManagementScreenPath = {

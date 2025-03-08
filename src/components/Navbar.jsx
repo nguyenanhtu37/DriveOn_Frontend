@@ -1,4 +1,3 @@
-// Navbar.jsx
 import { AlignJustify, Globe } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -6,12 +5,13 @@ import { useScrollPosition } from "react-haiku";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
+import { AbsoluteScreenPath } from "../constants/screen";
 
 function Navbar() {
   const [scroll] = useScrollPosition();
   const { handleLogout, isLoading, error } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [logoutError, setLogoutError] = useState(null); // Local state for error display
+  const [logoutError, setLogoutError] = useState(null);
   const navigate = useNavigate();
 
   // Check login status and sync with localStorage
@@ -24,7 +24,7 @@ function Navbar() {
   useEffect(() => {
     if (error) {
       setLogoutError(error);
-      const timer = setTimeout(() => setLogoutError(null), 5000); // Clear after 5 seconds
+      const timer = setTimeout(() => setLogoutError(null), 5000);
       return () => clearTimeout(timer);
     }
   }, [error]);
@@ -34,6 +34,7 @@ function Navbar() {
     try {
       await handleLogout();
       setIsLoggedIn(false);
+      navigate(AbsoluteScreenPath.Login); // Redirect to login after logout
     } catch (err) {
       console.error("Logout failed:", err);
       // Error is handled by useAuth and synced to logoutError
@@ -43,7 +44,7 @@ function Navbar() {
   // Handle navigation to protected routes
   const handleProtectedNavigation = (to) => {
     if (!isLoggedIn) {
-      navigate("/login", { state: { from: to } });
+      navigate(AbsoluteScreenPath.Login, { state: { from: to } });
       return;
     }
     navigate(to);
@@ -54,10 +55,11 @@ function Navbar() {
       <div className="relative w-full h-20 px-4 md:px-10 flex justify-between items-center">
         {/* Left */}
         <div className="w-full md:w-1/2 lg:w-1/3 flex justify-center md:justify-start items-center z-30">
-          <Link to={"/"} className="w-full max-w-[180px] h-8">
+          <Link to={AbsoluteScreenPath.Entry} className="w-full max-w-[180px] h-8">
             <img
               src="/public/Screenshot 2025-01-16 232902_preview_rev_1.png"
               className="w-full h-full object-cover"
+              alt="Logo"
             />
           </Link>
         </div>
@@ -127,12 +129,12 @@ function Navbar() {
           <div className="flex items-center gap-2">
             <div className="hidden xl:flex py-[9px] px-3 rounded-full bg-white items-center gap-2 cursor-pointer hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100">
               <Link
-                to={"/garageRegistration"}
+                to={AbsoluteScreenPath.GarageRegistrationPage}
                 className="text-[#222222] text-sm font-bold"
                 onClick={(e) => {
                   if (!isLoggedIn) {
                     e.preventDefault();
-                    handleProtectedNavigation("/garageRegistration");
+                    handleProtectedNavigation(AbsoluteScreenPath.GarageRegistrationPage);
                   }
                 }}
               >
@@ -147,13 +149,13 @@ function Navbar() {
             {!isLoggedIn ? (
               <div className="flex items-center gap-2">
                 <Link
-                  to="/login"
+                  to={AbsoluteScreenPath.Login}
                   className="py-[9px] px-3 rounded-full bg-white text-[#222222] text-sm font-medium hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100"
                 >
                   Login
                 </Link>
                 <Link
-                  to="/signup"
+                  to={AbsoluteScreenPath.SignUp}
                   className="py-[9px] px-3 rounded-full bg-white text-[#222222] text-sm font-medium hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100"
                 >
                   Sign Up
@@ -178,8 +180,14 @@ function Navbar() {
                 >
                   <div className="grid gap-4 bg-white">
                     <Link
-                      to="/profile"
+                      to={AbsoluteScreenPath.ProfilePage} // Updated to /car-owner/profile
                       className="text-sm w-full px-4 py-[11px] text-[#222222] hover:bg-[#f7f6f6] ease-in-out font-roboto cursor-pointer"
+                      onClick={(e) => {
+                        if (!isLoggedIn) {
+                          e.preventDefault();
+                          handleProtectedNavigation(AbsoluteScreenPath.ProfilePage);
+                        }
+                      }}
                     >
                       Profile
                     </Link>
@@ -194,6 +202,12 @@ function Navbar() {
                     <Link
                       to="/garage"
                       className="text-sm w-full px-3 py-2 text-[#222222] ease-in-out hover:bg-[#f7f6f6] font-roboto cursor-pointer"
+                      onClick={(e) => {
+                        if (!isLoggedIn) {
+                          e.preventDefault();
+                          handleProtectedNavigation("/garage");
+                        }
+                      }}
                     >
                       Garage
                     </Link>
