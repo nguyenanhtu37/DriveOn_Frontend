@@ -3,7 +3,7 @@ import axios from 'axios';
 const handleSuccess = async (credentialResponse) => {
     try {
         // gui token ve backend de xac thuc
-        const result = await axios.post('http://localhost:5000/api/auth/google', {
+        const result = await axios.post(`${import.meta.env.VITE_BE_API}/auth/google`, {
             token: credentialResponse.credential
         })
 
