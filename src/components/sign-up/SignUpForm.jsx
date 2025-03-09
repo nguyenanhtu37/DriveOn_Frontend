@@ -19,8 +19,6 @@ const SignUpForm = () => {
       phone: "",
       password: "",
       confirmPassword: "",
-      bankAccount: "",
-      bankName: "",
     },
     mode: "onChange",
   });
@@ -36,11 +34,8 @@ const SignUpForm = () => {
         email: data.email,
         phone: data.phone,
         password: data.password,
-        roles: [{ roleName: "carowner" }], // Match backend expectation
-        bankAccount: data.bankAccount || undefined,
-        bankName: data.bankName || undefined,
+        roles: ["carowner"],
       };
-      console.log("Validated form data:", submitData);
       await handleSignup(submitData);
     } catch (err) {
       console.error("Submission error:", err);
