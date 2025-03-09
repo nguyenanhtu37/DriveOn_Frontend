@@ -3,6 +3,7 @@ import { SidebarRight } from "./components/SidebarRight";
 import { Header } from "./components/Header";
 import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 function Dashboard() {
   return (
@@ -15,10 +16,8 @@ function Dashboard() {
             <Outlet />
           </div>
         </div>
-        <div className="hidden lg:block h-full">
-          <SidebarRight />
-        </div>
       </div>
+      <Toaster />
     </SidebarProvider>
   );
 }

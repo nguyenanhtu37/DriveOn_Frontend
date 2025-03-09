@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Tạo instance Axios
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api/",
+  baseURL: import.meta.env.VITE_BE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

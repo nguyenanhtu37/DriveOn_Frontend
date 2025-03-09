@@ -17,6 +17,5 @@ const LoginWithGoogleButton = () => (
       />
     </div>
   );
-  
+
   export default LoginWithGoogleButton;
-  
