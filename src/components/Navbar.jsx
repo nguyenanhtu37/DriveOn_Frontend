@@ -206,7 +206,7 @@ function Navbar() {
       </div>
 
       {/* Bottom Search Bar */}
-      <div
+      {/* <div
         className={`hidden md:flex justify-center items-center w-full transition-all ease-in-out duration-300 overflow-hidden ${
           scroll.y === 0 ? "h-[88px]" : "h-0"
         }`}
@@ -229,7 +229,7 @@ function Navbar() {
             <span className="text-sm font-archivo">Search Location</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Error Message Display */}
       {logoutError && (

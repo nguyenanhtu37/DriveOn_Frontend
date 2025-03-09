@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, logout } from "../../app/services/login";
 import { signup } from "../../app/services/signup";
-import { requestPasswordReset, resetPassword } from "../../app/services/reset-password";
+import {
+  requestPasswordReset,
+  resetPassword,
+} from "../../app/services/reset-password";
+import { setUser } from "@/app/stores/view/user";
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +21,7 @@ export const useAuth = () => {
     setError(null);
     try {
       const response = await login(credentials);
+      setUser(response.user); // anh thêm dòng này tạo global state user
       localStorage.setItem("token", response.token);
       navigate("/");
       return response;
@@ -103,15 +108,15 @@ export const useAuth = () => {
   };
 
   // Handle Google OAuth login callback
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+  // useEffect(() => {
+  //   const params = new URLSearchParams(window.location.search);
+  //   const token = params.get("token");
 
-    if (token) {
-      localStorage.setItem("token", token);
-      navigate("/");
-    }
-  }, [navigate]);
+  //   if (token) {
+  //     localStorage.setItem("token", token);
+  //     navigate("/");
+  //   }
+  // }, [navigate]);
 
   return {
     isLoading,
