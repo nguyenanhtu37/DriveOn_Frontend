@@ -1,9 +1,9 @@
-import axios from 'axios';
+import { axios } from "@/lib/axios";
 
 const handleSuccess = async (credentialResponse) => {
   try {
     // Send the Google OAuth token to the backend for authentication
-    const result = await axios.post(`${VITE_BE_URL}/auth/google`, {
+    const result = await axios.post("auth/google", {
       token: credentialResponse.credential,
     });
 
@@ -19,7 +19,7 @@ const handleSuccess = async (credentialResponse) => {
         localStorage.setItem("token", result.data.token);
       }
       // Redirect to homepage after successful login
-      window.location.href = '/';
+      window.location.href = "/";
     } else {
       alert(result.data.message || "Login failed");
     }
