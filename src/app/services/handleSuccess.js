@@ -12,7 +12,7 @@ const handleSuccess = async (credentialResponse) => {
     console.log("result: ", result);
 
     // Check if the login was successful
-    if (result.status === 200 && result.statusText === "OK") {
+    if (result.status === 200) {
       alert("Login successful!");
       // Store the token in localStorage (if provided by backend)
       if (result.data.token) {
