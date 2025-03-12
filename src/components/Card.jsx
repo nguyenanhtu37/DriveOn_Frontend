@@ -30,13 +30,13 @@ export function GarageCard({
 
   return (
     <Card
-      className="w-full  mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-lg hover:-translate-y-1"
+      className="w-full  mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-lg "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardContent className="p-0">
         <div className="relative">
-          <Swiper className="aspect-[4/3]">
+          <Swiper className="aspect-[1.1] md:aspect-[1.5]">
             {imgs?.map((img, index) => (
               <SwiperSlide key={index}>
                 <img

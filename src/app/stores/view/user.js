@@ -14,4 +14,4 @@ export const useUserStore = create(
 
 export const setUser = (user) => useUserStore.getState().setUser(user);
 
-export const logout = () => useUserStore.getState().logout();
+export const userLogout = () => useUserStore.getState().logout();

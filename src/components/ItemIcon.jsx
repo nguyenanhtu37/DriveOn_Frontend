@@ -2,18 +2,23 @@ import PropTypes from "prop-types";
 import { cn } from "@/lib/utils";
 
 function ItemIcon(props) {
-  const { imgage, isActive, title } = props;
+  const { image, isActive, title } = props;
   return (
     <div className=" flex flex-col items-center justify-center cursor-pointer group ">
       <div className="flex flex-col items-center justify-center  gap-y-2 ">
-        <img className=" w-6 h-6 object-cover" src={imgage} />
+        <img
+          className=" size-10 rounded-full right-1 object-cover"
+          src={image}
+        />
         <span
           className={cn(
-            " text-sm text-[#717171] text-nowrap group-hover:text-[#222222] ",
+            " text-sm text-[#717171] text-nowrap group-hover:text-[#222222] max-w-[80px] line-clamp-1 group ",
             isActive && "text-[#222222]"
           )}
         >
-          {title}
+          <span className="block w-max group-hover:animate-[marquee_3s_linear_infinite]">
+            {title}
+          </span>
         </span>
       </div>
       <hr

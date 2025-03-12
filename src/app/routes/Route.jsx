@@ -28,6 +28,7 @@ import GarageRegistrationPage from "@/pages/GarageRegistrationPage/GarageRegistr
 import Service from "@/pages/GarageManagement/Service/Service";
 import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
 import CreateService from "@/pages/GarageManagement/Service/CreateService";
+import PageNotFound from "@/pages/404/PageNotFound";
 
 const router = createBrowserRouter(
   [
@@ -47,10 +48,11 @@ const router = createBrowserRouter(
       path: AbsoluteScreenPath.GarageRegistrationPage,
       element: <GarageRegistrationPage />,
     },
+
     //Admin route
     {
       path: AdminScreenPath.AdminDashBoard,
-      element: <ProtectedRoute />,
+      element: <ProtectedRoute role={["admin"]} />,
       children: [
         {
           element: <Dashboard />,
@@ -78,10 +80,9 @@ const router = createBrowserRouter(
     },
 
     //Garage Management route
-
     {
       path: GarageManagementScreenPath.GarageManagement,
-      element: <ProtectedRoute />,
+      element: <ProtectedRoute role={["manager", "staff"]} />,
       children: [
         {
           element: <GarageManagement />,
@@ -127,6 +128,11 @@ const router = createBrowserRouter(
           ],
         },
       ],
+    },
+
+    {
+      path: AbsoluteScreenPath.PageNotFound,
+      element: <PageNotFound />,
     },
   ],
   {

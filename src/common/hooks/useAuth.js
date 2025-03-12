@@ -7,7 +7,7 @@ import {
   requestPasswordReset,
   resetPassword,
 } from "../../app/services/reset-password";
-import { setUser } from "@/app/stores/view/user";
+import { setUser, userLogout } from "@/app/stores/view/user";
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +59,7 @@ export const useAuth = () => {
     try {
       await logout(); // Call the API logout function
       localStorage.removeItem("token");
+      userLogout();
       navigate("/");
       return { message: "Logged out successfully" };
     } catch (err) {
