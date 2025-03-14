@@ -8,7 +8,7 @@ import { ArrowLeft } from "lucide-react"
 import { loginSchema } from "../../schema/loginSchema"
 import { useAuth } from "../../common/hooks/useAuth"
 
-import LoginWithGoogleButton from "../../components/login/LoginWithGoogleButton"
+
 import InputField from "../../components/ui/InputField"
 import RememberMeSection from "../../components/login/RememberMeSection"
 import SubmitButton from "../../components/login/SubmitButton"
@@ -73,7 +73,7 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <LoginWithGoogleButton />
+         
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
