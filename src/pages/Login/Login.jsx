@@ -8,11 +8,10 @@ import { ArrowLeft } from "lucide-react"
 import { loginSchema } from "../../schema/loginSchema"
 import { useAuth } from "../../common/hooks/useAuth"
 
-import { GoogleLogin } from "@react-oauth/google";
-import LoginForm from "../../components/login/LoginForm";
+
+
 import FooterSection from "../../components/login/FooterSection";
-import backgroundImage from "../../assets/background.png";
-import ArrowLeftIcon from "../../assets/arrow-left.svg";
+
 
 import LoginWithGoogleButton from "../../components/login/LoginWithGoogleButton"
 import InputField from "../../components/ui/InputField"
@@ -78,7 +77,7 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-         
+          <LoginWithGoogleButton />
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">

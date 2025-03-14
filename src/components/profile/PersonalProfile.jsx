@@ -10,13 +10,13 @@ const PersonalProfile = ({
   onCancel,
   loading,
 }) => {
-  const [avatarPreview, setAvatarPreview] = useState(profile.avatar || "");
+  const [avatarPreview, setAvatarPreview] = useState(profile.avatar );
   const [about, setAbout] = useState(profile.about || "");
 
   const { files, progressList, handleFileChange, handleUpload, handleRemove } = useUpload();
 
   useEffect(() => {
-    setAvatarPreview(profile.avatar || "https://via.placeholder.com/120?text=Upload+Photo");
+    setAvatarPreview(profile.avatar);
     setAbout(profile.about || "");
   }, [profile.avatar, profile.about]);
 

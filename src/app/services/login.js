@@ -3,12 +3,13 @@ import { axios } from "../../lib/axios";
 export const login = async (credentials) => {
   try {
     const response = await axios.post("/auth/login", credentials);
+    console.log("response:", response);
     if (!response.data.token) {
       throw new Error("Invalid response from server: No token received");
     }
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Đăng nhập thất bại. Vui lòng kiểm tra thông tin.");
+    throw new Error(error.response?.data?.error || "Login Failed");
   }
 };
 

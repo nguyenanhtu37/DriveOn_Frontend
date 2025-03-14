@@ -3,6 +3,7 @@ import { axios } from "@/lib/axios";
 
 export const getProfile = async () => {
   const response = await axios.get("user/view-personal-profile");
+  console.log("Profile:",response);
   return response.data;
 };
 
