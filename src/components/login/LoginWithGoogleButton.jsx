@@ -30,7 +30,11 @@ const LoginWithGoogleButton = () => {
         Login with Google
       </button>
       <div className="hidden">
-        <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
+        <GoogleLogin onSuccess={handleSuccess}
+          onError={handleError}
+          ux_mode="popup"
+          useOneTap
+          flow="auth-code" />
       </div>
     </div>
   )
