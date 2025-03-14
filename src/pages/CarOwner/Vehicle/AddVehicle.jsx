@@ -1,28 +1,34 @@
 // src/pages/CarOwner/Vehicle/AddVehicleForm.jsx
-import { useState } from 'react';
-import { useVehicles } from '@/common/hooks/useVehicle';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useVehicles } from "@/common/hooks/useVehicle";
+import { useBrands } from "@/common/hooks/useBrand"; // Import useBrands
+import { useNavigate } from "react-router-dom";
 
 const AddVehicleForm = ({ onClose }) => {
   const navigate = useNavigate();
   const { addVehicle } = useVehicles();
+  const { brands, loading: brandsLoading, error: brandsError } = useBrands(); // Fetch brands
   const [formData, setFormData] = useState({
-    carBrand: '',
-    carName: '',
-    carYear: '',
-    carColor: '',
-    carPlate: '',
+    carBrand: "",
+    carName: "",
+    carYear: "",
+    carColor: "",
+    carPlate: "",
   });
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    if (!formData.carBrand) {
+      setError("Please select a brand.");
+      return;
+    }
     try {
       await addVehicle(formData);
-      alert('Vehicle added successfully');
-      onClose(); // Close the modal after successful submission
-      navigate('/car-owner/vehicles'); // Refresh the vehicle list page
+      alert("Vehicle added successfully");
+      onClose();
+      navigate("/car-owner/vehicles");
     } catch (err) {
       setError(err.message);
     }
@@ -34,14 +40,25 @@ const AddVehicleForm = ({ onClose }) => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-gray-700 text-sm font-medium mb-1">Brand</label>
-          <input
-            type="text"
-            value={formData.carBrand}
-            onChange={(e) => setFormData({ ...formData, carBrand: e.target.value })}
-            placeholder="e.g. Toyota"
-            className="w-full p-2 border rounded"
-            required
-          />
+          {brandsLoading ? (
+            <p className="text-gray-500">Loading brands...</p>
+          ) : brandsError ? (
+            <p className="text-red-500 text-sm">{brandsError}</p>
+          ) : (
+            <select
+              value={formData.carBrand}
+              onChange={(e) => setFormData({ ...formData, carBrand: e.target.value })}
+              className="w-full p-2 border rounded"
+              required
+            >
+              <option value="">Select a brand</option>
+              {brands.map((brand) => (
+                <option key={brand._id} value={brand._id}>
+                  {brand.brandName}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <div>
           <label className="block text-gray-700 text-sm font-medium mb-1">Model</label>
@@ -92,17 +109,10 @@ const AddVehicleForm = ({ onClose }) => {
       </div>
       {error && <div className="text-red-500 text-sm">{error}</div>}
       <div className="flex justify-end space-x-4 mt-4">
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 border rounded"
-        >
+        <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
           Cancel
         </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-black text-white rounded"
-        >
+        <button type="submit" className="px-4 py-2 bg-black text-white rounded">
           Add Vehicle
         </button>
       </div>

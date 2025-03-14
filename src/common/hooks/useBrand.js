@@ -1,15 +1,22 @@
 // src/app/hooks/useBrands.js
 import { useState, useEffect, useCallback } from "react";
-import { addBrand } from "@/app/services/brand";
+import { addBrand, getBrands } from "@/app/services/brand";
 
 export const useBrands = () => {
-  const [brands, setBrands] = useState([]); // Mảng rỗng vì không có getBrands
+  const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchBrands = useCallback(async () => {
-    // Không gọi API vì không có getBrands
-    setLoading(false);
+    setLoading(true);
+    try {
+      const brandList = await getBrands();
+      setBrands(brandList.data || []); // Assuming getBrands returns { message, data }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {

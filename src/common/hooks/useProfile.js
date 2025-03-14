@@ -6,7 +6,6 @@ export const useProfile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch profile data from server
   const fetchProfile = async () => {
     setLoading(true);
     try {
@@ -20,18 +19,18 @@ export const useProfile = () => {
     }
   };
 
-  // Handle profile update with form data (gọi API)
   const handleUpdateProfile = async (updatedProfile) => {
     setLoading(true);
     try {
       const formData = new FormData();
+      formData.append("name", updatedProfile.name || profile.name);
       Object.entries(updatedProfile).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
+        if (key !== "name" && value !== undefined && value !== null) {
           formData.append(key, value);
         }
       });
       await updateProfileService(formData);
-      await fetchProfile(); // Refetch updated profile
+      await fetchProfile();
       setError(null);
     } catch (err) {
       setError(err.message);
@@ -41,7 +40,6 @@ export const useProfile = () => {
     }
   };
 
-  // Handle password change
   const handleChangePassword = async (oldPassword, newPassword) => {
     setLoading(true);
     try {
@@ -56,16 +54,16 @@ export const useProfile = () => {
   };
 
   useEffect(() => {
-    fetchProfile(); // Fetch profile on mount
+    fetchProfile();
   }, []);
 
   return {
     profile,
-    setProfile,         // Cho phép cập nhật state cục bộ
+    setProfile,
     loading,
     error,
-    updateProfile: handleUpdateProfile, // Hàm gọi API update profile
+    updateProfile: handleUpdateProfile,
     changePassword: handleChangePassword,
-    refetchProfile: fetchProfile,       // Cho phép refetch profile sau update
+    refetchProfile: fetchProfile,
   };
 };

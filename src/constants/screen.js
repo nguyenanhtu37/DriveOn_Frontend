@@ -28,6 +28,7 @@ export const GarageManagementScreenPath = {
 };
 
 export const AdminScreenPath = {
+  AddCarBrand:"/adminDashboard/addCarBrand",
   AdminDashBoard: "/adminDashboard/",
   ViewRegisterGarage: "viewRegisterGarage",
   ViewRegisterGarageDetail: "viewRegisterGarage/:id",

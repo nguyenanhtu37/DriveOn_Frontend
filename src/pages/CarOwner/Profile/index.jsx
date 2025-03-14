@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { useProfile } from "../../../common/hooks/useProfile";
 import PersonalProfile from "../../../components/profile/PersonalProfile";
+import ChangePassword from "../../../components/profile/ChangePassword";
 import { Link } from "react-router-dom";
-import { Home, Car, LogOut } from 'lucide-react';
+import { Home, Car, LogOut } from "lucide-react";
+import { useAuth } from "../../../common/hooks/useAuth";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const { profile, setProfile, loading, error, updateProfile, refetchProfile, changePassword } = useProfile();
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const { profile, setProfile, loading, updateProfile, refetchProfile, changePassword } = useProfile();
+  const { handleLogout } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,31 +40,16 @@ const ProfilePage = () => {
     await changePassword(oldPassword, newPassword);
   };
 
-  if (loading && !profile.name)
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-primary text-lg flex items-center space-x-2">
-          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span>Loading profile...</span>
-        </div>
-      </div>
-    );
+  const handleCancelPassword = () => {
+    setIsChangingPassword(false);
+  };
 
-  if (error)
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-destructive text-lg bg-destructive/10 p-4 rounded-lg shadow-md">{error}</div>
-      </div>
-    );
-
-  const displayProfile = {
-    ...profile,
-    username: profile.email?.split("@")[0] || "username",
-    memberSince: profile.createdAt ? new Date(profile.createdAt).toLocaleDateString() : "Not set",
-    vehicles: profile.vehicles || 2
+  const handleLogoutClick = async () => {
+    try {
+      await handleLogout();
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
   return (
@@ -87,13 +76,13 @@ const ProfilePage = () => {
             <Car className="h-4 w-4 md:h-5 md:w-5 mr-1" />
             <span className="hidden md:inline">My Vehicle</span>
           </Link>
-          <Link
-            to="/logout"
+          <button
+            onClick={handleLogoutClick}
             className="text-white bg-destructive hover:bg-destructive/90 px-3 py-1.5 md:px-4 md:py-2 rounded-full font-medium transition-all duration-200 shadow-md flex items-center"
           >
             <LogOut className="h-4 w-4 md:mr-1" />
             <span className="hidden md:inline">Logout</span>
-          </Link>
+          </button>
         </div>
       </nav>
 
@@ -105,18 +94,40 @@ const ProfilePage = () => {
           </div>
           <div className="relative -mt-20 px-4 md:px-8 pb-8">
             <PersonalProfile
-              profile={displayProfile}
+              profile={profile}
               isEditing={isEditing}
               onInputChange={handleInputChange}
               onSubmit={handleSubmit}
-              onEdit={handleEditToggle}
               onCancel={handleCancel}
-              onChangePassword={handleChangePassword}
               loading={loading}
             />
-            {!isEditing && (
-              <div className="mt-8 text-center">
-                </div>
+            {/* Buttons when not editing */}
+            {!isEditing && !isChangingPassword && (
+              <div className="flex justify-end mt-6 space-x-4">
+                <button
+                  onClick={handleEditToggle}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-md"
+                >
+                  Edit Profile
+                </button>
+                <button
+                  onClick={() => setIsChangingPassword(true)}
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md"
+                >
+                  Change Password
+                </button>
+              </div>
+            )}
+
+            {/* Change Password Component */}
+            {isChangingPassword && (
+              <div className="mt-6">
+                <ChangePassword
+                  onChangePassword={handleChangePassword}
+                  onCancel={handleCancelPassword}
+                  loading={loading}
+                />
+              </div>
             )}
           </div>
         </div>

@@ -30,7 +30,7 @@ import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
 import CreateService from "@/pages/GarageManagement/Service/CreateService";
 import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
-
+import AddBrandPage from "@/pages/AdminDashboard/Brand/AddBrand"
 const router = createBrowserRouter(
   [
     {
@@ -59,6 +59,10 @@ const router = createBrowserRouter(
           element: <Dashboard />,
           children: [
             { index: true, element: <HomePage /> },
+            {
+              path: AdminScreenPath.AddCarBrand,
+              element: <AddBrandPage/>,
+            },
             {
               path: AdminScreenPath.ViewRegisterGarage,
               element: <ViewRegisterGarage />,
