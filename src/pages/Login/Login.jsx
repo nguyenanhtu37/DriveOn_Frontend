@@ -8,11 +8,16 @@ import { ArrowLeft } from "lucide-react"
 import { loginSchema } from "../../schema/loginSchema"
 import { useAuth } from "../../common/hooks/useAuth"
 
+import { GoogleLogin } from "@react-oauth/google";
+import LoginForm from "../../components/login/LoginForm";
+import FooterSection from "../../components/login/FooterSection";
+import backgroundImage from "../../assets/background.png";
+import ArrowLeftIcon from "../../assets/arrow-left.svg";
 
+import LoginWithGoogleButton from "../../components/login/LoginWithGoogleButton"
 import InputField from "../../components/ui/InputField"
 import RememberMeSection from "../../components/login/RememberMeSection"
 import SubmitButton from "../../components/login/SubmitButton"
-import FooterSection from "../../components/login/FooterSection"
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -112,4 +117,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
