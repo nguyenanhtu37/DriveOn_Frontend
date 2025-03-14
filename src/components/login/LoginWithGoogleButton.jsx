@@ -29,12 +29,14 @@ const LoginWithGoogleButton = () => {
         </svg>
         Login with Google
       </button>
-      <div className="hidden">
-        <GoogleLogin onSuccess={handleSuccess}
+      <div>
+        <GoogleLogin
+          onSuccess={handleSuccess}
           onError={handleError}
           ux_mode="popup"
           useOneTap
-          flow="auth-code" />
+          flow="auth-code"
+        />
       </div>
     </div>
   )
