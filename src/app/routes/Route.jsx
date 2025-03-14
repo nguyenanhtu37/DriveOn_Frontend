@@ -28,6 +28,8 @@ import GarageRegistrationPage from "@/pages/GarageRegistrationPage/GarageRegistr
 import Service from "@/pages/GarageManagement/Service/Service";
 import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
 import CreateService from "@/pages/GarageManagement/Service/CreateService";
+import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
+import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
 
 const router = createBrowserRouter(
   [
@@ -42,6 +44,8 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage/> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
+    { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage/>},
+    { path: AbsoluteScreenPath.AddVehiclePage, element: <AddVehiclePage/>},
     {
       path: AbsoluteScreenPath.GarageRegistrationPage,
       element: <GarageRegistrationPage />,

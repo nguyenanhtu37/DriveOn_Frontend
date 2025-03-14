@@ -1,10 +1,12 @@
-import InputField from "../ui/InputField";
-import SubmitButton from "../sign-up/SubmitButton";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { carOwnerSchema } from "../../schema/carOwnerSchema";
-import { useAuth } from "@/common/hooks/useAuth";
-import { useState } from "react";
+"use client"
+
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { carOwnerSchema } from "../../schema/carOwnerSchema"
+import { useAuth } from "../../common/hooks/useAuth"
+import InputField from "../ui/InputField"
+import SubmitButton from "./SubmitButton"
 
 const SignUpForm = () => {
   const {
@@ -21,13 +23,13 @@ const SignUpForm = () => {
       confirmPassword: "",
     },
     mode: "onChange",
-  });
+  })
 
-  const { handleSignup, error: authError, success } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const { handleSignup, error: authError, success } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (data) => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const submitData = {
         name: data.name,
@@ -35,26 +37,39 @@ const SignUpForm = () => {
         phone: data.phone,
         password: data.password,
         roles: ["carowner"],
-      };
-      await handleSignup(submitData);
+      }
+      await handleSignup(submitData)
     } catch (err) {
-      console.error("Submission error:", err);
+      console.error("Submission error:", err)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
-      {authError && <div className="mb-4 text-red-600 text-sm">{authError}</div>}
-      {success && <div className="mb-4 text-green-600 text-sm">{success}</div>}
-      <InputField
-        label="Full Name"
-        type="text"
-        placeholder="Enter full name"
-        register={register("name")}
-        error={errors.name}
-      />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {authError && <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm">{authError}</div>}
+
+      {success && <div className="p-3 rounded-md bg-green-100 text-green-700 text-sm">{success}</div>}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label="Full Name"
+          type="text"
+          placeholder="Enter full name"
+          register={register("name")}
+          error={errors.name}
+        />
+
+        <InputField
+          label="Phone Number"
+          type="tel"
+          placeholder="Enter phone number"
+          register={register("phone")}
+          error={errors.phone}
+        />
+      </div>
+
       <InputField
         label="Email"
         type="email"
@@ -62,30 +77,31 @@ const SignUpForm = () => {
         register={register("email")}
         error={errors.email}
       />
-      <InputField
-        label="Phone Number"
-        type="tel"
-        placeholder="Enter phone number"
-        register={register("phone")}
-        error={errors.phone}
-      />
-      <InputField
-        label="Password"
-        type="password"
-        placeholder="Enter password"
-        register={register("password")}
-        error={errors.password}
-      />
-      <InputField
-        label="Confirm Password"
-        type="password"
-        placeholder="Confirm your password"
-        register={register("confirmPassword")}
-        error={errors.confirmPassword}
-      />
-      <SubmitButton isLoading={isLoading} disabled={!isValid} />
-    </form>
-  );
-};
 
-export default SignUpForm;
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label="Password"
+          type="password"
+          placeholder="Enter password"
+          register={register("password")}
+          error={errors.password}
+        />
+
+        <InputField
+          label="Confirm Password"
+          type="password"
+          placeholder="Confirm your password"
+          register={register("confirmPassword")}
+          error={errors.confirmPassword}
+        />
+      </div>
+
+      <div className="mt-2">
+        <SubmitButton text="Sign Up" isLoading={isLoading} disabled={!isValid} />
+      </div>
+    </form>
+  )
+}
+
+export default SignUpForm
+

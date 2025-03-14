@@ -1,17 +1,17 @@
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"
 
 const InputField = ({ label, type, placeholder, register, error }) => (
-  <div className="mb-4">
-    <label className="block text-sm font-medium text-gray-700">{label}</label>
+  <div className="space-y-2">
+    <label className="block text-sm font-medium text-heading">{label}</label>
     <input
       type={type}
-      className={`block w-full px-4 py-2 mt-1 text-gray-700 bg-gray-100 border rounded-lg focus:ring-2 focus:ring-purple-500 ${error ? 'border-red-500' : 'border-gray-300'}`}
+      className={`block w-full px-4 py-3 text-heading bg-gray2/30 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 ${error ? "border-destructive" : "border-gray"}`}
       placeholder={placeholder}
       {...register}
     />
-    {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
+    {error && <p className="mt-1 text-sm text-destructive">{error.message}</p>}
   </div>
-);
+)
 
 InputField.propTypes = {
   label: PropTypes.string.isRequired,
@@ -19,6 +19,7 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   register: PropTypes.object.isRequired,
   error: PropTypes.object,
-};
+}
 
-export default InputField;
+export default InputField
+

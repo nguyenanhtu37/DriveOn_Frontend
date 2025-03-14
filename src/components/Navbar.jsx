@@ -13,9 +13,13 @@ function Navbar() {
   const [logoutError, setLogoutError] = useState(null);
   const navigate = useNavigate();
 
-  console.log("Navbar - isLoggedIn:", isLoggedIn); // Debug
-  console.log("Navbar - Token exists:", !!localStorage.getItem("token")); // Debug
+  // Debug trạng thái
+  useEffect(() => {
+    console.log("Navbar - isLoggedIn:", isLoggedIn);
+    console.log("Navbar - Token exists:", !!localStorage.getItem("token"));
+  }, [isLoggedIn]);
 
+  // Hiển thị lỗi đăng xuất
   useEffect(() => {
     if (error) {
       setLogoutError(error);
@@ -25,12 +29,7 @@ function Navbar() {
   }, [error]);
 
   const onLogout = async () => {
-    try {
-      await handleLogout();
-      navigate(AbsoluteScreenPath.Entry);
-    } catch {
-      console.error("Logout failed");
-    }
+    await handleLogout(); // handleLogout đã xử lý navigate
   };
 
   const handleProtectedNavigation = (to) => {

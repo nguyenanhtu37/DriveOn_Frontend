@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, logout } from "../../app/services/login";
 import { signup } from "../../app/services/signup";
 import { requestPasswordReset, resetPassword } from "../../app/services/reset-password";
-
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,19 +12,29 @@ export const useAuth = () => {
   const [userRoles, setUserRoles] = useState([]);
   const navigate = useNavigate();
 
+  // Đồng bộ trạng thái với localStorage khi khởi động
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+    // Nếu cần lấy userRoles từ server, thêm logic ở đây
+  }, []);
+
   const handleLogin = async (credentials) => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await login(credentials);
-      console.log("Login response:", response); // Debug
+      console.log("Login response:", response);
       localStorage.setItem("token", response.token);
+      // Giả định response chứa roles, nếu không thì cần API riêng để lấy roles
+      const roles = response.roles || ["carowner"];
+      setUserRoles(roles);
       setIsLoggedIn(true);
-      console.log("isLoggedIn set to true"); // Debug
       navigate("/");
     } catch (err) {
-      const errorMessage = err.message || "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
-      console.error("Login error:", errorMessage); // Debug
+      const errorMessage =
+        err.message || "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
+      console.error("Login error:", errorMessage);
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -60,18 +69,20 @@ export const useAuth = () => {
     setError(null);
     try {
       const token = localStorage.getItem("token");
-      await logout(token);
-      setIsLoggedIn(false);
-      setUserRoles([]);
-      localStorage.removeItem("token");
-      navigate("/login");
+      if (token) {
+        await logout(token); // Gọi API logout nếu có token
+      }
     } catch (err) {
       const errorMessage = err.message || "Đăng xuất thất bại.";
       console.error("Logout error:", errorMessage);
       setError(errorMessage);
-      throw new Error(errorMessage);
     } finally {
+      // Luôn xóa token và cập nhật trạng thái, bất kể API có thành công hay không
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      setUserRoles([]);
       setIsLoading(false);
+      navigate("/login");
     }
   };
 

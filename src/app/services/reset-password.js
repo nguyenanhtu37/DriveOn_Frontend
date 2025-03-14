@@ -11,9 +11,14 @@ export const requestPasswordReset = async (email) => {
 
 export const resetPassword = async (token, newPassword) => {
   try {
-    const response = await axios.post(`/auth/reset-password?token=${token}`, { newPassword });
+    const response = await axios.post('/auth/reset-password', {
+      token,
+      password: newPassword,
+    });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Đặt lại mật khẩu thất bại.");
+    throw new Error(
+      error.response?.data?.error || "Đặt lại mật khẩu thất bại."
+    );
   }
 };
