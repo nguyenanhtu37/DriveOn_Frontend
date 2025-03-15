@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "../../components/Header";
 import NavbarMobile from "@/components/NavbarMobile";
+import { Footer } from "react-daisyui";
 
 function MainLayout() {
   return (

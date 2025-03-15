@@ -163,3 +163,15 @@ export const useDisableGarage = () => {
 
   return mutation;
 };
+
+export const useGetGarageDetail = (id) => {
+  const query = useQuery({
+    queryKey: ["garageDetail", id],
+    queryFn: () => garageService.getGarageDetail(id),
+  });
+
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

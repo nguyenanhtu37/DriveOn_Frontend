@@ -1,32 +1,47 @@
 import { SlidersHorizontal } from "lucide-react";
 import ItemIcon from "@/components/ItemIcon";
+import { useGetService } from "@/app/stores/entity/service";
+import DialogFilter from "../DialogFilter/DialogFilter";
 
 export default function Filter() {
+  const services = useGetService();
+
   return (
-    <div className=" flex w-full px-4 md:px-10 h-[78px]  items-center mt-2">
-      <div className=" w-full md:w-[80%] flex items-center gap-6">
-        <div className="flex-1 flex items-center gap-8 overflow-x-auto scrollbar-hide">
-          {Array.from({ length: 30 }).map((_, index) => (
+    <div className="flex w-full px-4 md:px-10 h-[86px] items-center mt-2 gap-x-5">
+      <div className="relative flex-1 overflow-x-auto scrollbar-hide">
+        <div className="absolute top-0 right-0 h-full w-10 bg-gradient-to-l from-white via-white/50 to-transparent pointer-events-none"></div>
+
+        <div className="flex items-center gap-6 overflow-x-auto scrollbar-hide">
+          {services.data.map((service) => (
             <ItemIcon
-              key={index}
-              imgage="/public/serviceIcons/car-wash.png"
-              title="lorum ipsum"
+              key={service._id}
+              image={service.image}
+              title={service.name}
+            />
+          ))}
+          {services.data.map((service) => (
+            <ItemIcon
+              key={service._id}
+              image={service.image}
+              title={service.name}
             />
           ))}
         </div>
-        <div className="hidden md:flex items-center gap-2 p-4 border border-[#DDDDDD] rounded-full hover:border-[#22222] hover:bg-zinc-100 cursor-pointer transition-all ease-in-out group">
-          <SlidersHorizontal size={14} color="#222222" />
-          <span className="text-sm text-[#22222] font-bold group-hover:text-black">
-            Filter
-          </span>
-        </div>
       </div>
-      <div className="hidden md:flex w-[20%] items-center justify-end">
-        <div className=" w-full ml-4 flex items-center gap-2 p-4 border border-[#DDDDDD] rounded-full hover:border-[#22222] hover:bg-zinc-100 cursor-pointer transition-all ease-in-out group">
-          <span className="text-sm text-nowrap text-[#22222] font-bold group-hover:text-black">
-            View NearBy
+
+      {/* Nút Filter */}
+      <div className="hidden md:flex items-center gap-x-2">
+        <DialogFilter />
+      </div>
+      <div className="hidden md:flex items-center gap-x-2">
+        <div className="flex items-center gap-2 px-5 py-3 rounded-md border border-[#dddddd] bg-white hover:bg-[#1c1c1c]/10 hover:border-[#1c1c1c] transition-colors ease-in-out cursor-pointer duration-150  group">
+          <SlidersHorizontal
+            size={18}
+            className="text-gray-800 group-hover:text-black transition-all"
+          />
+          <span className="text-sm font-medium text-gray-800 group-hover:text-black">
+            NearBy
           </span>
-          <SlidersHorizontal size={14} />
         </div>
       </div>
     </div>

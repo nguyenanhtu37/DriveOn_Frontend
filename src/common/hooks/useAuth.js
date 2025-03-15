@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, logout } from "../../app/services/login";
 import { signup } from "../../app/services/signup";
-import { requestPasswordReset, resetPassword } from "../../app/services/reset-password";
+import {
+  requestPasswordReset,
+  resetPassword,
+} from "../../app/services/reset-password";
+import { setUser, userLogout } from "@/app/stores/view/user";
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +28,7 @@ export const useAuth = () => {
     setError(null);
     try {
       const response = await login(credentials);
+      setUser(response.user); // anh thêm dòng này tạo global state user
       console.log("Login response:", response);
       localStorage.setItem("token", response.token);
       // Giả định response chứa roles, nếu không thì cần API riêng để lấy roles
@@ -71,6 +76,7 @@ export const useAuth = () => {
       const token = localStorage.getItem("token");
       if (token) {
         await logout(token); // Gọi API logout nếu có token
+        userLogout();
       }
     } catch (err) {
       const errorMessage = err.message || "Đăng xuất thất bại.";
