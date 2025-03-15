@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from 'lucide-react';
 import ForgotPasswordForm from "../../components/forgot-password/ForgotPasswordForm";
-import backgroundImage from "../../assets/background.png";
-import ArrowLeftIcon from "../../assets/arrow-left.svg";
+
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
 
@@ -10,26 +10,29 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div
-      className="relative flex items-center justify-center min-h-screen"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="relative min-h-screen flex items-center justify-center p-4 md:p-8 font-archivo">
+      {/* Background with gradient overlay */}
+      <div className="absolute inset-0 z-0 bg-cover bg-center" 
+           style={{ backgroundImage: "url('/src/assets/background.png')" }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-secondary/80 backdrop-blur-sm" />
+      </div>
+
+      {/* Back button */}
       <button
         onClick={handleBackToLogin}
-        className="absolute top-4 left-4 text-gray-600 hover:text-gray-800 bg-white p-2 rounded-full shadow"
+        className="absolute top-4 left-4 z-10 bg-white hover:bg-gray2 text-heading p-3 rounded-full shadow-lg transition-all duration-300"
       >
-        <img src={ArrowLeftIcon} alt="Back to home" className="w-6 h-6" />
+        <ArrowLeft className="h-5 w-5" />
+        <span className="sr-only">Back to login</span>
       </button>
 
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-gray-800">Forgot Password</h1>
-        <p className="text-sm text-gray-600">
-          Enter your email to reset your password
-        </p>
+      {/* Forgot Password card */}
+      <div className="w-full max-w-md z-10 bg-white rounded-lg shadow-2xl border border-gray p-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-heading">Forgot Password</h1>
+          <p className="text-sm text-body">Enter your email to reset your password</p>
+        </div>
+
         <ForgotPasswordForm />
       </div>
     </div>
