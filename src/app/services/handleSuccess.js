@@ -1,9 +1,9 @@
-import axios from 'axios';
+import { axios } from "@/lib/axios";
 
 const handleSuccess = async (credentialResponse) => {
   try {
     // Send the Google OAuth token to the backend for authentication
-    const result = await axios.post('http://localhost:5000/api/auth/google', {
+    const result = await axios.post("auth/google", {
       token: credentialResponse.credential,
     });
 
@@ -12,14 +12,14 @@ const handleSuccess = async (credentialResponse) => {
     console.log("result: ", result);
 
     // Check if the login was successful
-    if (result.status === 200 && result.statusText === "OK") {
+    if (result.status === 200) {
       alert("Login successful!");
       // Store the token in localStorage (if provided by backend)
       if (result.data.token) {
         localStorage.setItem("token", result.data.token);
       }
       // Redirect to homepage after successful login
-      window.location.href = '/';
+      window.location.href = "/";
     } else {
       alert(result.data.message || "Login failed");
     }
