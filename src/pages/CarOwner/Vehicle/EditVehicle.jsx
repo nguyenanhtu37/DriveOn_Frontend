@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";
 import { useVehicles } from "@/common/hooks/useVehicle";
 import { useBrands } from "@/common/hooks/useBrand";
+import { vehicleSchema } from "@/schema/vehicleSchema"; // Import the Zod schema
 
 const EditVehicleForm = ({ vehicleId, onClose }) => {
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate();
   const { fetchVehicleById, updateVehicle, fetchVehicles, error: vehicleError } = useVehicles();
   const { brands, loading: brandsLoading, error: brandsError } = useBrands();
   const [formData, setFormData] = useState({
@@ -14,9 +15,9 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
     carColor: "",
     carPlate: "",
   });
-  const [error, setError] = useState(null); // Error state for form submission
-  const [loading, setLoading] = useState(true); // Loading state for fetching vehicle data
-  const [submitting, setSubmitting] = useState(false); // Submitting state for form submission
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   // Fetch the vehicle details on mount
   useEffect(() => {
@@ -44,26 +45,19 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
     loadVehicle();
   }, [vehicleId, fetchVehicleById]);
 
-  // Handle form submission
+  // Handle form submission with Zod validation
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Reset error on each submit attempt
+    setError(null);
 
-    // Basic form validation
-    if (!formData.carBrand) {
-      setError("Please select a brand.");
-      return;
-    }
-    if (!formData.carName.trim()) {
-      setError("Please enter a model name.");
-      return;
-    }
-    if (!formData.carYear || isNaN(formData.carYear) || formData.carYear < 1900 || formData.carYear > new Date().getFullYear() + 1) {
-      setError("Please enter a valid year (1900 - next year).");
+    try {
+      // Validate form data using the Zod schema
+      vehicleSchema.parse(formData); // Will throw an error if validation fails
+    } catch (err) {
+      setError(err.errors[0].message); // Set the error message from Zod validation
       return;
     }
 
-    // Set submitting state to true
     setSubmitting(true);
     try {
       // Update the vehicle with the current form data
@@ -71,11 +65,11 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
       // Refresh the vehicle list after update
       await fetchVehicles();
       // Navigate to the vehicle list page after successful update
-      navigate("/vehicle");  // Change this path to your vehicle list route
+      navigate("/vehicle");
     } catch (err) {
       setError(err.message || "Failed to update vehicle.");
     } finally {
-      setSubmitting(false); // Reset submitting state after completion
+      setSubmitting(false);
     }
   };
 

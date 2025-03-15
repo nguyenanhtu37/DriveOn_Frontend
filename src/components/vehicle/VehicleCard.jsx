@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useVehicles } from '@/common/hooks/useVehicle';
-import DeleteConfirmationModal from '@/components/vehicle/DeleteConfirm'; 
+import {DeleteConfirmationModal} from '@/components/vehicle/DeleteConfirm'; 
 
 const VehicleCard = ({ vehicle, onEdit }) => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const VehicleCard = ({ vehicle, onEdit }) => {
 
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false); // Now useState is available
 
-  const handleView = () => navigate(`/vehicle/details/${_id}`); // Update the navigate path to include vehicle ID
+  const handleView = () => navigate(`/car-owner/vehicles/${_id}`);
   const handleEdit = () => onEdit(_id);
   
   const handleDelete = async () => {
@@ -25,6 +25,7 @@ const VehicleCard = ({ vehicle, onEdit }) => {
       await fetchVehicles();
       alert('Vehicle deleted successfully');
       setIsConfirmDeleteOpen(false);
+      navigate(0); // This refreshes the current page
     } catch (err) {
       alert('Error deleting vehicle: ' + err.message);
       setIsConfirmDeleteOpen(false);
