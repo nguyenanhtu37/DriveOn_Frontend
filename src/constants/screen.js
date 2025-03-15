@@ -3,7 +3,7 @@ export const AbsoluteScreenPath = {
   Entry: "/", // Entry screen
   Login: "/login", // Login screen
   ForgotPassword: "/forgot-password",
-  NewPassword: "/reset-password?token=${token}",
+  NewPassword: "/reset-password",
   SignUp: "/signup",
   AdminDashBoard: "/adminDashboard/", // This might be redundant with AdminScreenPath
   viewRegisterGarage: "viewRegisterGarage", // Should be in AdminScreenPath

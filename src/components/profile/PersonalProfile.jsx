@@ -59,7 +59,7 @@ const PersonalProfile = ({
             alt="Profile Avatar"
             className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
             onError={(e) => {
-              e.target.src = "https://via.placeholder.com/120?text=Upload+Photo";
+              e.target.src = "";
             }}
           />
           {isEditing && (

@@ -43,7 +43,6 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage/> },
-    { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage/>},
     { path: AbsoluteScreenPath.AddVehiclePage, element: <AddVehiclePage/>},
     {

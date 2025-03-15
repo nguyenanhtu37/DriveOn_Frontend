@@ -111,7 +111,7 @@ const ChangePassword = ({ onChangePassword, onCancel, loading }) => {
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-200 shadow-md"
+          className="flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-500 transition-all duration-200 shadow-md"
         >
           Cancel
         </button>

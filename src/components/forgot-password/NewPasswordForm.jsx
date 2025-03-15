@@ -1,17 +1,14 @@
 "use client"
 
-import { useAuth } from "../../common/hooks/useAuth"
-import InputField from "../ui/InputField"
-import SubmitButton from "./SubmitButton"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { newPasswordSchema } from "../../schema/forgotPasswordSchema"
-import { useSearchParams } from "react-router-dom"
+import { useAuth } from "../../common/hooks/useAuth";
+import InputField from "../ui/InputField";
+import SubmitButton from "./SubmitButton";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { newPasswordSchema } from "../../schema/forgotPasswordSchema";
 
-const NewPasswordForm = () => {
-  const { handleResetPassword, isLoading, error, success } = useAuth()
-  const [searchParams] = useSearchParams()
-  const token = searchParams.get("token")
+const NewPasswordForm = ({ token }) => {
+  const { handleResetPassword, isLoading, error, success } = useAuth();
 
   const {
     register,
@@ -19,19 +16,19 @@ const NewPasswordForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(newPasswordSchema),
-  })
+  });
 
   const onSubmit = async (data) => {
     if (!token) {
-      console.error("No reset token provided")
-      return
+      console.error("No reset token provided");
+      return;
     }
     try {
-      await handleResetPassword(token, data.password)
+      await handleResetPassword(token, data.password);
     } catch (err) {
-      console.error("Password reset failed:", err)
+      console.error("Password reset failed:", err);
     }
-  }
+  };
 
   return (
     <div className="w-full">
@@ -69,8 +66,7 @@ const NewPasswordForm = () => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default NewPasswordForm
-
+export default NewPasswordForm;

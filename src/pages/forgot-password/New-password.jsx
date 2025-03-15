@@ -1,9 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from 'lucide-react';
 import NewPasswordForm from "../../components/forgot-password/NewPasswordForm";
 
 const NewPasswordPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
   const handleBackToLogin = () => {
     navigate("/login");
@@ -12,8 +14,7 @@ const NewPasswordPage = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 md:p-8 font-archivo">
       {/* Background with gradient overlay */}
-      <div className="absolute inset-0 z-0 bg-cover bg-center" 
-           style={{ backgroundImage: "url('/src/assets/background.png')" }}>
+      <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: "url('/src/assets/background.png')" }}>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-secondary/80 backdrop-blur-sm" />
       </div>
 
@@ -33,7 +34,8 @@ const NewPasswordPage = () => {
           <p className="text-sm text-body">Set a strong and secure password</p>
         </div>
 
-        <NewPasswordForm />
+        {/* Pass the token to the NewPasswordForm */}
+        <NewPasswordForm token={token} />
       </div>
     </div>
   );
