@@ -6,6 +6,7 @@ import { useScrollPosition } from "react-haiku";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
+import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 
 function Navbar() {
   const [scroll] = useScrollPosition();
@@ -74,7 +75,7 @@ function Navbar() {
           >
             <div className="flex items-center justify-center p-2 rounded-full hover:bg-[#f4f4f4]">
               <NavLink
-                to="/garage"
+                to="/"
                 className="text-[#222222] text-md font-medium cursor-pointer"
                 onClick={(e) => {
                   if (!isLoggedIn) {
@@ -129,12 +130,6 @@ function Navbar() {
               <Link
                 to={"/garageRegistration"}
                 className="text-[#222222] text-sm font-bold"
-                onClick={(e) => {
-                  if (!isLoggedIn) {
-                    e.preventDefault();
-                    handleProtectedNavigation("/garageRegistration");
-                  }
-                }}
               >
                 Garage Register
               </Link>
@@ -191,12 +186,7 @@ function Navbar() {
                       {isLoading ? "Logging out..." : "Logout"}
                     </button>
                     <div className="text-sm w-full h-[1px] bg-[#DDDDDD]" />
-                    <Link
-                      to="/garage"
-                      className="text-sm w-full px-3 py-2 text-[#222222] ease-in-out hover:bg-[#f7f6f6] font-roboto cursor-pointer"
-                    >
-                      Garage
-                    </Link>
+                    <DialogMyGarage />
                   </div>
                 </PopoverContent>
               </Popover>

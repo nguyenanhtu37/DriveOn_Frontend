@@ -29,13 +29,25 @@ import Service from "@/pages/GarageManagement/Service/Service";
 import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
 import CreateService from "@/pages/GarageManagement/Service/CreateService";
 import PageNotFound from "@/pages/404/PageNotFound";
+import GarageDetailPage from "@/pages/GarageDetailPage/GarageDetailPage";
 
 const router = createBrowserRouter(
   [
     {
       path: AbsoluteScreenPath.Entry,
       element: <MainLayout />,
-      children: [{ index: true, element: <HomePage /> }],
+      children: [
+        { index: true, element: <HomePage /> },
+        {
+          element: <ProtectedRoute role={["carowner"]} />,
+          children: [
+            {
+              path: AbsoluteScreenPath.GarageDetail,
+              element: <GarageDetailPage />,
+            },
+          ],
+        },
+      ],
     },
     { path: AbsoluteScreenPath.Login, element: <Login /> },
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
@@ -45,8 +57,18 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.CarOwnerPage, element: <CarOwnerPage /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     {
-      path: AbsoluteScreenPath.GarageRegistrationPage,
-      element: <GarageRegistrationPage />,
+      element: (
+        <ProtectedRoute
+          role={["carowner", "manager"]}
+          directTo={AbsoluteScreenPath.Login}
+        />
+      ),
+      children: [
+        {
+          path: AbsoluteScreenPath.GarageRegistrationPage,
+          element: <GarageRegistrationPage />,
+        },
+      ],
     },
 
     //Admin route

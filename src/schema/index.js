@@ -39,3 +39,28 @@ export const serviceDetailSchema = z.object({
   duration: z.string().min(1, "Duration must be at least 1"),
   warranty: z.string().min(1, "Warranty must be at least 1"),
 });
+
+export const appointmentSchema = z.object({
+  service: z
+    .array(
+      z.object({
+        value: z.string().nonempty("Service ID is required"),
+        label: z.string().nonempty("Service name is required"),
+      })
+    )
+    .nonempty("At least one service is required"),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+  start: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Start time must be in HH:mm format"),
+  end: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "End time must be in HH:mm format"),
+  note: z.string().optional(),
+  vehicle: z.object({
+    value: z.string().nonempty("Vehicle ID is required"),
+    label: z.string().nonempty("Vehicle name is required"),
+  }),
+});

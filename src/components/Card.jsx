@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -16,8 +17,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useNavigate } from "react-router-dom";
 
 export function GarageCard({
+  id,
   garageName,
   rating,
   address,
@@ -27,16 +30,23 @@ export function GarageCard({
   isFavourited,
 }) {
   const [isHovered, setIsHovered] = React.useState(false);
+  const navigate = useNavigate();
 
   return (
     <Card
-      className="w-full  mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-lg "
+      className="w-full h-full  mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-lg border-none shadow-none rounded-xl "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => navigate(`/garageDetail/${id}`)}
     >
       <CardContent className="p-0">
-        <div className="relative">
-          <Swiper className="aspect-[1.1] md:aspect-[1.5]">
+        <div className="relative rounded-b-xl overflow-hidden">
+          <Swiper
+            className="aspect-[1.1] md:aspect-[1.5]"
+            modules={[Autoplay]}
+            autoplay={{ delay: 2000 }}
+            loop={true}
+          >
             {imgs?.map((img, index) => (
               <SwiperSlide key={index}>
                 <img
@@ -63,7 +73,7 @@ export function GarageCard({
             </span>
           </Button>
         </div>
-        <div className="p-4">
+        <div className="pt-4 px-2 pb-2">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-lg font-semibold text-primary">{garageName}</h3>
             <Badge variant="secondary" className="flex items-center gap-1">

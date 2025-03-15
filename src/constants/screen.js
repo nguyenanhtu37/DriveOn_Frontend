@@ -9,6 +9,7 @@ export const AbsoluteScreenPath = {
   CarOwnerPage: "/car-owner",
   GarageRegistrationPage: "/garageRegistration",
   PageNotFound: "/notFound",
+  GarageDetail: "/garageDetail/:garageId",
 };
 
 export const GarageManagementScreenPath = {
