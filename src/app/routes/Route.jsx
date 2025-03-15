@@ -28,6 +28,9 @@ import GarageRegistrationPage from "@/pages/GarageRegistrationPage/GarageRegistr
 import Service from "@/pages/GarageManagement/Service/Service";
 import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
 import CreateService from "@/pages/GarageManagement/Service/CreateService";
+import PageNotFound from "@/pages/404/PageNotFound";
+import GarageDetailPage from "@/pages/GarageDetailPage/GarageDetailPage";
+
 import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
 import AddBrandPage from "@/pages/AdminDashboard/Brand/AddBrand"
@@ -37,7 +40,18 @@ const router = createBrowserRouter(
     {
       path: AbsoluteScreenPath.Entry,
       element: <MainLayout />,
-      children: [{ index: true, element: <HomePage /> }],
+      children: [
+        { index: true, element: <HomePage /> },
+        {
+          element: <ProtectedRoute role={["carowner"]} />,
+          children: [
+            {
+              path: AbsoluteScreenPath.GarageDetail,
+              element: <GarageDetailPage />,
+            },
+          ],
+        },
+      ],
     },
     { path: AbsoluteScreenPath.Login, element: <Login /> },
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
@@ -51,13 +65,24 @@ const router = createBrowserRouter(
     },
     { path: AbsoluteScreenPath.AddVehiclePage, element: <AddVehiclePage/>},
     {
-      path: AbsoluteScreenPath.GarageRegistrationPage,
-      element: <GarageRegistrationPage />,
+      element: (
+        <ProtectedRoute
+          role={["carowner", "manager"]}
+          directTo={AbsoluteScreenPath.Login}
+        />
+      ),
+      children: [
+        {
+          path: AbsoluteScreenPath.GarageRegistrationPage,
+          element: <GarageRegistrationPage />,
+        },
+      ],
     },
+
     //Admin route
     {
       path: AdminScreenPath.AdminDashBoard,
-      element: <ProtectedRoute />,
+      element: <ProtectedRoute role={["admin"]} />,
       children: [
         {
           element: <Dashboard />,
@@ -89,10 +114,9 @@ const router = createBrowserRouter(
     },
 
     //Garage Management route
-
     {
       path: GarageManagementScreenPath.GarageManagement,
-      element: <ProtectedRoute />,
+      element: <ProtectedRoute role={["manager", "staff"]} />,
       children: [
         {
           element: <GarageManagement />,
@@ -138,6 +162,11 @@ const router = createBrowserRouter(
           ],
         },
       ],
+    },
+
+    {
+      path: AbsoluteScreenPath.PageNotFound,
+      element: <PageNotFound />,
     },
   ],
   {

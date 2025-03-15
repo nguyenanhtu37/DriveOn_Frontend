@@ -8,9 +8,11 @@ export const AbsoluteScreenPath = {
   AdminDashBoard: "/adminDashboard/", // This might be redundant with AdminScreenPath
   viewRegisterGarage: "viewRegisterGarage", // Should be in AdminScreenPath
   GarageRegistrationPage: "/garageRegistration",
-  ProfilePage: "/profile", 
+  PageNotFound: "/notFound",
+  GarageDetail: "/garageDetail/:garageId",
+  ProfilePage: "/profile",
   VehicleList: "/vehicle",
-  VehicleDetail: "/vehicle/details/:id", 
+  VehicleDetail: "/vehicle/details/:id",
 };
 
 export const GarageManagementScreenPath = {

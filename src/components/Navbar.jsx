@@ -5,6 +5,7 @@ import { useScrollPosition } from "react-haiku";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
+import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 import { AbsoluteScreenPath } from "../constants/screen";
 
 function Navbar() {
@@ -66,7 +67,7 @@ function Navbar() {
           >
             <div className="flex items-center justify-center p-2 rounded-full hover:bg-[#f4f4f4]">
               <NavLink
-                to="/garage"
+                to="/"
                 className="text-[#222222] text-md font-medium cursor-pointer"
                 onClick={(e) => {
                   if (!isLoggedIn) {
@@ -117,22 +118,14 @@ function Navbar() {
         {/* Right */}
         <div className="hidden w-1/2 lg:w-1/3 md:flex justify-end items-center z-30">
           <div className="flex items-center gap-2">
-            {isLoggedIn && userRoles.includes("carowner") && (
-              <div className="hidden xl:flex py-[9px] px-3 rounded-full bg-white items-center gap-2 cursor-pointer hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100">
-                <Link
-                  to={AbsoluteScreenPath.GarageRegistrationPage}
-                  className="text-[#222222] text-sm font-bold"
-                  onClick={(e) => {
-                    if (!isLoggedIn) {
-                      e.preventDefault();
-                      handleProtectedNavigation(AbsoluteScreenPath.GarageRegistrationPage);
-                    }
-                  }}
-                >
-                  Garage Register
-                </Link>
-              </div>
-            )}
+            <div className="hidden xl:flex py-[9px] px-3 rounded-full bg-white items-center gap-2 cursor-pointer hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100">
+              <Link
+                to={"/garageRegistration"}
+                className="text-[#222222] text-sm font-bold"
+              >
+                Garage Register
+              </Link>
+            </div>
             <div className="flex items-center p-3 rounded-full bg-white cursor-pointer hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100">
               <Globe size={16} />
             </div>
@@ -180,12 +173,7 @@ function Navbar() {
                       {isLoading ? "Đang đăng xuất..." : "Logout"}
                     </button>
                     <div className="text-sm w-full h-[1px] bg-[#DDDDDD]" />
-                    <Link
-                      to="/garage"
-                      className="text-sm w-full px-3 py-2 text-[#222222] ease-in-out hover:bg-[#f7f6f6] font-roboto cursor-pointer"
-                    >
-                      Garage
-                    </Link>
+                    <DialogMyGarage />
                   </div>
                 </PopoverContent>
               </Popover>
@@ -195,7 +183,7 @@ function Navbar() {
       </div>
 
       {/* Bottom Search Bar */}
-      <div
+      {/* <div
         className={`hidden md:flex justify-center items-center w-full transition-all ease-in-out duration-300 overflow-hidden ${
           scroll.y === 0 ? "h-[88px]" : "h-0"
         }`}
@@ -218,7 +206,7 @@ function Navbar() {
             <span className="text-sm font-archivo">Search Location</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {logoutError && (
         <div className="absolute top-20 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md z-50">

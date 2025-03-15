@@ -2,7 +2,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 /* Variables */
 @layer base {
   :root {
@@ -87,6 +86,11 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 @layer base {
   * {
     @apply border-border;

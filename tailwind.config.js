@@ -2,7 +2,13 @@
 
 export default {
   darkMode: ["class"],
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "node_modules/daisyui/dist/**/*.js",
+    "node_modules/react-daisyui/dist/**/*.js",
+    "./node_modules/react-tailwindcss-select/dist/index.esm.js",
+  ],
   theme: {
     extend: {
       colors: {
@@ -83,6 +89,7 @@ export default {
             height: "var(--radix-accordion-content-height)",
           },
         },
+
         "accordion-up": {
           from: {
             height: "var(--radix-accordion-content-height)",
@@ -91,12 +98,23 @@ export default {
             height: "0",
           },
         },
+        marquee: {
+          from: { transform: "translateX(0%)" },
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        marquee: "marquee 4s linear infinite",
+        marqueeOnce: "marquee 4s linear forwards",
+        marqueeAlternate: "marquee 4s linear infinite alternate",
       },
     },
   },
-  plugins: [require("tailwindcss-animated"), require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animated"),
+    require("tailwindcss-animate"),
+    require("daisyui"),
+  ],
 };

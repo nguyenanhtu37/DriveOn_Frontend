@@ -1,6 +1,11 @@
-import { axios } from "../../lib/axios";
+import { axios } from "@/lib/axios";
 
 const API_URL = "/vehicle";
+
+export const getMyVehicles = async () => {
+  const response = await axios.get("/vehicle");
+  return response.data;
+}
 
 // Function to add a new vehicle
 export const addVehicle = async (vehicleData) => {
