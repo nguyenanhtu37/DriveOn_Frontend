@@ -1,144 +1,246 @@
-import { useState } from "react";
-import { useProfile } from "../../../common/hooks/useProfile";
-import PersonalProfile from "../../../components/profile/PersonalProfile";
-import ChangePassword from "../../../components/profile/ChangePassword";
-import { Link } from "react-router-dom";
-import { Home, Car, LogOut } from "lucide-react";
-import { useAuth } from "../../../common/hooks/useAuth";
+"use client"
+
+import { useState } from "react"
+import { useProfile } from "../../../common/hooks/useProfile"
+import PersonalProfile from "../../../components/profile/PersonalProfile"
+import ChangePassword from "../../../components/profile/ChangePassword"
+import { Link } from "react-router-dom"
+import { Home, Car, LogOut, User, Menu, X } from 'lucide-react'
+import { useAuth } from "../../../common/hooks/useAuth"
 
 const ProfilePage = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const { profile, setProfile, loading, updateProfile, refetchProfile, changePassword } = useProfile();
-  const { handleLogout } = useAuth();
+  const [isEditing, setIsEditing] = useState(false)
+  const [ setIsChangingPassword] = useState(false)
+  const [activeTab, setActiveTab] = useState("profile")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { profile, setProfile, loading, updateProfile, refetchProfile, changePassword } = useProfile()
+  const { handleLogout } = useAuth()
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfile((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setProfile((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleSubmit = async () => {
     try {
-      await updateProfile(profile);
-      setIsEditing(false);
-      await refetchProfile();
+      await updateProfile(profile)
+      setIsEditing(false)
+      await refetchProfile()
     } catch (err) {
-      console.error("Update failed:", err);
+      console.error("Update failed:", err)
     }
-  };
+  }
 
   const handleEditToggle = () => {
-    setIsEditing(true);
-  };
+    setIsEditing(true)
+  }
 
   const handleCancel = () => {
-    setIsEditing(false);
-    refetchProfile();
-  };
+    setIsEditing(false)
+    refetchProfile()
+  }
 
   const handleChangePassword = async (oldPassword, newPassword) => {
-    await changePassword(oldPassword, newPassword);
-  };
+    await changePassword(oldPassword, newPassword)
+  }
 
   const handleCancelPassword = () => {
-    setIsChangingPassword(false);
-  };
+    setIsChangingPassword(false)
+  }
 
   const handleLogoutClick = async () => {
     try {
-      await handleLogout();
+      await handleLogout()
     } catch (err) {
-      console.error("Logout failed:", err);
+      console.error("Logout failed:", err)
     }
-  };
+  }
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen)
+  }
+
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 font-archivo">
-      {/* Navigation */}
-      <nav className="bg-white shadow-lg p-4 md:p-6 flex justify-between items-center sticky top-0 z-10">
-        <div className="text-xl md:text-2xl font-bold text-heading tracking-tight">
-          <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
-            MyProfile
-          </span>
-        </div>
-        <div className="space-x-3 md:space-x-6 flex items-center">
-          <Link
-            to="/"
-            className="text-body hover:text-primary font-medium transition-colors duration-200 flex items-center"
-          >
-            <Home className="h-4 w-4 md:h-5 md:w-5 mr-1" />
-            <span className="hidden md:inline">Home</span>
-          </Link>
-          <Link
-            to="/vehicle"
-            className="text-body hover:text-primary font-medium transition-colors duration-200 flex items-center"
-          >
-            <Car className="h-4 w-4 md:h-5 md:w-5 mr-1" />
-            <span className="hidden md:inline">My Vehicle</span>
-          </Link>
-          <button
-            onClick={handleLogoutClick}
-            className="text-white bg-destructive hover:bg-destructive/90 px-3 py-1.5 md:px-4 md:py-2 rounded-full font-medium transition-all duration-200 shadow-md flex items-center"
-          >
-            <LogOut className="h-4 w-4 md:mr-1" />
-            <span className="hidden md:inline">Logout</span>
-          </button>
-        </div>
-      </nav>
+    <div className="min-h-screen font-sans relative">
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed z-0"
+        style={{ backgroundImage: "url('/placeholder.svg?height=1080&width=1920')" }}
+      ></div>
+      <div className="relative z-10 min-h-screen bg-white/90">
+        {/* Top Navigation */}
+        <header className="bg-white/95 shadow-md backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex items-center">
+                <div className="flex-shrink-0 flex items-center">
+                  <div className="h-8 w-8 bg-blue-500 rounded-md flex items-center justify-center">
+                    <User className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="ml-2 text-xl font-bold text-blue-600">MyProfile</span>
+                </div>
+              </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden transform hover:shadow-2xl transition-all duration-300">
-          <div className="h-32 md:h-40 bg-gradient-to-r from-primary via-primary/80 to-secondary relative">
-            <div className="absolute inset-0 bg-black bg-opacity-10"></div>
-          </div>
-          <div className="relative -mt-20 px-4 md:px-8 pb-8">
-            <PersonalProfile
-              profile={profile}
-              isEditing={isEditing}
-              onInputChange={handleInputChange}
-              onSubmit={handleSubmit}
-              onCancel={handleCancel}
-              loading={loading}
-            />
-            {/* Buttons when not editing */}
-            {!isEditing && !isChangingPassword && (
-              <div className="flex justify-end mt-6 space-x-4">
-                <button
-                  onClick={handleEditToggle}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-md"
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center space-x-4">
+                <Link
+                  to="/"
+                  className="px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex items-center"
                 >
-                  Edit Profile
+                  <Home className="h-4 w-4 mr-1" />
+                  <span>Home</span>
+                </Link>
+                <Link
+                  to="/vehicle"
+                  className="px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600 flex items-center"
+                >
+                  <Car className="h-4 w-4 mr-1" />
+                  <span>Vehicles</span>
+                </Link>
+                <button
+                  onClick={handleLogoutClick}
+                  className="ml-2 px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 flex items-center"
+                >
+                  <LogOut className="h-4 w-4 mr-1" />
+                  <span>Logout</span>
                 </button>
+              </nav>
+
+              {/* Mobile menu button */}
+              <div className="flex items-center md:hidden">
                 <button
-                  onClick={() => setIsChangingPassword(true)}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md"
+                  onClick={toggleMobileMenu}
+                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-gray-100 focus:outline-none"
                 >
-                  Change Password
+                  {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                 </button>
               </div>
-            )}
-
-            {/* Change Password Component */}
-            {isChangingPassword && (
-              <div className="mt-6">
-                <ChangePassword
-                  onChangePassword={handleChangePassword}
-                  onCancel={handleCancelPassword}
-                  loading={loading}
-                />
-              </div>
-            )}
+            </div>
           </div>
-        </div>
+
+          {/* Mobile menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <Link to="/" className="block px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600">
+                  <div className="flex items-center">
+                    <Home className="h-4 w-4 mr-2" />
+                    <span>Home</span>
+                  </div>
+                </Link>
+                <Link
+                  to="/vehicle"
+                  className="block px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                >
+                  <div className="flex items-center">
+                    <Car className="h-4 w-4 mr-2" />
+                    <span>Vehicles</span>
+                  </div>
+                </Link>
+                <button
+                  onClick={handleLogoutClick}
+                  className="w-full text-left block px-3 py-2 rounded-md text-red-500 hover:bg-red-50"
+                >
+                  <div className="flex items-center">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    <span>Logout</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          )}
+        </header>
+
+        {/* Main Content */}
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"> 
+          <div className="px-4 py-6 sm:px-0">
+            {/* Profile Header */}
+            <div className="bg-white/95 rounded-lg shadow overflow-hidden backdrop-blur-sm">
+              <div className="px-4 py-5 sm:p-6">
+                {/* Tabs */}
+                <div className="border-b border-gray-200 mb-6">
+                  <nav className="-mb-px flex space-x-8">
+                    <button
+                      onClick={() => setActiveTab("profile")}
+                      className={`${
+                        activeTab === "profile"
+                          ? "border-blue-500 text-blue-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveTab("security")
+                        setIsChangingPassword(true)
+                      }}
+                      className={`${
+                        activeTab === "security"
+                          ? "border-blue-500 text-blue-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                    >
+                      Security
+                    </button>
+                  </nav>
+                </div>
+
+                {/* Tab Content */}
+                {activeTab === "profile" && (
+                  <div>
+                    <PersonalProfile
+                      profile={profile}
+                      isEditing={isEditing}
+                      onInputChange={handleInputChange}
+                      onSubmit={handleSubmit}
+                      onCancel={handleCancel}
+                      loading={loading}
+                    />
+
+                    {/* Action Buttons */}
+                    {!isEditing && (
+                      <div className="mt-6 flex justify-end">
+                        <button
+                          onClick={handleEditToggle}
+                          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          Edit Profile
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === "security" && (
+                  <div>
+                    <ChangePassword
+                      onChangePassword={handleChangePassword}
+                      onCancel={() => {
+                        handleCancelPassword()
+                        setActiveTab("profile")
+                      }}
+                      loading={loading}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="bg-white/95 border-t border-gray-200 mt-12 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <p className="text-center text-sm text-gray-500">
+              © {new Date().getFullYear()} MyProfile. All rights reserved.
+            </p>
+          </div>
+        </footer>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white text-center py-4 mt-auto">
-        <p className="text-sm">© {new Date().getFullYear()} MyProfile. All rights reserved.</p>
-      </footer>
     </div>
-  );
-};
+  )
+}
 
-export default ProfilePage;
+export default ProfilePage

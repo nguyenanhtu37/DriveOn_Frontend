@@ -1,13 +1,11 @@
 // src/pages/CarOwner/Vehicle/AddVehicleForm.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Added useEffect for debug
 import { useVehicles } from "@/common/hooks/useVehicle";
-import { useBrands } from "@/common/hooks/useBrand"; // Import useBrands
-import { useNavigate } from "react-router-dom";
+import { useBrands } from "@/common/hooks/useBrand";
 
 const AddVehicleForm = ({ onClose }) => {
-  const navigate = useNavigate();
-  const { addVehicle } = useVehicles();
-  const { brands, loading: brandsLoading, error: brandsError } = useBrands(); // Fetch brands
+  const { addVehicle, fetchVehicles } = useVehicles();
+  const { brands, loading: brandsLoading, error: brandsError } = useBrands();
   const [formData, setFormData] = useState({
     carBrand: "",
     carName: "",
@@ -16,6 +14,11 @@ const AddVehicleForm = ({ onClose }) => {
     carPlate: "",
   });
   const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    console.log("Brands received in form:", brands); // Debug log
+  }, [brands]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,13 +27,15 @@ const AddVehicleForm = ({ onClose }) => {
       setError("Please select a brand.");
       return;
     }
+    setSubmitting(true);
     try {
       await addVehicle(formData);
-      alert("Vehicle added successfully");
+      await fetchVehicles();
       onClose();
-      navigate("/car-owner/vehicles");
     } catch (err) {
       setError(err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -43,13 +48,16 @@ const AddVehicleForm = ({ onClose }) => {
           {brandsLoading ? (
             <p className="text-gray-500">Loading brands...</p>
           ) : brandsError ? (
-            <p className="text-red-500 text-sm">{brandsError}</p>
+            <p className="text-red-500 text-sm">Error: {brandsError}</p>
+          ) : brands.length === 0 ? (
+            <p className="text-gray-500">No brands available</p>
           ) : (
             <select
               value={formData.carBrand}
               onChange={(e) => setFormData({ ...formData, carBrand: e.target.value })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={submitting}
             >
               <option value="">Select a brand</option>
               {brands.map((brand) => (
@@ -67,8 +75,9 @@ const AddVehicleForm = ({ onClose }) => {
             value={formData.carName}
             onChange={(e) => setFormData({ ...formData, carName: e.target.value })}
             placeholder="e.g. Camry"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
+            disabled={submitting}
           />
         </div>
       </div>
@@ -80,8 +89,9 @@ const AddVehicleForm = ({ onClose }) => {
             value={formData.carYear}
             onChange={(e) => setFormData({ ...formData, carYear: e.target.value })}
             placeholder="e.g. 2020"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
+            disabled={submitting}
           />
         </div>
         <div>
@@ -91,8 +101,9 @@ const AddVehicleForm = ({ onClose }) => {
             value={formData.carColor}
             onChange={(e) => setFormData({ ...formData, carColor: e.target.value })}
             placeholder="e.g. Silver"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
+            disabled={submitting}
           />
         </div>
       </div>
@@ -103,17 +114,27 @@ const AddVehicleForm = ({ onClose }) => {
           value={formData.carPlate}
           onChange={(e) => setFormData({ ...formData, carPlate: e.target.value })}
           placeholder="e.g. ABC-123"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
+          disabled={submitting}
         />
       </div>
       {error && <div className="text-red-500 text-sm">{error}</div>}
       <div className="flex justify-end space-x-4 mt-4">
-        <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 border rounded hover:bg-gray-100"
+          disabled={submitting}
+        >
           Cancel
         </button>
-        <button type="submit" className="px-4 py-2 bg-black text-white rounded">
-          Add Vehicle
+        <button
+          type="submit"
+          className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:bg-gray-400"
+          disabled={brandsLoading || submitting}
+        >
+          {submitting ? "Adding..." : "Add Vehicle"}
         </button>
       </div>
     </form>

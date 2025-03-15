@@ -44,7 +44,7 @@ export const getVehicleById = async (vehicleId) => {
 // Function to update vehicle details
 export const updateVehicle = async (vehicleId, updateData) => {
   try {
-    const response = await axios.put(`${API_URL}/update/${vehicleId}`, updateData);
+    const response = await axios.put(`${API_URL}/${vehicleId}`, updateData);
     if (!response.data) {
       throw new Error("Invalid response from server");
     }
@@ -57,7 +57,7 @@ export const updateVehicle = async (vehicleId, updateData) => {
 // Function to delete a vehicle
 export const deleteVehicle = async (vehicleId) => {
   try {
-    const response = await axios.delete(`${API_URL}/delete/${vehicleId}`);
+    const response = await axios.delete(`${API_URL}/${vehicleId}`);
     if (!response.data) {
       throw new Error("Invalid response from server");
     }

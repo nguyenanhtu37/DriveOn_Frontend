@@ -1,3 +1,4 @@
+// src/common/hooks/useVehicle.js
 import { useState, useEffect, useCallback } from "react";
 import { getVehicles, addVehicle, updateVehicle, deleteVehicle, getVehicleById } from "@/app/services/vehicle";
 
@@ -6,7 +7,6 @@ export const useVehicles = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch all vehicles
   const fetchVehicles = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -20,7 +20,6 @@ export const useVehicles = () => {
     }
   }, []);
 
-  // Fetch vehicle by ID
   const fetchVehicleById = useCallback(async (id) => {
     setLoading(true);
     setError(null);
@@ -29,21 +28,19 @@ export const useVehicles = () => {
       return vehicle;
     } catch (err) {
       setError(err.message);
-      return null;
+      throw err;
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Add a new vehicle
   const addNewVehicle = async (vehicleData) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await addVehicle(vehicleData);
-      const newVehicle = response.vehicle;
+      const newVehicle = await addVehicle(vehicleData);
       setVehicles((prev) => [...prev, newVehicle]);
-      return response;
+      return newVehicle;
     } catch (err) {
       setError(err.message);
       throw err;
@@ -52,17 +49,15 @@ export const useVehicles = () => {
     }
   };
 
-  // Update an existing vehicle
   const updateExistingVehicle = async (id, vehicleData) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await updateVehicle(id, vehicleData);
-      const updatedVehicle = response.vehicle;
+      const updatedVehicle = await updateVehicle(id, vehicleData);
       setVehicles((prev) =>
         prev.map((v) => (v._id === id ? updatedVehicle : v))
       );
-      return response;
+      return updatedVehicle;
     } catch (err) {
       setError(err.message);
       throw err;
@@ -71,7 +66,6 @@ export const useVehicles = () => {
     }
   };
 
-  // Delete an existing vehicle
   const deleteExistingVehicle = async (id) => {
     setLoading(true);
     setError(null);
@@ -86,7 +80,6 @@ export const useVehicles = () => {
     }
   };
 
-  // Fetch vehicles on component mount
   useEffect(() => {
     fetchVehicles();
   }, [fetchVehicles]);
@@ -96,11 +89,9 @@ export const useVehicles = () => {
     loading,
     error,
     fetchVehicles,
-    fetchVehicleById,
+    getVehicle: fetchVehicleById,
     addVehicle: addNewVehicle,
     updateVehicle: updateExistingVehicle,
     deleteVehicle: deleteExistingVehicle,
   };
 };
-
-export default useVehicles;

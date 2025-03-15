@@ -12,7 +12,7 @@ const VehicleCard = ({ vehicle, onEdit }) => {
 
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false); // Now useState is available
 
-  const handleView = () => navigate(`/car-owner/vehicles/${_id}`);
+  const handleView = () => navigate(`/vehicle/details/${_id}`); // Update the navigate path to include vehicle ID
   const handleEdit = () => onEdit(_id);
   
   const handleDelete = async () => {

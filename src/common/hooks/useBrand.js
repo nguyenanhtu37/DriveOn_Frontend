@@ -1,6 +1,6 @@
-// src/app/hooks/useBrands.js
+// src/common/hooks/useBrand.js
 import { useState, useEffect, useCallback } from "react";
-import { addBrand, getBrands } from "@/app/services/brand";
+import { getBrands } from "@/app/services/brand";
 
 export const useBrands = () => {
   const [brands, setBrands] = useState([]);
@@ -9,11 +9,15 @@ export const useBrands = () => {
 
   const fetchBrands = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const brandList = await getBrands();
-      setBrands(brandList.data || []); // Assuming getBrands returns { message, data }
+      const data = await getBrands();
+      console.log("Fetched brands:", data); // Debug log
+      setBrands(Array.isArray(data) ? data : []);
     } catch (err) {
+      console.error("Fetch brands error:", err);
       setError(err.message);
+      setBrands([]);
     } finally {
       setLoading(false);
     }
@@ -23,20 +27,7 @@ export const useBrands = () => {
     fetchBrands();
   }, [fetchBrands]);
 
-  const addNewBrand = async (brandData) => {
-    try {
-      const newBrand = await addBrand(brandData);
-      setBrands((prev) => [...prev, newBrand]);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  return {
-    brands,
-    loading,
-    error,
-    fetchBrands,
-    addNewBrand,
-  };
+  return { brands, loading, error, fetchBrands };
 };
+
+export default useBrands;

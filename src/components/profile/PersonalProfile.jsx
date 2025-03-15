@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Camera } from "lucide-react";
+import { Camera, Mail, Phone, Clock, CheckCircle, User } from 'lucide-react';
 import useUpload from "@/app/services/Cloudinary/upload";
 
 const PersonalProfile = ({
@@ -10,23 +10,15 @@ const PersonalProfile = ({
   onCancel,
   loading,
 }) => {
-  const [avatarPreview, setAvatarPreview] = useState(profile.avatar );
-  const [about, setAbout] = useState(profile.about || "");
-
+  const [avatarPreview, setAvatarPreview] = useState(profile.avatar);
   const { files, progressList, handleFileChange, handleUpload, handleRemove } = useUpload();
 
   useEffect(() => {
     setAvatarPreview(profile.avatar);
-    setAbout(profile.about || "");
-  }, [profile.avatar, profile.about]);
+  }, [profile.avatar]);
 
   const handleAvatarChange = (e) => {
     handleFileChange(e);
-  };
-
-  const handleAboutChange = (e) => {
-    setAbout(e.target.value);
-    onInputChange({ target: { name: "about", value: e.target.value } });
   };
 
   const handleSubmit = async (e) => {
@@ -40,181 +32,208 @@ const PersonalProfile = ({
           onInputChange({ target: { name: "avatar", value: uploadedUrls[0] } });
         }
       }
-  
+
       // Proceed with other form data and submit it
       onSubmit();
     } catch (err) {
       console.error("Profile update failed:", err);
     }
   };
-  
 
+  // Format date
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+console.log(profile)
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Avatar */}
-      <div className="flex justify-center">
-        <div className="relative w-32 h-32">
-          <img
-            src={avatarPreview || "/placeholder.svg"}
-            alt="Profile Avatar"
-            className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
-            onError={(e) => {
-              e.target.src = "";
-            }}
-          />
-          {isEditing && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer shadow-md hover:bg-blue-700 transition-colors">
-                <Camera className="h-5 w-5" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+      <div className="md:grid md:grid-cols-3 md:gap-8">
+        {/* Profile Image Section */}
+        <div className="md:col-span-1">
+          <div className="flex flex-col items-center">
+            <div className="relative group">
+              <div className="h-36 w-36 rounded-full overflow-hidden border-4 border-white shadow-lg transition-all duration-300 group-hover:shadow-xl">
+                <img
+                  src={avatarPreview}
+                  alt="Profile Avatar"
+                  className="h-full w-full object-cover"
                 />
-              </label>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Upload Progress */}
-      {files.length > 0 && (
-        <div>
-          <h3 className="text-center text-primary">Uploading...</h3>
-          {files.map((file) => (
-            <div key={file.name} className="flex justify-between items-center">
-              <span>{file.name}</span>
-              <div className="w-32 bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-blue-600 h-2 rounded-full"
-                  style={{ width: `${progressList[file.name] || 0}%` }}
-                ></div>
               </div>
-              <button
-                type="button"
-                onClick={() => handleRemove(file)}
-                className="text-red-500 ml-2"
-              >
-                Remove
-              </button>
+              {isEditing && (
+                <label className="absolute bottom-0 right-0 bg-blue-500 text-white p-3 rounded-full cursor-pointer shadow-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">
+                  <Camera className="h-5 w-5" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </label>
+              )}
             </div>
-          ))}
-        </div>
-      )}
+            
+            <div className="mt-6 text-center">
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="name"
+                  value={profile.name || ""}
+                  onChange={onInputChange}
+                  className="text-center text-xl font-semibold w-full border-0 border-b-2 border-blue-300 focus:border-blue-500 focus:ring-0 px-2 py-1 bg-transparent"
+                  placeholder="Your Name"
+                  required
+                />
+              ) : (
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {profile.name || "Your Name"}
+                </h3>
+              )}
+              
+              {/* Status Badge */}
+              <div className="mt-3 flex justify-center">
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                  profile.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                }`}>
+                  <CheckCircle className="mr-1.5 h-4 w-4" />
+                  {profile.status || "Status"}
+                </span>
+              </div>
+              
+              {/* Created At */}
+              <div className="mt-3 flex justify-center items-center text-sm text-gray-500">
+                <Clock className="mr-1.5 h-4 w-4" />
+                Member since: {formatDate(profile.createdAt)}
+              </div>
+            </div>
 
-      {/* Form inputs */}
-      <div className="text-center">
-        {isEditing ? (
-          <input
-            type="text"
-            name="name"
-            value={profile.name || ""}
-            onChange={onInputChange}
-            className="text-3xl font-bold text-heading w-full text-center border border-gray px-4 py-2
-                       rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all"
-            required
-          />
-        ) : (
-          <h2 className="text-3xl font-bold text-heading">{profile.name}</h2>
-        )}
-        <p className="text-body text-lg mt-1">@{profile.username}</p>
-      </div>
-
-      {/* Form information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <div>
-            <label className="text-body font-medium">Email</label>
-            {isEditing ? (
-              <input
-                type="email"
-                name="email"
-                value={profile.email || ""}
-                onChange={onInputChange}
-                className="w-full mt-1 px-4 py-2 border border-gray rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all"
-              />
-            ) : (
-              <p className="text-heading mt-1">{profile.email || "Not set"}</p>
+            {/* Upload Progress */}
+            {files.length > 0 && (
+              <div className="mt-6 w-full bg-blue-50 p-4 rounded-xl shadow-inner">
+                <h4 className="text-sm font-medium text-blue-700 mb-3">Uploading...</h4>
+                {files.map((file) => (
+                  <div key={file.name} className="mb-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs truncate max-w-[180px] text-gray-600">{file.name}</span>
+                      <span className="text-xs font-medium text-blue-600">{progressList[file.name] || 0}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${progressList[file.name] || 0}%` }}
+                        ></div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemove(file)}
+                        className="text-red-500 hover:text-red-600 text-xs"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
-          <div>
-            <label className="text-body font-medium">Phone</label>
-            {isEditing ? (
-              <input
-                type="tel"
-                name="phone"
-                value={profile.phone || ""}
-                onChange={onInputChange}
-                className="w-full mt-1 px-4 py-2 border border-gray rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all"
-              />
-            ) : (
-              <p className="text-heading mt-1">{profile.phone || "Not set"}</p>
+        </div>
+
+        {/* Profile Details Section */}
+        <div className="mt-8 md:mt-0 md:col-span-2">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <div className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-6 flex items-center">
+                <User className="h-5 w-5 mr-2 text-blue-500" />
+                Personal Information
+              </h3>
+              
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div className="group">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1 flex items-center group-hover:text-blue-600 transition-colors">
+                      <Mail className="h-4 w-4 mr-1.5 text-blue-500" />
+                      Email
+                    </label>
+                    {isEditing ? (
+                      <div className="relative">
+                        <input
+                          type="email"
+                          name="email"
+                          id="email"
+                          value={profile.email || ""}
+                          onChange={onInputChange}
+                          className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="your.email@example.com"
+                        />
+                      </div>
+                    ) : (
+                      <p className="mt-1 text-gray-900 bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
+                        {profile.email || "Not set"}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="group">
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1 flex items-center group-hover:text-blue-600 transition-colors">
+                      <Phone className="h-4 w-4 mr-1.5 text-blue-500" />
+                      Phone
+                    </label>
+                    {isEditing ? (
+                      <div className="relative">
+                        <input
+                          type="tel"
+                          name="phone"
+                          id="phone"
+                          value={profile.phone || ""}
+                          onChange={onInputChange}
+                          className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="+1 (555) 123-4567"
+                        />
+                      </div>
+                    ) : (
+                      <p className="mt-1 text-gray-900 bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
+                        {profile.phone || "Not set"}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Save / Cancel buttons when editing */}
+            {isEditing && (
+              <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </button>
+              </div>
             )}
           </div>
         </div>
-
-        <div className="space-y-6">
-          <div>
-            <label className="text-body font-medium">Location</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="address"
-                value={profile.address || ""}
-                onChange={onInputChange}
-                className="w-full mt-1 px-4 py-2 border border-gray rounded-lg 
-                           focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all"
-              />
-            ) : (
-              <p className="text-heading mt-1">{profile.address || "Not set"}</p>
-            )}
-          </div>
-          <div>
-            <label className="text-body font-medium">Member Since</label>
-            <p className="text-heading mt-1">{profile.memberSince}</p>
-          </div>
-        </div>
       </div>
-
-      {/* About Me */}
-      <div>
-        <h3 className="text-xl font-semibold text-heading mb-3">About Me</h3>
-        {isEditing ? (
-          <textarea
-            name="about"
-            value={about}
-            onChange={handleAboutChange}
-            className="w-full px-4 py-2 border border-gray rounded-lg 
-                       focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600
-                       resize-none h-28 transition-all"
-          />
-        ) : (
-          <p className="text-body">{about || "No information provided"}</p>
-        )}
-      </div>
-
-      {/* Save / Cancel buttons when editing */}
-      {isEditing && (
-        <div className="flex space-x-4">
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 shadow-md"
-          >
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="flex-1 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-200 shadow-md"
-          >
-            Cancel
-          </button>
-        </div>
-      )}
     </form>
   );
 };
