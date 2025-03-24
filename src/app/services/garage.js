@@ -49,3 +49,8 @@ export const getGarageDetail = async (id) => {
   const response = await axios.get(`garage/garages/${id}`);
   return response.data;
 };
+
+export const getMyGarage = async () => {
+  const response = await axios.get("garage/garages");
+  return response.data;
+};
