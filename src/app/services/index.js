@@ -4,3 +4,4 @@ export * as serviceService from "./service";
 export * as serviceDetailService from "./service-detail";
 export * as appointmentService from "./appointment";
 export * as vehicleService from "./vehicle";
+export * as googleMapService from "./googleMapApi";
