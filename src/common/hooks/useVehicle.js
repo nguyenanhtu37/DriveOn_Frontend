@@ -96,7 +96,7 @@ export const useVehicles = () => {
     loading,
     error,
     fetchVehicles,
-    fetchVehicleById,
+    fetchVehicleById,  // Ensure this function is returned
     addVehicle: addNewVehicle,
     updateVehicle: updateExistingVehicle,
     deleteVehicle: deleteExistingVehicle,

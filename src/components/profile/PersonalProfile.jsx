@@ -46,7 +46,7 @@ const PersonalProfile = ({
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
-console.log(profile)
+  console.log(profile)
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div className="md:grid md:grid-cols-3 md:gap-8">
@@ -73,7 +73,7 @@ console.log(profile)
                 </label>
               )}
             </div>
-            
+
             <div className="mt-6 text-center">
               {isEditing ? (
                 <input
@@ -90,17 +90,16 @@ console.log(profile)
                   {profile.name || "Your Name"}
                 </h3>
               )}
-              
+
               {/* Status Badge */}
               <div className="mt-3 flex justify-center">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                  profile.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                }`}>
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${profile.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  }`}>
                   <CheckCircle className="mr-1.5 h-4 w-4" />
                   {profile.status || "Status"}
                 </span>
               </div>
-              
+
               {/* Created At */}
               <div className="mt-3 flex justify-center items-center text-sm text-gray-500">
                 <Clock className="mr-1.5 h-4 w-4" />
@@ -148,7 +147,7 @@ console.log(profile)
                 <User className="h-5 w-5 mr-2 text-blue-500" />
                 Personal Information
               </h3>
-              
+
               <div className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div className="group">
@@ -166,6 +165,7 @@ console.log(profile)
                           onChange={onInputChange}
                           className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           placeholder="your.email@example.com"
+                          disabled  // Add this to make it non-editable
                         />
                       </div>
                     ) : (
@@ -201,7 +201,7 @@ console.log(profile)
                 </div>
               </div>
             </div>
-            
+
             {/* Save / Cancel buttons when editing */}
             {isEditing && (
               <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
