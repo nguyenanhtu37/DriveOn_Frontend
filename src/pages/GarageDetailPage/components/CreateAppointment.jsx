@@ -1,15 +1,14 @@
 import { useCreateAppointment } from "@/app/stores/entity/appointment";
 import { useGetService } from "@/app/stores/entity/service-detail";
 import { useGetMyVehicles } from "@/app/stores/entity/vehicle";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { InputDate } from "@/components/ui/inputDate";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { appointmentSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 
-import { Button } from "react-daisyui";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import Select from "react-tailwindcss-select";
@@ -83,7 +82,7 @@ export const CreateAppointment = () => {
           Make an appointment with the garage
         </span>
         <div className="w-full flex flex-col gap-y-4 rounded-xl">
-          <div className="flex flex-col gap-y-2">
+          {/* <div className="flex flex-col gap-y-2">
             <label className="text-sm font-semibold text-[#222222]">
               Choose Date
             </label>
@@ -106,53 +105,65 @@ export const CreateAppointment = () => {
                 </>
               )}
             />
-          </div>
+          </div> */}
 
-          <div className="grid grid-cols-2 gap-x-2">
-            <div className="flex flex-col gap-y-2">
-              <label className="text-sm font-semibold text-[#222222]">
-                Start Time
-              </label>
-              <Controller
-                name="start"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Input
-                      type="time"
-                      className="h-9"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                    <span className="text-red-500 text-sm">
-                      {errors.start?.message}
-                    </span>
-                  </>
-                )}
-              />
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <label className="text-sm font-semibold text-[#222222]">
-                End Time
-              </label>
-              <Controller
-                name="end"
-                control={control}
-                render={({ field }) => (
-                  <>
-                    <Input
-                      type="time"
-                      className="h-9"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                    <span className="text-red-500 text-sm">
-                      {errors.end?.message}
-                    </span>
-                  </>
-                )}
-              />
-            </div>
+          <div className="flex flex-col gap-y-2">
+            <label className="text-sm font-semibold text-[#222222]">
+              Start Date
+            </label>
+            <Controller
+              name="start"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Input
+                    id="start"
+                    type="datetime-local"
+                    value={
+                      field.value
+                        ? format(new Date(field.value), "yyyy-MM-dd'T'HH:mm")
+                        : ""
+                    }
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      field.onChange(new Date(e.target.value));
+                    }}
+                  />
+                  <span className="text-red-500 text-sm">
+                    {errors.start?.message}
+                  </span>
+                </>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <label className="text-sm font-semibold text-[#222222]">
+              End Date
+            </label>
+            <Controller
+              name="end"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Input
+                    id="start"
+                    type="datetime-local"
+                    value={
+                      field.value
+                        ? format(new Date(field.value), "yyyy-MM-dd'T'HH:mm")
+                        : ""
+                    }
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      field.onChange(new Date(e.target.value));
+                    }}
+                  />
+                  <span className="text-red-500 text-sm">
+                    {errors.start?.message}
+                  </span>
+                </>
+              )}
+            />
           </div>
 
           <div className="flex flex-col gap-y-2">

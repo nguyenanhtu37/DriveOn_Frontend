@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentScheduler } from "./Tab/AppointmentScheduler";
-import { useGetAppointmentByGarageId } from "@/app/stores/entity/appointment";
-import { useParams } from "react-router-dom";
+
 import { AppointmentList } from "./Tab/AppointmentList";
 
 const Appointment = () => {

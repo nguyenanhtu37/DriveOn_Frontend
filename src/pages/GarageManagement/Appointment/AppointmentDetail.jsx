@@ -33,20 +33,11 @@ const AppointmentDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow animate-fade-down">
-        <div className=" py-6 px-4 sm:px-6 lg:px-6">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Appointment Detail
-            </h1>
-          </div>
-        </div>
-      </header>
       <main className=" py-6 sm:px-6 lg:px-8 animate-fade">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-1/3">
-              <CardAppointment {...appointmentDetails} hiddenButton={true} />
+              {/* <CardAppointment {...appointmentDetails} hiddenButton={true} /> */}
             </div>
             <div className="lg:w-2/3 space-y-6">
               <Accordion

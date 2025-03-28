@@ -20,11 +20,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
 import useUpload from "@/app/services/Cloudinary/upload";
 import { Progress } from "@/components/ui/progress";
+import Select from "react-tailwindcss-select";
+import { useGetGeocode } from "@/app/stores/entity/distance-matrix";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
+
+const days = [
+  { value: "Sunday", label: "☀️ Sunday" },
+  { value: "Monday", label: "🌙 Monday" },
+  { value: "Tuesday", label: "☁️ Tuesday" },
+  { value: "Wednesday", label: "🌧️ Wednesday" },
+  { value: "Thursday", label: "⚡ Thursday" },
+  { value: "Friday", label: "❄️ Friday" },
+  { value: "Saturday", label: "💨 Saturday" },
+];
 
 export default function RegistrationForm() {
   const navigate = useNavigate();
   const register = useRegisterGarage();
-
+  const getLocation = useGetGeocode();
+  const [submitting, setSubmitting] = useState(false);
   const { files, progressList, handleFileChange, handleUpload } = useUpload();
 
   const form = useForm({
@@ -37,14 +52,38 @@ export default function RegistrationForm() {
       openTime: "",
       closeTime: "",
       email: "",
+      openDays: [],
     },
   });
 
   const onSubmit = async (data) => {
+    setSubmitting(true);
     let uploadedUrls = [];
     if (files.length > 0) {
       uploadedUrls = await handleUpload();
     }
+
+    let location, address;
+    try {
+      const res = await getLocation.mutateAsync(data.address);
+      console.log("Geocode Response:", res);
+      const { lat, lng } = res.result[0].geometry.location;
+      location = {
+        type: "Point",
+        coordinates: [lng, lat],
+      };
+      address = res.result[0].formatted_address;
+    } catch (error) {
+      toast({
+        title: "Error fetching geocode",
+        description: "Please check the address and try again.",
+        variant: "destructive",
+      });
+      console.error("Error fetching geocode:", error);
+      setSubmitting(false);
+      return;
+    }
+
     const newGarage = {
       name: data.name,
       phone: data.phone,
@@ -52,18 +91,22 @@ export default function RegistrationForm() {
       openTime: data.openTime,
       closeTime: data.closeTime,
       workingHours: `${data.openTime} - ${data.closeTime} hours`,
-      operating_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      operating_days: data.openDays.map((day) => day.value),
       email: data.email,
       interiorImages: uploadedUrls,
-      address: data.address,
+      location: location,
+      address: address,
     };
-    console.log(newGarage);
+
     register.mutate(newGarage, {
       onSuccess: () => {
         setTimeout(() => {
           form.reset();
           navigate("/");
         }, 2500);
+      },
+      onError: () => {
+        setSubmitting(false);
       },
     });
   };
@@ -122,6 +165,7 @@ export default function RegistrationForm() {
                   <Input
                     {...field}
                     className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                    placeholder="Email"
                   />
                 </FormControl>
                 <FormMessage />
@@ -140,6 +184,7 @@ export default function RegistrationForm() {
                   <Textarea
                     {...field}
                     className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                    placeholder="Description"
                   />
                 </FormControl>
                 <FormMessage />
@@ -186,6 +231,25 @@ export default function RegistrationForm() {
             />
           </div>
         </div>
+
+        <FormField
+          control={form.control}
+          name="openDays"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Open on days</FormLabel>
+              <Select
+                value={field.value}
+                onChange={field.onChange}
+                options={days}
+                isMultiple={true}
+                primaryColor="black"
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="animate-fade-up animate-once animate-duration-600 animate-ease-linear">
           <FormField
             control={form.control}
@@ -263,10 +327,10 @@ export default function RegistrationForm() {
         <div className="animate-fade-up animate-once animate-duration-800 animate-ease-linear">
           <Button
             type="submit"
-            disabled={register.isLoading}
+            disabled={submitting}
             className="w-full transition-all duration-200 hover:bg-red-400 hover:scale-105"
           >
-            {register.isLoading ? "Registering..." : "Register Garage"}
+            {submitting ? "Registering..." : "Register Garage"}
           </Button>
         </div>
       </form>

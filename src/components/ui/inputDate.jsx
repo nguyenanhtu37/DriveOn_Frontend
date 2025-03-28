@@ -5,7 +5,7 @@ import { Calendar } from "./calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
-const InputDate = ({ date, setDate }) => {
+const InputDate = ({ date, setDate, align = "start" }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -20,7 +20,7 @@ const InputDate = ({ date, setDate }) => {
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align={align}>
         <Calendar
           mode="single"
           selected={date}

@@ -8,7 +8,7 @@ const ServiceList = () => {
   const services = useGetService(garageId);
 
   return (
-    <div className=" relative pt-3 pb-5 px-1 flex flex-col  w-[250px] shrink-0 h-full border shadow-md border-[#1c1c1c] border-opacity-5 bg-white gap-y-2 ">
+    <div className=" relative pt-3 pb-5 px-1 flex flex-col  w-[250px] shrink-0 h-full border shadow-md border-[#1c1c1c] border-opacity-5  gap-y-2 ">
       <h4 className=" text-md font-semibold pb-2 px-3 border-b border-black ">
         List Service
       </h4>

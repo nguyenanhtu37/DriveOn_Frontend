@@ -4,7 +4,6 @@ import {
   Car,
   Check,
   Clock,
-  MapPin,
   MoreHorizontal,
   Settings,
   X,
@@ -19,7 +18,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { format } from "date-fns";
-import { useState } from "react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +33,8 @@ import {
   useDenyAppointment,
 } from "@/app/stores/entity/appointment";
 import { toast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 const CardAppointment = ({
   id,
@@ -45,46 +46,45 @@ const CardAppointment = ({
   location,
   status,
   notes,
-  onStatusChange,
   vehicle,
 }) => {
-  const [currentStatus, setCurrentStatus] = useState(status);
+  const { garageId } = useParams();
 
+  const queryClient = useQueryClient();
   const confirmAppointmentMutation = useConfirmAppointment();
   const denyAppointmentMutation = useDenyAppointment();
   const completeAppointmentMutation = useCompleteAppointment();
-
   const handleConfirm = () => {
     confirmAppointmentMutation.mutate(id, {
       onSuccess: () => {
-        setCurrentStatus("Accepted");
+        queryClient.invalidateQueries(["appointment", "garage", garageId]);
         toast({
           title: "Success",
           description: "Appointment confirmed successfully",
         });
       },
-      onError: () => {
+      onError: (error) => {
         toast({
           title: "Error",
-          description: "Failed to confirm appointment",
+          description: error.response.data.error,
           variant: "destructive",
         });
       },
     });
   };
-  const handleCancel = () => {
+  const handleReject = () => {
     denyAppointmentMutation.mutate(id, {
       onSuccess: () => {
-        setCurrentStatus("Cancelled");
+        queryClient.invalidateQueries(["appointment", "garage", garageId]);
         toast({
           title: "Success",
-          description: "Appointment cancelled successfully",
+          description: "Appointment rejected successfully",
         });
       },
-      onError: () => {
+      onError: (error) => {
         toast({
           title: "Error",
-          description: "Failed to cancel appointment",
+          description: error.response.data.error,
           variant: "destructive",
         });
       },
@@ -94,16 +94,16 @@ const CardAppointment = ({
   const handleComplete = () => {
     completeAppointmentMutation.mutate(id, {
       onSuccess: () => {
-        setCurrentStatus("Completed");
+        queryClient.invalidateQueries(["appointment", "garage", garageId]);
         toast({
           title: "Success",
           description: "Appointment completed successfully",
         });
       },
-      onError: () => {
+      onError: (error) => {
         toast({
           title: "Error",
-          description: "Failed to complete appointment",
+          description: error.response.data.error,
           variant: "destructive",
         });
       },
@@ -141,9 +141,7 @@ const CardAppointment = ({
   return (
     <Card className="w-full h-full max-w-xl overflow-hidden transition-all hover:shadow-md flex flex-col justify-between">
       <div className="flex flex-col w-full">
-        <div
-          className={cn("h-2", getStatusColor(currentStatus).split(" ")[0])}
-        />
+        <div className={cn("h-2", getStatusColor(status).split(" ")[0])} />
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <div className="flex items-center space-x-4">
             <Avatar className="h-10 w-10 border">
@@ -156,10 +154,10 @@ const CardAppointment = ({
           </div>
           <Badge
             variant="outline"
-            className={cn("px-3 py-1", getStatusColor(currentStatus))}
+            className={cn("px-3 py-1", getStatusColor(status))}
           >
-            {getStatusIcon(currentStatus)}
-            <span className="ml-1 capitalize">{currentStatus}</span>
+            {getStatusIcon(status)}
+            <span className="ml-1 capitalize">{status}</span>
           </Badge>
         </CardHeader>
         <CardContent className="pb-3">
@@ -206,24 +204,24 @@ const CardAppointment = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[180px]">
-            {currentStatus !== "confirmed" && (
+            {status !== "confirmed" && (
               <DropdownMenuItem onClick={() => handleConfirm()}>
                 <Check className="mr-2 h-4 w-4 text-green-500" />
-                <span>Confirm</span>
+                <span>Accepted</span>
               </DropdownMenuItem>
             )}
-            {currentStatus !== "completed" && (
+            {status !== "completed" && (
               <DropdownMenuItem onClick={() => handleComplete()}>
                 <Check className="mr-2 h-4 w-4 text-blue-500" />
                 <span>Mark Completed</span>
               </DropdownMenuItem>
             )}
-            {currentStatus !== "cancelled" && (
+            {status !== "cancelled" && (
               <>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleCancel()}>
+                <DropdownMenuItem onClick={() => handleReject()}>
                   <X className="mr-2 h-4 w-4 text-red-500" />
-                  <span>Cancel</span>
+                  <span>Reject</span>
                 </DropdownMenuItem>
               </>
             )}

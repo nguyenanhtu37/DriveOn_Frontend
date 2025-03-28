@@ -35,6 +35,7 @@ import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
 import AddBrandPage from "@/pages/AdminDashboard/Brand/AddBrand";
 import VehicleDetailsPage from "@/pages/CarOwner/Vehicle/VehicleDetails";
+import AppointmentId from "@/pages/GarageManagement/Appointment/AppointmentId";
 const router = createBrowserRouter(
   [
     {
@@ -139,7 +140,7 @@ const router = createBrowserRouter(
             },
             {
               path: GarageManagementScreenPath.AppointmentDetail,
-              element: <AppointmentDetail />,
+              element: <AppointmentId />,
             },
             {
               path: GarageManagementScreenPath.Staff,

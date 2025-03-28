@@ -1,10 +1,4 @@
-import {
-  Activity,
-  ArrowRightIcon,
-  Locate,
-  Phone,
-  Settings,
-} from "lucide-react";
+import { Activity, Locate, Phone } from "lucide-react";
 import Service from "./components/Service";
 import { useGetGarageDetail } from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
