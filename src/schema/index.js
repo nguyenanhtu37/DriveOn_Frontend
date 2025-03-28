@@ -9,6 +9,14 @@ export const formSchema = z.object({
   openTime: z.string().nonempty("Open time is required"),
   closeTime: z.string().nonempty("Close time is required"),
   email: z.string().email("Invalid email address"),
+  openDays: z
+    .array(
+      z.object({
+        value: z.string().nonempty("Day ID is required"),
+        label: z.string().nonempty("Day name is required"),
+      })
+    )
+    .nonempty("At least one open day is required"),
 });
 
 export const staffSchema = z
@@ -49,15 +57,8 @@ export const appointmentSchema = z.object({
       })
     )
     .nonempty("At least one service is required"),
-  date: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
-  start: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Start time must be in HH:mm format"),
-  end: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "End time must be in HH:mm format"),
+  start: z.string().nonempty("Start time is required"),
+  end: z.string().nonempty("End time is required"),
   note: z.string().optional(),
   vehicle: z.object({
     value: z.string().nonempty("Vehicle ID is required"),

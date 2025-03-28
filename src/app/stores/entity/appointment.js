@@ -55,3 +55,14 @@ export const useCompleteAppointment = () => {
   });
   return mutation;
 };
+
+export const useGetAppointmentById = (appointmentId) => {
+  const query = useQuery({
+    queryKey: ["appointment", appointmentId],
+    queryFn: async () => appointmentService.getAppointmentById(appointmentId),
+  });
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

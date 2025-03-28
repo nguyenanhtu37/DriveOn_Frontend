@@ -28,3 +28,8 @@ export const completeAppointment = async (appointmentId) => {
   const response = await axios.put(`/appointment/${appointmentId}/complete`);
   return response.data;
 };
+
+export const getAppointmentById = async (appointmentId) => {
+  const response = await axios.get(`/appointment/${appointmentId}`);
+  return response.data;
+};

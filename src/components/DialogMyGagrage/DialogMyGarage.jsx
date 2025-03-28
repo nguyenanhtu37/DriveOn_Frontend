@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +10,7 @@ import { Link } from "react-router-dom";
 const DialogMyGarage = () => {
   const myGarage = useGetMyGarage();
   if (myGarage.isLoading) return;
+  if (myGarage?.data.length === 0) return null;
   return (
     <Dialog>
       <DialogTrigger asChild>

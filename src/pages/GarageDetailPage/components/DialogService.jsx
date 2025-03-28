@@ -1,8 +1,6 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ArrowRightIcon } from "lucide-react";
-import { useRef } from "react";
 import { ServiceItem } from "./ServiceItem";
-import { useDraggable } from "react-use-draggable-scroll";
 import { useGetService } from "@/app/stores/entity/service-detail";
 import { useParams } from "react-router-dom";
 

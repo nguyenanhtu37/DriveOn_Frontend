@@ -1,8 +1,5 @@
-import React from "react";
-
 import { Button } from "@/components/ui/button";
 import { useApproveGarage, useRejectGarage } from "@/app/stores/entity/garage";
-import { cn } from "@/lib/utils";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Check, X } from "lucide-react";
@@ -15,6 +12,7 @@ export const Cell = ({ children }) => {
   );
 };
 export const Row = ({
+  index,
   id,
   image,
   username,
@@ -44,7 +42,7 @@ export const Row = ({
   return (
     <TableRow>
       <TableCell className="font-medium cursor-pointer" onClick={onClick}>
-        INV001
+        {index + 1}
       </TableCell>
       <TableCell>
         <div className=" flex items-center flex-wrap justify-start gap-1">
