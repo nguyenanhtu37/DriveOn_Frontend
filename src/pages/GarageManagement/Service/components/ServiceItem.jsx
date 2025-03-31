@@ -11,7 +11,7 @@ const ServiceItem = ({ service, garageId }) => {
       to={link}
       className={({ isActive }) =>
         cn(
-          "py-2 px-3 w-full flex items-center justify-between  rounded-md bg-white hover:bg-red-100 hover:shadow-sm cursor-pointer transition-colors ease-in-out duration-100 group",
+          "py-2 px-3 w-full flex items-center justify-between  rounded-md  hover:shadow-sm cursor-pointer transition-colors ease-in-out duration-100 group",
           isActive &&
             "bg-[#1C1C1C] bg-opacity-5 shadow-sm hover:bg-[#1C1C1C] hover:bg-opacity-5"
         )

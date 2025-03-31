@@ -5,8 +5,6 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-    "node_modules/daisyui/dist/**/*.js",
-    "node_modules/react-daisyui/dist/**/*.js",
     "./node_modules/react-tailwindcss-select/dist/index.esm.js",
   ],
   theme: {
@@ -112,9 +110,5 @@ export default {
       },
     },
   },
-  plugins: [
-    require("tailwindcss-animated"),
-    require("tailwindcss-animate"),
-    require("daisyui"),
-  ],
+  plugins: [require("tailwindcss-animated"), require("tailwindcss-animate")],
 };

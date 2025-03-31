@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Badge } from "react-daisyui";
+import { formatCurrency } from "@/utils";
 
 export const ServiceItem = ({
   img,
@@ -46,7 +46,9 @@ export const ServiceItem = ({
           </p>
         </div>
         <div className="mt-auto">
-          <p className="text-xl font-bold text-primary">Price: {price}</p>
+          <p className="text-xl font-bold text-primary">
+            Price: {formatCurrency(price)}
+          </p>
         </div>
       </div>
     </div>

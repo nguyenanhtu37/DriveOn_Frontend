@@ -53,7 +53,7 @@ export const ViewRegisterGarage = () => {
           <TableCaption>A list of garage register.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">ID</TableHead>
+              <TableHead className="w-[100px]">No</TableHead>
               <TableHead>User</TableHead>
               <TableHead>Garage Name</TableHead>
               <TableHead>Address</TableHead>
@@ -63,11 +63,12 @@ export const ViewRegisterGarage = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {listRegisterGarage.data.map((item) => (
+            {listRegisterGarage.data.map((item, index) => (
               <Row
+                index={index}
                 key={item._id}
                 id={item._id}
-                image={item.user[0].avatar}
+                // image={item.user[0].avatar}
                 username={item.user[0].name}
                 garage={item.name}
                 address={item.address}
