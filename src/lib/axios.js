@@ -1,3 +1,4 @@
+import { userLogout } from "@/app/stores/view/user";
 import axios from "axios";
 
 // Tạo instance Axios
@@ -18,6 +19,20 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      userLogout();
+      window.location.href = "/login";
+      console.error("Error response:", error.response.data);
+    }
     return Promise.reject(error);
   }
 );

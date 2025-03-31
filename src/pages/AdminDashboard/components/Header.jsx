@@ -1,15 +1,6 @@
-import {
-  Bell,
-  History,
-  LayoutDashboard,
-  Search,
-  Star,
-  Sun,
-} from "lucide-react";
-
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { BreadcrumbWrapper } from "./BreadcrumbWrapper";
-import PopoverNotification from "@/components/PopoverNotification";
+import { Star } from "lucide-react";
 
 export const Header = () => {
   return (
@@ -22,7 +13,7 @@ export const Header = () => {
         <BreadcrumbWrapper />
       </div>
 
-      <div className="flex justify-end items-center gap-x-2">
+      {/* <div className="flex justify-end items-center gap-x-2">
         <div className=" w-fit lg:w-40 py-1 px-2 bg-blue-50 flex justify-center items-center gap-x-1 rounded-full">
           <Search size={16} color="black" className=" cursor-pointer" />
           <input
@@ -43,7 +34,7 @@ export const Header = () => {
             <LayoutDashboard size={20} />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

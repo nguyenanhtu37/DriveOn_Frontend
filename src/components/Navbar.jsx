@@ -7,7 +7,7 @@ import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 import { AbsoluteScreenPath } from "../constants/screen";
-import { userLogout } from "@/app/stores/view/user";
+import { getUser, userLogout } from "@/app/stores/view/user";
 
 function Navbar() {
   const [scroll] = useScrollPosition();
@@ -15,11 +15,7 @@ function Navbar() {
   const [logoutError, setLogoutError] = useState(null);
   const navigate = useNavigate();
 
-  // Debug trạng thái
-  useEffect(() => {
-    console.log("Navbar - isLoggedIn:", isLoggedIn);
-    console.log("Navbar - Token exists:", !!localStorage.getItem("token"));
-  }, [isLoggedIn]);
+  const user = getUser();
 
   // Hiển thị lỗi đăng xuất
   useEffect(() => {
@@ -33,14 +29,6 @@ function Navbar() {
   const onLogout = async () => {
     userLogout();
     await handleLogout(); // handleLogout đã xử lý navigate
-  };
-
-  const handleProtectedNavigation = (to) => {
-    if (!isLoggedIn) {
-      navigate(AbsoluteScreenPath.Login, { state: { from: to } });
-      return;
-    }
-    navigate(to);
   };
 
   return (
@@ -106,7 +94,7 @@ function Navbar() {
               <Globe size={16} />
             </div>
 
-            {!isLoggedIn ? (
+            {!user ? (
               <div className="flex items-center gap-2">
                 <Link
                   to={AbsoluteScreenPath.Login}

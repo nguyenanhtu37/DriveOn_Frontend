@@ -3,7 +3,13 @@ import { z } from "zod";
 // validation schema for the form
 export const formSchema = z.object({
   name: z.string().min(2, "Garage name must be at least 2 characters"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
+  address: z
+    .string()
+    .min(5, "Address must be at least 5 characters")
+    .regex(
+      /^(?:\+84|0)(?:\d{9}|\d{8})$/,
+      "Phone number must contain only digits"
+    ),
   phone: z.string().min(10, "Phone number must be at least 10 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   openTime: z.string().nonempty("Open time is required"),
@@ -22,7 +28,13 @@ export const formSchema = z.object({
 export const staffSchema = z
   .object({
     name: z.string().min(2, "Garage name must be at least 2 characters"),
-    phone: z.string().min(10, "Phone number must be at least 10 characters"),
+    phone: z
+      .string()
+      .min(10, "Phone number must be at least 10 characters")
+      .regex(
+        /^(?:\+84|0)(?:\d{9}|\d{8})$/,
+        "Phone number must contain only digits"
+      ),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z
