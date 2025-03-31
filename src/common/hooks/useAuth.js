@@ -78,7 +78,7 @@ export const useAuth = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        await logout(token); // Gọi API logout nếu có token
+        await logout(token);
       }
     } catch (err) {
       const errorMessage = err.message || "Đăng xuất thất bại.";
@@ -100,10 +100,10 @@ export const useAuth = () => {
     setSuccess(null);
     try {
       await requestPasswordReset(email);
-      setSuccess("Email đặt lại mật khẩu đã được gửi.");
+      setSuccess("Password reset email has been sent.");
     } catch (err) {
       const errorMessage =
-        err.message || "Không thể gửi email đặt lại mật khẩu.";
+        err.message || "Password reset email could not be sent.";
       console.error("Request reset password error:", errorMessage);
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -118,10 +118,10 @@ export const useAuth = () => {
     setSuccess(null);
     try {
       await resetPassword(token, newPassword);
-      setSuccess("Mật khẩu đã được đặt lại thành công.");
+      setSuccess("Password reset email has been sent.");
       navigate("/login");
     } catch (err) {
-      const errorMessage = err.message || "Đặt lại mật khẩu thất bại.";
+      const errorMessage = err.message || "Password reset failed.";
       console.error("Reset password error:", errorMessage);
       setError(errorMessage);
       throw new Error(errorMessage);
