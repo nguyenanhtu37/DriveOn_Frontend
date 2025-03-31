@@ -1,9 +1,8 @@
-import React from "react";
 import { motion } from "framer-motion";
-import { Bell, Plus, Search, SlidersHorizontal } from "lucide-react";
+import { Bell, Search, SlidersHorizontal } from "lucide-react";
 import { useGetService } from "@/app/stores/entity/service";
 import CreateService from "../ViewServiceSystem/components/CreateService";
-const TopBar = () => {
+const TopBar = ({ setSearch, search }) => {
   const serviceData = useGetService();
   return (
     <div className="w-full bg-white p-3  border-b border-gray-100">
@@ -34,6 +33,8 @@ const TopBar = () => {
               <Search size={18} className="text-gray-400" />
             </div>
             <input
+              value={search}
+              onChange={setSearch}
               type="text"
               placeholder="Search services..."
               className="w-full sm:w-[300px] pl-10 pr-4 py-2.5 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-gray-200 rounded-xl text-sm transition-all duration-200 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-100"

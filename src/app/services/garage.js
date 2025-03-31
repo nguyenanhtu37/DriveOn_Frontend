@@ -37,11 +37,11 @@ export const viewGarageExits = async () => {
 };
 
 export const enableGarage = async (id) => {
-  const response = await axios.post(`garage/${id}/enable`);
+  const response = await axios.put(`garage/${id}/enable`);
   return response.data;
 };
 export const disableGarage = async (id) => {
-  const response = await axios.post(`garage/${id}/disable`);
+  const response = await axios.put(`garage/${id}/disable`);
   return response.data;
 };
 

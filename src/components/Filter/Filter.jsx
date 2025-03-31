@@ -23,13 +23,7 @@ export default function Filter() {
           {services.data.map((service) => (
             <ItemIcon
               key={service._id}
-              image={service.image}
-              title={service.name}
-            />
-          ))}
-          {services.data.map((service) => (
-            <ItemIcon
-              key={service._id}
+              id={service._id}
               image={service.image}
               title={service.name}
             />

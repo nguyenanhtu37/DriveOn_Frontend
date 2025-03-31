@@ -3,7 +3,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -41,12 +40,7 @@ export function GarageCard({
     >
       <CardContent className="p-0">
         <div className="relative rounded-b-xl overflow-hidden">
-          <Swiper
-            className="aspect-[1.1] md:aspect-[1.5]"
-            modules={[Autoplay]}
-            autoplay={{ delay: 2000 }}
-            loop={true}
-          >
+          <Swiper className="aspect-[1.1] md:aspect-[1.5]">
             {imgs?.map((img, index) => (
               <SwiperSlide key={index}>
                 <img
