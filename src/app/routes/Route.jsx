@@ -13,11 +13,11 @@ import NewPassword from "../../pages/forgot-password/New-password";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
 import SignUp from "../../pages/SignUp/SignUp";
-import  ProfilePage  from "@/pages/CarOwner/Profile/index";
+import ProfilePage from "@/pages/CarOwner/Profile/index";
 import { ViewExitsGarage } from "@/pages/AdminDashboard/ViewExitsGararge/ViewExitsGarage";
 import { GarageManagement } from "@/pages/GarageManagement/GarageManagement";
 import GarageDashboard from "@/pages/GarageManagement/Dashboard/GarageDashboard";
-import Appointment from "@/pages/GarageManagement/Appointment/Tab/Appointment";
+import Appointment from "@/pages/GarageManagement/Appointment/Appointment";
 import AppointmentDetail from "@/pages/GarageManagement/Appointment/AppointmentDetail";
 import { AppointmentScheduler } from "@/pages/GarageManagement/Appointment/Tab/AppointmentScheduler";
 import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGarageDetail/ViewRegisterGarageDetail";
@@ -33,7 +33,7 @@ import GarageDetailPage from "@/pages/GarageDetailPage/GarageDetailPage";
 
 import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
-import AddBrandPage from "@/pages/AdminDashboard/Brand/AddBrand"
+import AddBrandPage from "@/pages/AdminDashboard/Brand/AddBrand";
 import VehicleDetailsPage from "@/pages/CarOwner/Vehicle/VehicleDetails";
 const router = createBrowserRouter(
   [
@@ -57,13 +57,13 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
     { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
-    { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage/> },
-    { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage/>},
+    { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage /> },
+    { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
     {
       path: AbsoluteScreenPath.VehicleDetail,
-      element: <VehicleDetailsPage />
+      element: <VehicleDetailsPage />,
     },
-    { path: AbsoluteScreenPath.AddVehiclePage, element: <AddVehiclePage/>},
+    { path: AbsoluteScreenPath.AddVehiclePage, element: <AddVehiclePage /> },
     {
       element: (
         <ProtectedRoute
@@ -90,7 +90,7 @@ const router = createBrowserRouter(
             { index: true, element: <HomePage /> },
             {
               path: AdminScreenPath.AddCarBrand,
-              element: <AddBrandPage/>,
+              element: <AddBrandPage />,
             },
             {
               path: AdminScreenPath.ViewRegisterGarage,

@@ -6,7 +6,7 @@ import {
   requestPasswordReset,
   resetPassword,
 } from "../../app/services/reset-password";
-import { setUser, userLogout } from "@/app/stores/view/user";
+import { setUser } from "@/app/stores/view/user";
 
 // Hardcoded role data for mapping (replace with API call in production)
 const roleData = [
@@ -70,7 +70,8 @@ export const useAuth = () => {
       }
     } catch (err) {
       const errorMessage =
-        err.message || "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
+        err.message ||
+        "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
       console.error("Login error:", errorMessage);
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -89,7 +90,9 @@ export const useAuth = () => {
         roles: ["carowner"], // Default role for new users
       };
       const response = await signup(submitData);
-      setSuccess(response.message || "Vui lòng kiểm tra email để xác minh tài khoản.");
+      setSuccess(
+        response.message || "Vui lòng kiểm tra email để xác minh tài khoản."
+      );
       navigate("/login");
     } catch (err) {
       const errorMessage = err.message || "Đăng ký thất bại. Vui lòng thử lại.";
@@ -107,8 +110,7 @@ export const useAuth = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        await logout(token); // Call logout API if token exists
-        userLogout(); // Clear global user state
+        await logout(token); // Gọi API logout nếu có token
       }
     } catch (err) {
       const errorMessage = err.message || "Đăng xuất thất bại.";
@@ -132,7 +134,8 @@ export const useAuth = () => {
       await requestPasswordReset(email);
       setSuccess("Email đặt lại mật khẩu đã được gửi.");
     } catch (err) {
-      const errorMessage = err.message || "Không thể gửi email đặt lại mật khẩu.";
+      const errorMessage =
+        err.message || "Không thể gửi email đặt lại mật khẩu.";
       console.error("Request reset password error:", errorMessage);
       setError(errorMessage);
       throw new Error(errorMessage);

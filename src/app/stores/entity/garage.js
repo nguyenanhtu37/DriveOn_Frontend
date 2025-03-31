@@ -175,3 +175,14 @@ export const useGetGarageDetail = (id) => {
     data: query.data ?? {},
   };
 };
+
+export const useGetMyGarage = () => {
+  const query = useQuery({
+    queryKey: ["myGarage"],
+    queryFn: garageService.getMyGarage,
+  });
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

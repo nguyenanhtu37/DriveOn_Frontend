@@ -7,6 +7,7 @@ import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 import { AbsoluteScreenPath } from "../constants/screen";
+import { userLogout } from "@/app/stores/view/user";
 
 function Navbar() {
   const [scroll] = useScrollPosition();
@@ -30,6 +31,7 @@ function Navbar() {
   }, [error]);
 
   const onLogout = async () => {
+    userLogout();
     await handleLogout(); // handleLogout đã xử lý navigate
   };
 
@@ -46,7 +48,10 @@ function Navbar() {
       <div className="relative w-full h-20 px-4 md:px-10 flex justify-between items-center">
         {/* Left */}
         <div className="w-full md:w-1/2 lg:w-1/3 flex justify-center md:justify-start items-center z-30">
-          <Link to={AbsoluteScreenPath.Entry} className="w-full max-w-[180px] h-8">
+          <Link
+            to={AbsoluteScreenPath.Entry}
+            className="w-full max-w-[180px] h-8"
+          >
             <img
               src="/public/Screenshot 2025-01-16 232902_preview_rev_1.png"
               className="w-full h-full object-cover"
@@ -59,59 +64,30 @@ function Navbar() {
         <div className="hidden md:block w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
           <div
             className={cn(
-              "flex justify-center items-center gap-x-3 transition-all duration-300 ease-in-out",
-              scroll.y === 0
-                ? "opacity-100 translate-y-0 pointer-events-auto"
-                : "opacity-0 -translate-y-4 pointer-events-none"
+              "flex justify-center items-center gap-x-3 transition-all duration-300 ease-in-out"
             )}
           >
-            <div className="flex items-center justify-center p-2 rounded-full hover:bg-[#f4f4f4]">
-              <NavLink
-                to="/"
-                className="text-[#222222] text-md font-medium cursor-pointer"
-                onClick={(e) => {
-                  if (!isLoggedIn) {
-                    e.preventDefault();
-                    handleProtectedNavigation("/garage");
-                  }
-                }}
-              >
-                Garage
-              </NavLink>
-            </div>
-            <div className="flex items-center justify-center p-2 rounded-full hover:bg-[#f4f4f4]">
-              <NavLink className="text-[#6A6A6A] text-md font-medium cursor-pointer">
-                Supports
-              </NavLink>
-            </div>
-          </div>
-          <div
-            className={cn(
-              "absolute left-[50%] translate-x-[-50%] top-0 py-[13px] px-2 bg-white rounded-full border-[1px] border-[#DDDDDD] transition-all duration-300 ease-in-out",
-              scroll.y === 0
-                ? "opacity-0 translate-y-4 pointer-events-none"
-                : "opacity-100 translate-y-0 pointer-events-auto"
-            )}
-          >
-            <div className="flex justify-center items-center gap-x-4">
-              <div className="px-4">
-                <span className="text-sm font-archivo font-medium cursor-pointer">
-                  Any where
-                </span>
-              </div>
-              <div className="w-[1px] h-6 bg-[#DDDDDD]" />
-              <div className="px-4">
-                <span className="text-sm font-archivo font-medium cursor-pointer">
-                  Any time
-                </span>
-              </div>
-              <div className="w-[1px] h-6 bg-[#DDDDDD]" />
-              <div className="px-4">
-                <span className="text-sm font-archivo font-medium cursor-pointer">
-                  Any where
-                </span>
-              </div>
-            </div>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `text-md font-medium cursor-pointer flex items-center justify-center px-4 p-2 rounded-full hover:bg-[#f4f4f4] transition-colors duration-100 ease-in-out  ${
+                  isActive ? "text-black bg-[#dedede]" : "text-[#222222]"
+                }`
+              }
+            >
+              Garage
+            </NavLink>
+
+            <NavLink
+              to="/emergency"
+              className={({ isActive }) =>
+                `text-md font-medium cursor-pointer flex items-center justify-center px-4 p-2 rounded-full hover:bg-[#f4f4f4] transition-colors duration-100 ease-in-out ${
+                  isActive ? "text-black" : "text-[#6A6A6A]"
+                }`
+              }
+            >
+              Emergency
+            </NavLink>
           </div>
         </div>
 
@@ -157,7 +133,11 @@ function Navbar() {
                     />
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-[220px] px-0 py-2" align="end" sideOffset={12}>
+                <PopoverContent
+                  className="w-[220px] px-0 py-2"
+                  align="end"
+                  sideOffset={12}
+                >
                   <div className="grid gap-4 bg-white">
                     <Link
                       to={AbsoluteScreenPath.ProfilePage}
@@ -181,32 +161,6 @@ function Navbar() {
           </div>
         </div>
       </div>
-
-      {/* Bottom Search Bar */}
-      {/* <div
-        className={`hidden md:flex justify-center items-center w-full transition-all ease-in-out duration-300 overflow-hidden ${
-          scroll.y === 0 ? "h-[88px]" : "h-0"
-        }`}
-      >
-        <div className="flex w-1/2 justify-center items-center gap-x-4 rounded-full bg-white shadow-md border-[1px] border-[#DDDDDD]">
-          <div className="px-4 py-2 w-1/3 flex flex-col items-start gap-y-[2px] cursor-pointer rounded-full hover:bg-[#f4f4f4]">
-            <span className="text-sm font-archivo font-medium">Location</span>
-            <span className="text-sm font-archivo">Search Location</span>
-          </div>
-          <div className="w-[1px] h-6 bg-[#DDDDDD]" />
-          <div className="flex-1 flex flex-col px-4 py-2 cursor-pointer rounded-full hover:bg-[#f4f4f4]">
-            <span className="text-sm font-archivo font-medium cursor-pointer">
-              Any time
-            </span>
-            <span className="text-sm font-archivo">Choose time</span>
-          </div>
-          <div className="w-[1px] h-6 bg-[#DDDDDD]" />
-          <div className="px-4 py-2 w-1/3 flex flex-col items-start gap-y-[2px] cursor-pointer rounded-full hover:bg-[#f4f4f4]">
-            <span className="text-sm font-archivo font-medium">Location</span>
-            <span className="text-sm font-archivo">Search Location</span>
-          </div>
-        </div>
-      </div> */}
 
       {logoutError && (
         <div className="absolute top-20 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md z-50">
