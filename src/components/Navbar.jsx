@@ -41,7 +41,7 @@ function Navbar() {
             className="w-full max-w-[180px] h-8"
           >
             <img
-              src="/public/Screenshot 2025-01-16 232902_preview_rev_1.png"
+              src="/Screenshot 2025-01-16 232902_preview_rev_1.png"
               className="w-full h-full object-cover"
               alt="Logo"
             />
