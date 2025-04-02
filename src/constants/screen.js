@@ -12,6 +12,7 @@ export const AbsoluteScreenPath = {
   ProfilePage: "/profile",
   VehicleList: "/vehicle",
   VehicleDetail: "/vehicle/:id",
+  FavoriteGarages: "/favorite-garages",
 };
 
 export const GarageManagementScreenPath = {

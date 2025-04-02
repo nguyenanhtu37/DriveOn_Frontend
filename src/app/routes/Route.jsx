@@ -36,6 +36,7 @@ import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
 import AddBrandPage from "@/pages/AdminDashboard/Brand/AddBrand";
 import VehicleDetailsPage from "@/pages/CarOwner/Vehicle/VehicleDetails";
 import AppointmentId from "@/pages/GarageManagement/Appointment/AppointmentId";
+import FavoriteGarages from "@/pages/CarOwner/FavoriteGarage/FavoriteGarages";
 const router = createBrowserRouter(
   [
     {
@@ -60,6 +61,7 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage /> },
     { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
+    { path: AbsoluteScreenPath.FavoriteGarages, element: <FavoriteGarages/>},
     {
       path: AbsoluteScreenPath.VehicleDetail,
       element: <VehicleDetailsPage />,

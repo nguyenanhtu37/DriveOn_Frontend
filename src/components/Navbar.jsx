@@ -7,7 +7,7 @@ import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 import { AbsoluteScreenPath } from "../constants/screen";
-import { userLogout } from "@/app/stores/view/user";
+import { getUser, userLogout } from "@/app/stores/view/user";
 
 function Navbar() {
   const [scroll] = useScrollPosition();
@@ -15,11 +15,7 @@ function Navbar() {
   const [logoutError, setLogoutError] = useState(null);
   const navigate = useNavigate();
 
-  // Debug trạng thái
-  useEffect(() => {
-    console.log("Navbar - isLoggedIn:", isLoggedIn);
-    console.log("Navbar - Token exists:", !!localStorage.getItem("token"));
-  }, [isLoggedIn]);
+  const user = getUser();
 
   // Hiển thị lỗi đăng xuất
   useEffect(() => {
@@ -35,14 +31,6 @@ function Navbar() {
     await handleLogout(); // handleLogout đã xử lý navigate
   };
 
-  const handleProtectedNavigation = (to) => {
-    if (!isLoggedIn) {
-      navigate(AbsoluteScreenPath.Login, { state: { from: to } });
-      return;
-    }
-    navigate(to);
-  };
-
   return (
     <div className="relative w-full flex flex-col items-center bg-white border-b border-[#DDDDDD]">
       <div className="relative w-full h-20 px-4 md:px-10 flex justify-between items-center">
@@ -53,7 +41,7 @@ function Navbar() {
             className="w-full max-w-[180px] h-8"
           >
             <img
-              src="/public/Screenshot 2025-01-16 232902_preview_rev_1.png"
+              src="/Screenshot 2025-01-16 232902_preview_rev_1.png"
               className="w-full h-full object-cover"
               alt="Logo"
             />
@@ -106,7 +94,7 @@ function Navbar() {
               <Globe size={16} />
             </div>
 
-            {!isLoggedIn ? (
+            {!user ? (
               <div className="flex items-center gap-2">
                 <Link
                   to={AbsoluteScreenPath.Login}
@@ -144,6 +132,12 @@ function Navbar() {
                       className="text-sm w-full px-4 py-[11px] text-[#222222] hover:bg-[#f7f6f6] ease-in-out font-roboto cursor-pointer"
                     >
                       Profile
+                    </Link>
+                    <Link
+                      to={AbsoluteScreenPath.FavoriteGarages}
+                      className="text-sm w-full px-4 py-[11px] text-[#222222] hover:bg-[#f7f6f6] ease-in-out font-roboto cursor-pointer"
+                    >
+                      Favorite Garages
                     </Link>
                     <button
                       className="text-sm w-full px-3 py-2 text-[#222222] ease-in-out hover:bg-[#f7f6f6] font-roboto cursor-pointer text-left disabled:opacity-50"

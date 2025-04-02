@@ -1,18 +1,26 @@
-import PropTypes from "prop-types";
 import { cn } from "@/lib/utils";
+import { useFilterStore } from "@/app/stores/view/filter";
 
-function ItemIcon(props) {
-  const { image, isActive, title } = props;
+function ItemIcon({ image, title, id }) {
+  const { serviceSystem, setServiceSystem } = useFilterStore();
+  const isActive = serviceSystem.includes(id);
+
+  const handleClick = () => setServiceSystem(id);
+
   return (
-    <div className=" flex flex-col items-center justify-center cursor-pointer group ">
-      <div className="flex flex-col items-center justify-center  gap-y-2 ">
+    <div
+      className="flex flex-col items-center justify-center cursor-pointer group"
+      onClick={handleClick}
+    >
+      <div className="flex flex-col items-center justify-center gap-y-2">
         <img
-          className=" size-10 rounded-full right-1 object-cover"
+          className="size-10 rounded-full object-cover"
           src={image}
+          alt={title}
         />
         <span
           className={cn(
-            " text-sm text-[#717171] text-nowrap group-hover:text-[#222222] max-w-[80px] line-clamp-1 group ",
+            "text-sm text-[#717171] group-hover:text-[#222222] max-w-[80px] line-clamp-1",
             isActive && "text-[#222222]"
           )}
         >
@@ -23,17 +31,12 @@ function ItemIcon(props) {
       </div>
       <hr
         className={cn(
-          " w-full h-[2px] group-hover:bg-[#DDDDDD] border-none rounded-full  transition-all ease-in-out origin-center",
-          isActive && "bg-[#222222]"
+          "w-full h-[2px] border-none rounded-full transition-all ease-in-out",
+          isActive ? "bg-[#222222]" : "group-hover:bg-[#DDDDDD]"
         )}
       />
     </div>
   );
 }
-ItemIcon.propTypes = {
-  imgage: PropTypes.string.isRequired,
-  isActive: PropTypes.bool,
-  title: PropTypes.string,
-};
 
 export default ItemIcon;
