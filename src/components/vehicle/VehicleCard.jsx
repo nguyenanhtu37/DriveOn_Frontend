@@ -2,19 +2,19 @@ import { useState } from 'react';
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useVehicles } from '@/common/hooks/useVehicle';
-import {DeleteConfirmationModal} from '@/components/vehicle/DeleteConfirm'; 
+import { DeleteConfirmationModal } from '@/components/vehicle/DeleteConfirm';
 
 const VehicleCard = ({ vehicle, onEdit }) => {
   const navigate = useNavigate();
   const { deleteVehicle, fetchVehicles } = useVehicles();
-  const { _id, carBrand, carName, carYear, carPlate, carColor, maintenanceHistory } = vehicle;
-  const status = maintenanceHistory.length > 0 ? 'Maintenance' : 'Active';
+  const { _id, carBrand, carName, carYear, carPlate, carColor, maintenanceHistory = [] } = vehicle;  // Default to an empty array
+  const status = (maintenanceHistory.length > 0) ? 'Maintenance' : 'Active';  // This works now because maintenanceHistory will always be an array.
 
-  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false); // Now useState is available
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
   const handleView = () => navigate(`/vehicle/${_id}`);
   const handleEdit = () => onEdit(_id);
-  
+
   const handleDelete = async () => {
     setIsConfirmDeleteOpen(true);
   };
@@ -25,7 +25,7 @@ const VehicleCard = ({ vehicle, onEdit }) => {
       await fetchVehicles();
       alert('Vehicle deleted successfully');
       setIsConfirmDeleteOpen(false);
-      navigate(0); // This refreshes the current page
+      navigate(0); // Refresh the page
     } catch (err) {
       alert('Error deleting vehicle: ' + err.message);
       setIsConfirmDeleteOpen(false);
@@ -34,7 +34,6 @@ const VehicleCard = ({ vehicle, onEdit }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
-      {/* Placeholder */}
       <div className="relative h-32 bg-gray-100 rounded-lg flex items-center justify-center">
         <div className="text-gray-400">
           <svg
@@ -59,16 +58,14 @@ const VehicleCard = ({ vehicle, onEdit }) => {
         </span>
       </div>
 
-      {/* Vehicle Info */}
       <div className="mt-4">
         <h3 className="text-lg font-semibold">{carName}</h3>
-        <p className="text-gray-600">Brand: <span className="font-medium">{carBrand.brandName}</span></p>
+        <p className="text-gray-600">Brand: <span className="font-medium">{carBrand?.brandName}</span></p>
         <p className="text-gray-600">Year: <span className="font-medium">{carYear}</span></p>
         <p className="text-gray-600">License Plate: <span className="font-medium">{carPlate}</span></p>
         <p className="text-gray-600">Color: <span className="font-medium">{carColor}</span></p>
       </div>
 
-      {/* Action Buttons */}
       <div className="mt-4 flex justify-between">
         <button onClick={handleView} className="text-gray-500 hover:text-gray-700">
           <EyeIcon className="w-5 h-5 inline-block mr-1" />
@@ -84,7 +81,6 @@ const VehicleCard = ({ vehicle, onEdit }) => {
         </button>
       </div>
 
-      {/* Delete Confirmation Modal */}
       <DeleteConfirmationModal
         isOpen={isConfirmDeleteOpen}
         onClose={() => setIsConfirmDeleteOpen(false)}
