@@ -57,6 +57,7 @@ export default function RegistrationForm() {
   });
 
   const onSubmit = async (data) => {
+    console.log("🔥 Debug form data:", data);
     setSubmitting(true);
     let uploadedUrls = [];
     if (files.length > 0) {
@@ -95,7 +96,7 @@ export default function RegistrationForm() {
       email: data.email,
       interiorImages: uploadedUrls,
       location: location,
-      address: address,
+      address: data.address,
     };
 
     register.mutate(newGarage, {
