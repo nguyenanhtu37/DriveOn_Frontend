@@ -54,9 +54,11 @@ export const serviceSchema = z.object({
 export const serviceDetailSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
   serviceSystem: z.string().nonempty("Service system is required"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  price: z.number().min(0, "Price must be at least 0"),
-  duration: z.string().min(1, "Duration must be at least 1"),
+  description: z
+    .string()
+    .min(100, "Description must be at least 100 characters"),
+  price: z.number().min(0, "Minimum price 0 VND"),
+  duration: z.number().min(0, "Minimum time is 5 minutes"),
   warranty: z.string().min(1, "Warranty must be at least 1"),
 });
 
@@ -69,8 +71,7 @@ export const appointmentSchema = z.object({
       })
     )
     .nonempty("At least one service is required"),
-  start: z.string().nonempty("Start time is required"),
-  end: z.string().nonempty("End time is required"),
+  date: z.date({ required_error: "Date is required" }),
   note: z.string().optional(),
   vehicle: z.object({
     value: z.string().nonempty("Vehicle ID is required"),

@@ -1,18 +1,30 @@
 import Calendar from "@/components/Calendar";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CreateAppointment } from "../../components/CreateAppointment";
 
 import TagAppointment from "@/components/TagAppointment";
+import { useGetAppointmentByGarageId } from "@/app/stores/entity/appointment";
+import { useParams } from "react-router-dom";
 
 export const AppointmentScheduler = () => {
-  const [appointments, setAppointments] = useState([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { garageId } = useParams();
+  const appointmentData = useGetAppointmentByGarageId(garageId);
 
-  const [newAppointment, setNewAppointment] = useState({});
-  const handleSelectSlot = useCallback(({ start, end }) => {
-    setNewAppointment({ start, end });
-    setIsDialogOpen(true);
-  }, []);
+  const [appointments, setAppointments] = useState([]);
+
+  useEffect(() => {
+    const formattedAppointments = appointmentData.data.map((appointment) => {
+      return {
+        ...appointment,
+        id: appointment._id,
+        title: appointment.service[0].name,
+        start: new Date(appointment.start),
+        end: new Date(appointment.end),
+      };
+    });
+    setAppointments(formattedAppointments);
+  }, [appointmentData.data]);
+
   return (
     <div className="h-screen p-4 bg-white">
       <h1 className="text-2xl font-bold mb-4">Appointment Scheduler</h1>
@@ -24,16 +36,7 @@ export const AppointmentScheduler = () => {
         selectable
         onNavigate={(date) => console.log(date)}
         onView={(view) => console.log(view)}
-        onSelectSlot={handleSelectSlot}
         components={{ event: TagAppointment }}
-      />
-      <CreateAppointment
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        setAppointments={setAppointments}
-        newAppointment={newAppointment}
-        setNewAppointment={setNewAppointment}
-        appointments={appointments}
       />
     </div>
   );

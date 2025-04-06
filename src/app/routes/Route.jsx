@@ -18,7 +18,6 @@ import { ViewExitsGarage } from "@/pages/AdminDashboard/ViewExitsGararge/ViewExi
 import { GarageManagement } from "@/pages/GarageManagement/GarageManagement";
 import GarageDashboard from "@/pages/GarageManagement/Dashboard/GarageDashboard";
 import Appointment from "@/pages/GarageManagement/Appointment/Appointment";
-import AppointmentDetail from "@/pages/GarageManagement/Appointment/AppointmentDetail";
 import { AppointmentScheduler } from "@/pages/GarageManagement/Appointment/Tab/AppointmentScheduler";
 import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGarageDetail/ViewRegisterGarageDetail";
 import { Staff } from "@/pages/GarageManagement/Staff/Staff";

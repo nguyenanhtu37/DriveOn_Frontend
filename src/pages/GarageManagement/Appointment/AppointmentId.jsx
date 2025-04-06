@@ -65,13 +65,12 @@ const AppointmentId = () => {
       id: appointmentData?.id || appointmentId,
       title: "Appointment information",
       status: appointmentData?.status || "proposal_sent", // proposal_sent, approved, rejected
-      date: appointmentData?.date
-        ? format(new Date(appointmentData.date), "EEEE, MMMM d, yyyy")
+      start: appointmentData?.start
+        ? format(new Date(appointmentData.start), "EEEE, MMMM d, yyyy h:mm a")
         : "",
-      time:
-        appointmentData?.start && appointmentData?.end
-          ? `${appointmentData.start} - ${appointmentData.end}`
-          : "",
+      end: appointmentData?.end
+        ? format(new Date(appointmentData.end), "EEEE, MMMM d, yyyy h:mm a")
+        : "",
       location:
         appointmentData?.location ||
         "4517 Washington Avenue, Manchester, KY 39495",
@@ -81,7 +80,7 @@ const AppointmentId = () => {
         appointmentData?.salesAvatar || "/placeholder.svg?height=40&width=40",
       notes: appointmentData?.note || "",
       createdAt: appointmentData?.createdAt
-        ? format(new Date(appointmentData.createdAt), "MMMM d, yyyy")
+        ? format(new Date(appointmentData.createdAt), "MMMM d, yyyy h:mm a")
         : "",
       services: appointmentData?.service ? appointmentData.service.length : 0,
     };
@@ -90,7 +89,7 @@ const AppointmentId = () => {
   const confirmAppointmentMutation = useConfirmAppointment();
   const denyAppointmentMutation = useDenyAppointment();
   const completeAppointmentMutation = useCompleteAppointment();
-
+  console.log(appointment);
   const handleConfirm = () => {
     confirmAppointmentMutation.mutate(appointmentId, {
       onSuccess: () => {
@@ -322,8 +321,8 @@ const AppointmentId = () => {
                       <Calendar className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-500">Date</div>
-                      <div className="font-medium">{appointment.date}</div>
+                      <div className="text-sm text-gray-500">start</div>
+                      <div className="font-medium">{appointment.start}</div>
                     </div>
                   </div>
 
@@ -332,8 +331,8 @@ const AppointmentId = () => {
                       <Clock className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-500">Time</div>
-                      <div className="font-medium">{appointment.time}</div>
+                      <div className="text-sm text-gray-500">End</div>
+                      <div className="font-medium">{appointment.end}</div>
                     </div>
                   </div>
 
@@ -441,19 +440,22 @@ const AppointmentId = () => {
                     className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center gap-y-2 flex-shrink-0">
                         <Settings className="h-5 w-5 text-green-600" />
                       </div>
                       <div>
                         <div className="font-medium">{service.name}</div>
-                        <div className="text-sm text-gray-500">
+                        <div
+                          className="text-sm text-gray-500 line-clamp-2
+                        "
+                        >
                           {service.description}
                         </div>
+                        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                          {service.duration} min
+                        </Badge>
                       </div>
                     </div>
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                      {service.duration} min
-                    </Badge>
                   </div>
                 ))}
               </div>
