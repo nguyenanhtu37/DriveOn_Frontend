@@ -39,7 +39,10 @@ const CreateService = () => {
 
   const form = useForm({
     resolver: zodResolver(serviceDetailSchema),
-    defaultValues: {},
+    defaultValues: {
+      price: 0,
+      duration: 0,
+    },
   });
 
   const onSubmit = async (data) => {
@@ -50,11 +53,10 @@ const CreateService = () => {
       name: data.name,
       description: data.description,
       price: Number(data.price),
-      duration: data.duration,
+      duration: Number(data.duration),
       warranty: data.warranty,
       images: uploadedUrls,
     };
-    console.log(newService);
     addService.mutate(newService);
   };
   return (
@@ -142,9 +144,12 @@ const CreateService = () => {
                   name="price"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel className="text-md">Price</FormLabel>
+                      <FormLabel className="text-md">
+                        Price (unit 1,000 VND)
+                      </FormLabel>
                       <FormControl>
                         <Input
+                          min={0}
                           placeholder="Price"
                           {...field}
                           onChange={(e) =>
@@ -164,12 +169,19 @@ const CreateService = () => {
                   name="duration"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel className="text-md">Duration</FormLabel>
+                      <FormLabel className="text-md">
+                        Duration (minutes)
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Duration"
                           {...field}
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
                           className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 h-12"
+                          type="number"
+                          min={0}
                         />
                       </FormControl>
                       <FormMessage />

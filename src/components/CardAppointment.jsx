@@ -34,14 +34,15 @@ import {
 } from "@/app/stores/entity/appointment";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CardAppointment = ({
   id,
   clientName,
   clientImage,
   serviceName,
-  date,
+  start,
+  end,
   duration,
   location,
   status,
@@ -49,7 +50,7 @@ const CardAppointment = ({
   vehicle,
 }) => {
   const { garageId } = useParams();
-
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const confirmAppointmentMutation = useConfirmAppointment();
   const denyAppointmentMutation = useDenyAppointment();
@@ -163,16 +164,12 @@ const CardAppointment = ({
         <CardContent className="pb-3">
           <div className="grid gap-3">
             <div className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span>{format(date, "EEEE, MMMM d, yyyy")}</span>
+              <span>🔥 {format(start, "EEEE, MMMM d, yyyy")}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <Clock className="h-4 w-4 text-muted-foreground" />
-              <span>
-                {format(date, "h:mm a")} - {format(new Date(), "h:mm a")} (
-                {duration} min)
-              </span>
+              <span>✅ {format(end, "EEEE, MMMM d, yyyy")}</span>
             </div>
+
             <div className="flex items-center gap-2 text-sm">
               <Settings className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground font-semibold">
@@ -194,8 +191,14 @@ const CardAppointment = ({
         </CardContent>
       </div>
       <CardFooter className="flex justify-between border-t bg-muted/50 px-6 py-3">
-        <Button variant="outline" size="sm">
-          Reschedule
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            navigate(`/garageManagement/${garageId}/appointments/${id}`)
+          }
+        >
+          View Details
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

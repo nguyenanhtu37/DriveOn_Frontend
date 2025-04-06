@@ -68,7 +68,9 @@ const ServiceDetail = () => {
         </div>
         <div className=" flex w-full justify-start items-start gap-x-2">
           <span className=" w-[120px] text-md font-semibold">Duration: </span>
-          <span className=" text-md">{serviceDetail.data.duration}</span>
+          <span className=" text-md">
+            {serviceDetail.data.duration} minutes
+          </span>
         </div>
         <div className=" flex w-full justify-start items-start gap-x-2">
           <span className=" w-[120px] text-md font-semibold">Waranty: </span>

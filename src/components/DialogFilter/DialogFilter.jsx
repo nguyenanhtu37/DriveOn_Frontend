@@ -1,29 +1,18 @@
-import { CalendarIcon, SlidersHorizontal } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
-import { useGetService } from "@/app/stores/entity/service";
-import { Form } from "../ui/form";
-import { Checkbox } from "../ui/checkbox";
-import { Range } from "react-daisyui";
-import { formatCurrency } from "@/utils";
 
-import { InputDate } from "../ui/inputDate";
-import { Input } from "../ui/input";
+import { useGetService } from "@/app/stores/entity/service";
+import { Checkbox } from "../ui/checkbox";
+
 import {
   Select,
   SelectContent,
@@ -33,25 +22,63 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useFilterStore } from "@/app/stores/view/filter";
+import { Input } from "../ui/input";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Slider } from "../ui/slider";
 
-const PRICE_VALUE = 1000;
+const days = [
+  { value: "Sunday", label: "☀️ Sunday" },
+  { value: "Monday", label: "🌙 Monday" },
+  { value: "Tuesday", label: "☁️ Tuesday" },
+  { value: "Wednesday", label: "🌧️ Wednesday" },
+  { value: "Thursday", label: "⚡ Thursday" },
+  { value: "Friday", label: "❄️ Friday" },
+  { value: "Saturday", label: "💨 Saturday" },
+];
 
 const DialogFilter = () => {
   const service = useGetService();
-  const [priceValue, setPriceValue] = useState(0);
-  const [date, setDate] = useState(new Date());
+  const {
+    serviceSystem,
+    setServiceSystem,
+    location,
+    setLocation,
+    clearFilter,
+    distance,
+    setDistance,
+    openTime,
+    closeTime,
+    setOpenTime,
+    setCloseTime,
+    operating_days,
+    tagPro,
+    rating,
+    setTagPro,
+    setRating,
+    setOperatingDays,
+  } = useFilterStore();
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
-  const [location, setLocation] = useState({ province: null });
 
   const handleChooseProvince = useCallback(
     (value) => {
       const selectedProvince = provinces.find((item) => item.id === value);
       if (selectedProvince) {
-        setLocation((prev) => ({ ...prev, province: selectedProvince }));
+        setLocation({ province: selectedProvince });
       }
     },
-    [provinces]
+    [provinces, setLocation]
+  );
+  const handleChooseDistrict = useCallback(
+    (value) => {
+      const selectedDistrict = districts.find((item) => item.id === value);
+      if (selectedDistrict) {
+        setLocation({ district: selectedDistrict });
+      }
+    },
+    [districts, setLocation]
   );
 
   useEffect(() => {
@@ -101,89 +128,168 @@ const DialogFilter = () => {
         </div>
       </DialogTrigger>
 
-      <DialogContent className="w-[590px] h-[818px] max-w-none flex p-2 pt-0 pb-4 flex-col items-center gap-y-0 overflow-y-auto">
+      <DialogContent className="w-[590px] h-[818px] max-w-none flex p-2 pt-0 pb-4 flex-col items-center gap-y-0 overflow-y-auto scrollbar-hide">
         <DialogTitle className="text-center text-xl sticky top-0 py-2 bg-white border-y-px border-[#1c1c1c]/50 w-full items-center justify-center shadow-sm z-30">
           Filter
         </DialogTitle>
-        <form className="w-full h-full relative flex flex-col justify-between ">
+        <div className="w-full h-[818px] pb-4  overflow-y-auto scrollbar-hide relative flex flex-col justify-between ">
           <div className="">
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem
-                value="item-1"
-                className="px-6 py-7 w-full flex-col gap-y-6 border-b border-[#1c1c1c]/50"
-                open={true}
-              >
-                <AccordionTrigger className="w-full">
-                  <div className=" flex justify-between items-center">
-                    <div className=" flex flex-col items-start gap-y-2">
-                      <Label className="text-lg">Service</Label>
-                      <DialogDescription>
-                        Choose the service you want
-                      </DialogDescription>
-                    </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className=" mt-4">
-                  <div className=" grid grid-cols-2 gap-2">
-                    {service.data.map((service) => (
-                      <div
-                        key={service._id}
-                        className=" flex gap-x-4 items-center mb-3"
-                      >
-                        <Checkbox id={service._id} color="red" />
-                        <div className="grid gap-1.5 leading-none ">
-                          <label
-                            htmlFor={service._id}
-                            className="text-sm font-regular leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            {service.name}
-                          </label>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-
             <div className="px-6 py-7 w-full flex-col gap-y-6 border-b border-[#1c1c1c]/50">
               <div className=" flex justify-between items-center mb-4">
                 <div className=" flex flex-col items-start gap-y-2">
-                  <Label className="text-lg">Select price range</Label>
+                  <Label className="text-lg">Service</Label>
                   <DialogDescription className=" flex items-center gap-x-2">
-                    Choose the price you want
                     <span className="text-md font-semibold">
-                      {formatCurrency(priceValue * PRICE_VALUE)}
+                      Choose the service you want
                     </span>
                   </DialogDescription>
                 </div>
               </div>
-              <div className=" w-full ">
-                <Range
-                  size="xs"
-                  color="error"
-                  className="range"
-                  value={priceValue}
-                  onChange={(e) => {
-                    setPriceValue(e.target.value);
-                  }}
-                  max={5000}
-                />
+              <div className=" grid grid-cols-2 gap-2">
+                {service.data.map((service) => (
+                  <div
+                    key={service._id}
+                    className=" flex gap-x-4 items-center mb-3"
+                  >
+                    <Checkbox
+                      id={service._id}
+                      color="red"
+                      checked={serviceSystem.includes(service._id)}
+                      onClick={() => setServiceSystem(service._id)}
+                    />
+                    <div className="grid gap-1.5 leading-none ">
+                      <label
+                        htmlFor={service._id}
+                        className="text-sm font-regular leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {service.name}
+                      </label>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div className="px-6 py-7 w-full flex-col gap-y-6 border-b border-[#1c1c1c]/50">
               <div className=" flex justify-between items-center mb-4">
                 <div className=" flex flex-col items-start gap-y-2">
-                  <Label className="text-lg">Select date </Label>
+                  <Label className="text-lg">Garage Pro</Label>
                   <DialogDescription className=" flex items-center gap-x-2">
-                    Select the date you want to schedule an appointment
+                    <span className="text-md font-semibold"></span>
+                  </DialogDescription>
+                </div>
+              </div>
+              <div className=" flex gap-x-4 items-center mb-3">
+                <Checkbox
+                  id={"tagPro"}
+                  color="red"
+                  checked={tagPro}
+                  onClick={() => setTagPro(!tagPro)}
+                />
+                <div className="grid gap-1.5 leading-none ">
+                  <label
+                    htmlFor={"tagPro"}
+                    className="text-sm font-regular leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Garage Pro (looking for Pro garages to enhance your
+                    experience)
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 py-7 w-full flex-col gap-y-6 border-b border-[#1c1c1c]/50">
+              <div className=" flex justify-between items-center mb-4">
+                <div className=" flex flex-col items-start gap-y-2">
+                  <Label className="text-lg">Rating</Label>
+                  <DialogDescription className=" flex items-center gap-x-2">
+                    <span className="text-md font-semibold"></span>
+                  </DialogDescription>
+                </div>
+              </div>
+              <div className=" flex gap-x-4 items-center mb-3">
+                <Select
+                  value={rating}
+                  onValueChange={(value) => setRating(value)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Star</SelectLabel>
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <SelectItem key={index} value={index + 1}>
+                          {index + 1}⭐
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="px-6 py-7 w-full flex-col gap-y-6 border-b border-[#1c1c1c]/50">
+              <div className=" flex justify-between items-center mb-4">
+                <div className=" flex flex-col items-start gap-y-2">
+                  <Label className="text-lg">
+                    Select the day of the week you want to schedule
+                  </Label>
+                  <DialogDescription className=" flex items-center gap-x-2">
+                    <span className="text-md font-semibold"></span>
+                  </DialogDescription>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-2 ">
+                {days.map((day) => (
+                  <div
+                    key={day.value}
+                    className=" flex gap-x-4 items-center mb-3"
+                  >
+                    <Checkbox
+                      id={day.value}
+                      color="red"
+                      checked={operating_days.includes(day.value)}
+                      onClick={() => setOperatingDays(day.value)}
+                    />
+                    <div className="grid gap-1.5 leading-none ">
+                      <label
+                        htmlFor={day.value}
+                        className="text-sm font-regular leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {day.label}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="px-6 py-7 w-full flex-col gap-y-6 border-b border-[#1c1c1c]/50">
+              <div className=" flex justify-between items-center mb-4">
+                <div className=" flex flex-col items-start gap-y-2">
+                  <Label className="text-lg">Select Time </Label>
+                  <DialogDescription className=" flex items-center gap-x-2">
+                    Chosse the opening time of the service
                   </DialogDescription>
                 </div>
               </div>
               <div className=" grid grid-cols-2 gap-x-2">
-                <div className=" w-full ">
-                  <InputDate date={date} setDate={setDate} />
+                <div className=" w-fit flex flex-col gap-y-2 ">
+                  <Label className="text-sm">From</Label>
+                  <Input
+                    type="time"
+                    value={openTime}
+                    onChange={(e) => setOpenTime(e.target.value)}
+                  />
+                </div>
+                <div className=" w-fit flex flex-col gap-y-2 ">
+                  <Label className="text-sm">To</Label>
+                  <Input
+                    type="time"
+                    value={closeTime}
+                    onChange={(e) => setCloseTime(e.target.value)}
+                  />
                 </div>
               </div>
             </div>
@@ -197,51 +303,90 @@ const DialogFilter = () => {
                   </DialogDescription>
                 </div>
               </div>
-              <div className=" grid grid-cols-2 gap-x-2">
-                <div className=" w-full ">
-                  <Select onValueChange={handleChooseProvince}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a province" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Province</SelectLabel>
-                        {provinces.map((item) => (
-                          <SelectItem key={item.id} value={item.id}>
-                            {item.name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className=" w-full ">
-                  <Select>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a district" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>District</SelectLabel>
-                        {districts.map((item) => (
-                          <SelectItem key={item.code} value={item.id}>
-                            {item.name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+
+              <Tabs defaultValue="address">
+                <TabsList className="mb-4">
+                  <TabsTrigger value="address">Search by area</TabsTrigger>
+                  <TabsTrigger value="currentLocation">
+                    Search around current location
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent className="mt-0" value="address">
+                  <div className=" grid grid-cols-2 gap-x-2">
+                    <div className=" w-full ">
+                      <Select
+                        value={location.province?.id}
+                        onValueChange={handleChooseProvince}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a province" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Province</SelectLabel>
+                            {provinces.map((item) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className=" w-full ">
+                      <Select
+                        value={location.district?.id}
+                        onValueChange={handleChooseDistrict}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a district" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>District</SelectLabel>
+                            {districts.map((item) => (
+                              <SelectItem key={item.code} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent className="mt-0" value="currentLocation">
+                  <div className=" flex flex-col gap-y-2">
+                    <DialogDescription className=" flex items-center gap-x-2">
+                      Distance from your current location {distance} (km)
+                    </DialogDescription>
+                    <Slider
+                      defaultValue={[distance]}
+                      max={20}
+                      step={1}
+                      onValueChange={(value) => setDistance(value[0])}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
-
-          <div className="flex justify-end pt-4 pb-4 rounded-t-md bg-white w-full shadow-[0_-4px_10px_-2px_rgba(0,0,0,0.1)]">
+        </div>
+        <div className=" flex justify-end pt-4 pb-4 rounded-t-md bg-white w-full shadow-[0_-4px_10px_-2px_rgba(0,0,0,0.1)]">
+          <Button
+            variant="ghost"
+            className="mr-2 hover:text-red-400"
+            type="submit"
+            onClick={() => clearFilter()}
+          >
+            Reset Filter
+          </Button>
+          <DialogTrigger asChild>
             <Button className="mr-2" type="submit">
-              Save changes
+              Cancel
             </Button>
-          </div>
-        </form>
+          </DialogTrigger>
+        </div>
       </DialogContent>
     </Dialog>
   );

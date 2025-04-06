@@ -7,8 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { appointmentSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-
+import { format, parse } from "date-fns";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import Select from "react-tailwindcss-select";
@@ -17,16 +16,17 @@ export const CreateAppointment = () => {
   const { garageId } = useParams();
   const service = useGetService(garageId);
   const myVehicles = useGetMyVehicles();
-  const serviceOptions = service?.data.map((item) => ({
-    label: item.name,
-    value: item._id,
+  const createAppointment = useCreateAppointment();
+
+  const serviceOptions = service?.data?.map(({ name, _id }) => ({
+    label: name,
+    value: _id,
   }));
 
-  const vehicleOptions = myVehicles?.data.map((item) => ({
-    label: item.carName,
-    value: item._id,
+  const vehicleOptions = myVehicles?.data?.map(({ carName, _id }) => ({
+    label: carName,
+    value: _id,
   }));
-  const createAppointment = useCreateAppointment();
 
   const {
     handleSubmit,
@@ -37,8 +37,6 @@ export const CreateAppointment = () => {
     resolver: zodResolver(appointmentSchema),
     defaultValues: {
       date: "",
-      start: "",
-      end: "",
       service: [],
       note: "",
       vehicle: {},
@@ -48,10 +46,8 @@ export const CreateAppointment = () => {
   const onSubmit = (data) => {
     const newAppointment = {
       garage: garageId,
-      date: data.date,
-      start: data.start,
-      end: data.end,
-      service: data.service.map((item) => item.value),
+      start: data.date,
+      service: data.service.map(({ value }) => value),
       note: data.note,
       vehicle: data.vehicle.value,
     };
@@ -59,19 +55,18 @@ export const CreateAppointment = () => {
     createAppointment.mutate(newAppointment, {
       onSuccess: () => {
         reset();
-        toast({
-          title: "Create appointment successfully",
-          duration: 2000,
-        });
+        toast({ title: "Create appointment successfully", duration: 2000 });
       },
       onError: () => {
-        toast({
-          title: "Create appointment failed",
-          duration: 2000,
-        });
+        toast({ title: "Create appointment failed", duration: 2000 });
       },
     });
   };
+
+  const renderFieldError = (error) => (
+    <span className="text-red-500 text-sm">{error?.message}</span>
+  );
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -82,7 +77,8 @@ export const CreateAppointment = () => {
           Make an appointment with the garage
         </span>
         <div className="w-full flex flex-col gap-y-4 rounded-xl">
-          {/* <div className="flex flex-col gap-y-2">
+          {/* Date Field */}
+          <div className="flex flex-col gap-y-2">
             <label className="text-sm font-semibold text-[#222222]">
               Choose Date
             </label>
@@ -91,111 +87,63 @@ export const CreateAppointment = () => {
               control={control}
               render={({ field }) => (
                 <>
-                  <InputDate
-                    date={field.value ? new Date(field.value) : null}
-                    setDate={(newDate) =>
+                  <Input
+                    id="date"
+                    type="datetime-local"
+                    value={
+                      field.value
+                        ? format(field.value, "yyyy-MM-dd'T'HH:mm")
+                        : ""
+                    }
+                    onChange={(e) =>
                       field.onChange(
-                        newDate ? format(newDate, "yyyy-MM-dd") : ""
+                        e.target.value
+                          ? parse(
+                              e.target.value,
+                              "yyyy-MM-dd'T'HH:mm",
+                              new Date()
+                            )
+                          : null
                       )
                     }
                   />
-                  <span className="text-red-500 text-sm">
-                    {errors.date?.message}
-                  </span>
-                </>
-              )}
-            />
-          </div> */}
-
-          <div className="flex flex-col gap-y-2">
-            <label className="text-sm font-semibold text-[#222222]">
-              Start Date
-            </label>
-            <Controller
-              name="start"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <Input
-                    id="start"
-                    type="datetime-local"
-                    value={
-                      field.value
-                        ? format(new Date(field.value), "yyyy-MM-dd'T'HH:mm")
-                        : ""
-                    }
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                      field.onChange(new Date(e.target.value));
-                    }}
-                  />
-                  <span className="text-red-500 text-sm">
-                    {errors.start?.message}
-                  </span>
-                </>
-              )}
-            />
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-sm font-semibold text-[#222222]">
-              End Date
-            </label>
-            <Controller
-              name="end"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <Input
-                    id="start"
-                    type="datetime-local"
-                    value={
-                      field.value
-                        ? format(new Date(field.value), "yyyy-MM-dd'T'HH:mm")
-                        : ""
-                    }
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                      field.onChange(new Date(e.target.value));
-                    }}
-                  />
-                  <span className="text-red-500 text-sm">
-                    {errors.start?.message}
-                  </span>
+                  {renderFieldError(errors.date)}
                 </>
               )}
             />
           </div>
 
+          {/* Service Field */}
           <div className="flex flex-col gap-y-2">
             <label className="text-sm font-semibold text-[#222222]">
               Choose Service
             </label>
             <Controller
-              control={control}
               name="service"
+              control={control}
               render={({ field }) => (
                 <>
                   <Select
                     value={field.value}
                     onChange={field.onChange}
                     options={serviceOptions}
-                    isMultiple={true}
+                    isMultiple
                     primaryColor="red"
                   />
-                  <span className="text-red-500 text-sm">
-                    {errors.service?.message}
-                  </span>
+                  {renderFieldError(errors.service)}
                 </>
               )}
             />
           </div>
+
+          {/* Vehicle Field */}
           <div className="flex flex-col gap-y-2">
             <label className="text-sm font-semibold text-[#222222]">
-              Choose Service
+              Choose Vehicle
             </label>
             <Controller
-              control={control}
               name="vehicle"
+              control={control}
               render={({ field }) => (
                 <>
                   <Select
@@ -205,21 +153,20 @@ export const CreateAppointment = () => {
                     isMultiple={false}
                     primaryColor="red"
                   />
-                  <span className="text-red-500 text-sm">
-                    {errors.service?.message}
-                  </span>
+                  {renderFieldError(errors.vehicle)}
                 </>
               )}
             />
           </div>
 
+          {/* Note Field */}
           <div className="flex flex-col gap-y-2">
             <label className="text-sm font-semibold text-[#222222]">
               Note for appointment
             </label>
             <Controller
-              control={control}
               name="note"
+              control={control}
               render={({ field }) => (
                 <>
                   <Textarea
@@ -227,16 +174,16 @@ export const CreateAppointment = () => {
                     value={field.value}
                     onChange={field.onChange}
                   />
-                  <span className="text-red-500 text-sm">
-                    {errors.note?.message}
-                  </span>
+                  {renderFieldError(errors.note)}
                 </>
               )}
             />
           </div>
+
+          {/* Submit Button */}
           <Button
             type="submit"
-            animation={true}
+            animation
             className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
           >
             Create Appointment

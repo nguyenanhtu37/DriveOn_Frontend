@@ -1,6 +1,9 @@
 import { garageService } from "@/app/services";
 import { toast, useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFilterStore } from "@/app/stores/view/filter";
+import { useDebounce } from "react-haiku";
+import { getLocation } from "../view/user";
 
 export const useRegisterGarage = () => {
   const { toast } = useToast();
@@ -28,10 +31,81 @@ export const useRegisterGarage = () => {
 };
 
 export const useGetGarages = () => {
+  const {
+    serviceSystem,
+    location,
+    rating,
+    tagPro,
+    distance,
+    openTime,
+    closeTime,
+    operating_days,
+    setLocation,
+  } = useFilterStore();
+
+  const debouncedServiceSystem = useDebounce(serviceSystem, 500);
+  const debouncedLocation = useDebounce(location, 500);
+  const debouncedRating = useDebounce(rating, 500);
+  const debouncedTagPro = useDebounce(tagPro, 500);
+  const debouncedDistance = useDebounce(distance, 500);
+  const debouncedOpenTime = useDebounce(openTime, 500);
+  const debouncedCloseTime = useDebounce(closeTime, 500);
+  const debouncedOperatingDays = useDebounce(operating_days, 500);
+  const currentLocation = getLocation();
+
+  const params = new URLSearchParams();
+  const services = debouncedServiceSystem.join(",");
+
   const query = useQuery({
-    queryKey: ["garage"],
-    queryFn: garageService.getGarages,
+    queryKey: [
+      "garage",
+      services,
+      debouncedLocation,
+      debouncedCloseTime,
+      debouncedOpenTime,
+      debouncedRating,
+      debouncedTagPro,
+      debouncedOperatingDays,
+      debouncedDistance,
+    ],
+    queryFn: () => {
+      if (services) {
+        params.append("services", services);
+      }
+      if (
+        debouncedLocation.province?.name &&
+        debouncedLocation.district?.name
+      ) {
+        params.append("province", debouncedLocation.province.name);
+        params.append("district", debouncedLocation.district.name);
+      }
+      if (debouncedRating) {
+        params.append("rating", debouncedRating);
+      }
+      if (debouncedTagPro) {
+        params.append("tag", "pro");
+      }
+      if (debouncedDistance) {
+        params.append("distance", debouncedDistance);
+        params.append("currentLocation", currentLocation);
+        setLocation({
+          province: null,
+          district: null,
+        });
+      }
+      if (debouncedOpenTime) {
+        params.append("openTime", debouncedOpenTime);
+      }
+      if (debouncedCloseTime) {
+        params.append("closeTime", debouncedCloseTime);
+      }
+      if (debouncedOperatingDays.length > 0) {
+        params.append("operating_days", debouncedOperatingDays.join(","));
+      }
+      return garageService.getGarages(params);
+    },
   });
+
   return {
     ...query,
     data: query.data?.data ?? [],
