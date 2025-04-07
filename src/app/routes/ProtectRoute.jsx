@@ -11,7 +11,7 @@ const ProtectedRoute = ({ role, directTo }) => {
   const authorized = useMemo(() => {
     return (
       user &&
-      role.every((requiredRole) =>
+      role.some((requiredRole) =>
         user.roles.some((userRole) => userRole.roleName === requiredRole)
       )
     );
