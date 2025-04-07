@@ -50,12 +50,12 @@ const BrandFormDialog = ({ onSubmit, onClose, initialData }) => {
         className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md"
       >
         <h2 className="text-xl font-bold mb-4">
-          {initialData ? "Sửa thương hiệu" : "Thêm thương hiệu"}
+          {initialData ? "Edit Brand" : "Add Brand"}
         </h2>
 
         <input
           className="border p-2 rounded w-full mb-3"
-          placeholder="Tên thương hiệu"
+          placeholder="Brand Name"
           value={brandName}
           onChange={(e) => setBrandName(e.target.value)}
         />
