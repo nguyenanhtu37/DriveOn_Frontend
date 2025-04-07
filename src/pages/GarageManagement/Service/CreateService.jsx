@@ -50,7 +50,8 @@ const CreateService = () => {
       name: data.name,
       description: data.description,
       price: Number(data.price),
-      duration: data.duration,
+      // duration: data.duration,
+      duration: Number(data.duration),
       warranty: data.warranty,
       images: uploadedUrls,
     };

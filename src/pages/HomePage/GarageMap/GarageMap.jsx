@@ -11,14 +11,14 @@ import { getLocation } from "@/app/stores/view/user";
 const locationDanang = [16.047079, 108.20623];
 
 const garageIcon = L.icon({
-  iconUrl: "/public/garageMarker.png",
+  iconUrl: "/garageMarker.png",
   iconSize: [40, 40],
   iconAnchor: [20, 40],
   popupAnchor: [0, -35],
 });
 
 const userIcon = L.icon({
-  iconUrl: "/public/userMarker.png",
+  iconUrl: "./userMarker.png",
   iconSize: [40, 40],
   iconAnchor: [20, 40],
   popupAnchor: [0, -35],
