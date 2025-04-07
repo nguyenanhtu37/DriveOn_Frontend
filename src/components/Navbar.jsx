@@ -133,6 +133,12 @@ function Navbar() {
                     >
                       Profile
                     </Link>
+                    <Link
+                      to={AbsoluteScreenPath.FavoriteGarages}
+                      className="text-sm w-full px-4 py-[11px] text-[#222222] hover:bg-[#f7f6f6] ease-in-out font-roboto cursor-pointer"
+                    >
+                      Favorite Garages
+                    </Link>
                     <button
                       className="text-sm w-full px-3 py-2 text-[#222222] ease-in-out hover:bg-[#f7f6f6] font-roboto cursor-pointer text-left disabled:opacity-50"
                       onClick={onLogout}

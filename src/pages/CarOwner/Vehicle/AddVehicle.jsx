@@ -1,7 +1,7 @@
-// src/pages/CarOwner/Vehicle/AddVehicleForm.jsx
-import { useState, useEffect } from "react"; // Added useEffect for debug
+import { useState, useEffect } from "react"; 
 import { useVehicles } from "@/common/hooks/useVehicle";
 import { useBrands } from "@/common/hooks/useBrand";
+import { vehicleSchema } from "@/schema/vehicleSchema"; 
 
 const AddVehicleForm = ({ onClose }) => {
   const { addVehicle, fetchVehicles } = useVehicles();
@@ -16,6 +16,9 @@ const AddVehicleForm = ({ onClose }) => {
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
+
+
+
   useEffect(() => {
     console.log("Brands received in form:", brands); // Debug log
   }, [brands]);
@@ -23,10 +26,15 @@ const AddVehicleForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    if (!formData.carBrand) {
-      setError("Please select a brand.");
+
+    // Validate the form data using Zod schema
+    try {
+      vehicleSchema.parse(formData); // Will throw an error if validation fails
+    } catch (err) {
+      setError(err.errors[0].message); // Get the first error message from Zod
       return;
     }
+
     setSubmitting(true);
     try {
       await addVehicle(formData);

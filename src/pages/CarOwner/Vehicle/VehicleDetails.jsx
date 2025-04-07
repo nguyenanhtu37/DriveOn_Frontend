@@ -10,7 +10,7 @@ import AbsoluteScreenPath from "@/app/routes/Route";
 const VehicleDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getVehicle, deleteVehicle, loading, error } = useVehicles();
+  const { fetchVehicleById, deleteVehicle, loading, error } = useVehicles(); // Updated here
   const [vehicle, setVehicle] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [setDeleting] = useState(false);
@@ -19,15 +19,14 @@ const VehicleDetailsPage = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        const data = await getVehicle(id);
+        const data = await fetchVehicleById(id);  // Updated to use fetchVehicleById
         setVehicle(data);
       } catch (err) {
         console.error("Failed to load vehicle:", err);
       }
     };
     fetchVehicle();
-  }, [id, getVehicle]);
-
+  }, [id, fetchVehicleById]);
 
   const handleConfirmDelete = async () => {
     setDeleting(true);
@@ -91,14 +90,14 @@ const VehicleDetailsPage = () => {
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
           <div className="relative h-64 bg-gray-200">
-            <img
+            {/* <img
               src={vehicle.image || ""}
               alt={`${vehicle.carBrand?.brandName} ${vehicle.carName}`}
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.target.src = "/placeholder.svg?height=256&width=800";
+                e.target.src = "";
               }}
-            />
+            /> */}
             <div
               className={`absolute top-4 right-4 px-3 py-1 text-sm font-medium text-white rounded-full ${vehicle.maintenanceHistory?.length > 0 ? "bg-yellow-500" : "bg-green-500"}`}
             >
@@ -133,8 +132,6 @@ const VehicleDetailsPage = () => {
                   </div>
                 </div>
               </div>
-
-
             </div>
 
             <div className="mt-8 space-y-6">
@@ -165,13 +162,6 @@ const VehicleDetailsPage = () => {
                     <p className="font-medium text-heading">{vehicle.maintenanceHistory?.length || 0}</p>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="mt-8 space-y-6">
-
-              <div className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
-
               </div>
             </div>
           </div>
