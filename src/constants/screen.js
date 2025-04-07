@@ -1,3 +1,5 @@
+import BrandList from "@/pages/AdminDashboard/Brand/BrandList";
+
 export const AbsoluteScreenPath = {
   Entry: "/", // Entry screen
   Login: "/login", // Login screen
@@ -31,7 +33,7 @@ export const GarageManagementScreenPath = {
 };
 
 export const AdminScreenPath = {
-  AddCarBrand: "/adminDashboard/addCarBrand",
+  BrandList: "/adminDashboard/brandList",
   AdminDashBoard: "/adminDashboard/",
   ViewRegisterGarage: "viewRegisterGarage",
   ViewRegisterGarageDetail: "viewRegisterGarage/:id",
