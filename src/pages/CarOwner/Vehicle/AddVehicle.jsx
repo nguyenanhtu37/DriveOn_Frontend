@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { useVehicles } from "@/common/hooks/useVehicle";
 import { useBrands } from "@/common/hooks/useBrand";
-import { vehicleSchema } from "@/schema/vehicleSchema"; 
+import { vehicleSchema } from "@/schema/vehicleSchema";
+import useUpload from "@/app/services/Cloudinary/upload"; // Import useUpload
 
 const AddVehicleForm = ({ onClose }) => {
   const { addVehicle, fetchVehicles } = useVehicles();
   const { brands, loading: brandsLoading, error: brandsError } = useBrands();
+  const { files, progressList, handleFileChange, handleUpload, handleRemove } = useUpload(); // Handle file uploads
+
   const [formData, setFormData] = useState({
     carBrand: "",
     carName: "",
@@ -15,9 +18,6 @@ const AddVehicleForm = ({ onClose }) => {
   });
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-
-
-
 
   useEffect(() => {
     console.log("Brands received in form:", brands); // Debug log
@@ -36,8 +36,18 @@ const AddVehicleForm = ({ onClose }) => {
     }
 
     setSubmitting(true);
+
     try {
-      await addVehicle(formData);
+      // Upload images to Cloudinary and get the URLs
+      const uploadedUrls = await handleUpload();
+      const vehicleData = { ...formData, carImages: uploadedUrls };
+
+      // Ensure the brand exists and submit the vehicle data
+      if (!vehicleData.carBrand) {
+        throw new Error("Please select a brand");
+      }
+
+      await addVehicle(vehicleData);
       await fetchVehicles();
       onClose();
     } catch (err) {
@@ -50,6 +60,8 @@ const AddVehicleForm = ({ onClose }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <p className="text-gray-500 text-sm">Enter your vehicle details to add it to your account.</p>
+
+      {/* Brand, Model, Year, Color, License Plate Fields */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-gray-700 text-sm font-medium mb-1">Brand</label>
@@ -89,6 +101,8 @@ const AddVehicleForm = ({ onClose }) => {
           />
         </div>
       </div>
+
+      {/* Year, Color, License Plate Fields */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-gray-700 text-sm font-medium mb-1">Year</label>
@@ -115,6 +129,8 @@ const AddVehicleForm = ({ onClose }) => {
           />
         </div>
       </div>
+
+      {/* License Plate */}
       <div>
         <label className="block text-gray-700 text-sm font-medium mb-1">License Plate</label>
         <input
@@ -127,7 +143,44 @@ const AddVehicleForm = ({ onClose }) => {
           disabled={submitting}
         />
       </div>
+
+      {/* Image Upload Section */}
+      <div>
+        <label className="block text-gray-700 text-sm font-medium mb-1">Car Images</label>
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={submitting}
+        />
+        {files.length > 0 && (
+          <div className="mt-2">
+            {files.map((file, index) => (
+              <div key={index} className="flex items-center justify-between">
+                <span>{file.name}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemove(file)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        {progressList && Object.keys(progressList).map((fileName, index) => (
+          <div key={index}>
+            {fileName}: {progressList[fileName]}%
+          </div>
+        ))}
+      </div>
+
+      {/* Error Display */}
       {error && <div className="text-red-500 text-sm">{error}</div>}
+
+      {/* Submit and Cancel Buttons */}
       <div className="flex justify-end space-x-4 mt-4">
         <button
           type="button"

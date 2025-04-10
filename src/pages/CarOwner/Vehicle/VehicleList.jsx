@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import VehicleCard from "@/components/vehicle/VehicleCard";
-import { MagnifyingGlassIcon, ChevronDownIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { useVehicles } from "@/common/hooks/useVehicle";
-import Modal from "@/components/vehicle/Modal";
-import AddVehicleForm from "../Vehicle/AddVehicle";
-import EditVehicleForm from "../Vehicle/EditVehicle";
+
+// src/pages/CarOwner/VehiclePage.jsx
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import VehicleCard from '@/components/vehicle/VehicleCard';
+import { MagnifyingGlassIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { useVehicles } from '@/common/hooks/useVehicle';
+import Modal from '@/components/vehicle/Modal';
+import AddVehicleForm from '../Vehicle/AddVehicle';
+import EditVehicleForm from '../Vehicle/EditVehicle';
 
 const VehiclePage = () => {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const VehiclePage = () => {
   const [selectedVehicleId, setSelectedVehicleId] = useState(null);
 
   const filteredVehicles = vehicles.filter((vehicle) => {
-    const matchesSearch =
+    const matchesSearch = 
       vehicle.carName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vehicle.carPlate.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All' || 
@@ -31,12 +33,10 @@ const VehiclePage = () => {
     setIsAddModalOpen(false);
     fetchVehicles();
   };
-
   const openEditModal = (id) => {
     setSelectedVehicleId(id);
     setIsEditModalOpen(true);
   };
-
   const closeEditModal = () => {
     setSelectedVehicleId(null);
     setIsEditModalOpen(false);

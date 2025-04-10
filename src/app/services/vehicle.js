@@ -1,4 +1,4 @@
-import { axios } from "@/lib/axios";
+import { axios } from "../../lib/axios";
 
 const API_URL = "/vehicle";
 
@@ -42,7 +42,6 @@ export const getVehicleById = async (vehicleId) => {
     throw new Error(error.response?.data?.message || "Failed to fetch vehicle");
   }
 };
-
 
 export const updateVehicle = async (vehicleId, updateData) => {
   try {
