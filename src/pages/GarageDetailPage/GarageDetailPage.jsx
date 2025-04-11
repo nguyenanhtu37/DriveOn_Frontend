@@ -1,6 +1,6 @@
 import { Activity, Locate, Phone, Star } from "lucide-react";
 import Service from "./components/Service";
-import { useGetGarageDetail } from "@/app/stores/entity/garage"; // Ensure this hook fetches the latest data
+import { useGetGarageDetail } from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
 import { Loading } from "@/components/Loading";
 import { DialogService } from "./components/DialogService";
@@ -9,13 +9,13 @@ import Feedback from "./components/Feedback";
 
 const GarageDetailPage = () => {
   const { garageId } = useParams();
-  const garageDetail = useGetGarageDetail(garageId); // Get garage details including ratingAverage
+  const garageDetail = useGetGarageDetail(garageId); 
   const currentUserId = localStorage.getItem("userId");
 
   // Handle loading state
   if (garageDetail.isLoading) return <Loading />;
 
-  // Ensure ratingAverage exists and is not undefined
+
   const averageRating = garageDetail.data.ratingAverage || 0;
 
   return (
