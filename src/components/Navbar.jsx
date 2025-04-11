@@ -109,7 +109,7 @@ function Navbar() {
                 <PopoverContent className="w-[220px] px-0 py-2" align="end" sideOffset={12}>
                   <div className="grid gap-4 bg-white">
                     <Link
-                      to={AbsoluteScreenPath.ProfilePage}
+                      to={AbsoluteScreenPath.ProfilePageV2}
                       className="text-sm w-full px-4 py-[11px] text-[#222222] hover:bg-[#f7f6f6] ease-in-out font-roboto cursor-pointer"
                     >
                       Profile

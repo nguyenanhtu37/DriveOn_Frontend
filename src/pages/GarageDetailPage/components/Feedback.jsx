@@ -9,7 +9,7 @@ const Feedback = ({ garageId, currentUserId }) => {
   const [newFeedback, setNewFeedback] = useState({ rating: 0, text: '' });
   const [editingFeedback, setEditingFeedback] = useState(null);
   const [submitError, setSubmitError] = useState(null); // Lưu lỗi khi submit
-  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +64,8 @@ const Feedback = ({ garageId, currentUserId }) => {
 
   // Hiển thị lỗi từ useFeedback (lỗi fetch ban đầu)
   if (error) return <div className="text-red-500">Error: {error}</div>;
-
+  console.log("Feedback user ID:", feedbacks.map(f => f.user?._id));
+  console.log("Current user ID:", currentUserId);
   return (
     <div className="w-full py-8 flex flex-col gap-y-6">
       <h3 className="text-lg font-semibold text-[#222222]">Customer Feedback</h3>
@@ -98,8 +99,8 @@ const Feedback = ({ garageId, currentUserId }) => {
             {isSubmitting
               ? 'Submitting...'
               : editingFeedback
-              ? 'Update Feedback'
-              : 'Submit Feedback'}
+                ? 'Update Feedback'
+                : 'Submit Feedback'}
           </button>
           {submitError && (
             <div className="text-red-500 text-sm mt-2">{submitError}</div>
@@ -138,7 +139,7 @@ const Feedback = ({ garageId, currentUserId }) => {
                 </div>
               </div>
               <p className="text-[#6a6a6a] mt-2">{feedback.text}</p>
-              {token && feedback.user && feedback.user._id === currentUserId && (
+              {token && feedback.user && String(feedback.user._id) === String(currentUserId) && (
                 <div className="mt-2 flex gap-2">
                   <button
                     onClick={() => {
