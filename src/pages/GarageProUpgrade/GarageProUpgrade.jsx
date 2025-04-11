@@ -18,9 +18,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { PaymentDialog } from "./PaymentDialog";
+import { getUser } from "@/app/stores/view/user";
 
 export const GarageProUpgrade = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const user = getUser();
+  const handleOpen = () => {
+    if (user) {
+      setOpen(true);
+    } else {
+      window.location.href = "/login";
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,7 +103,7 @@ export const GarageProUpgrade = () => {
                   transition={{ delay: 0.3, duration: 0.5 }}
                   className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl"
                 >
-                  Upgrade to{" "}
+                  Upgrade to
                   <motion.span
                     initial={{ color: "#000" }}
                     animate={{ color: "#ef4444" }}
@@ -120,6 +132,7 @@ export const GarageProUpgrade = () => {
                 <Button
                   size="lg"
                   className="bg-red-500 hover:bg-red-600 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-red-200"
+                  onClick={handleOpen}
                 >
                   Upgrade Now <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -144,6 +157,38 @@ export const GarageProUpgrade = () => {
               viewport={{ once: true, amount: 0.3 }}
               className="grid gap-6 lg:grid-cols-2 lg:gap-12"
             >
+              {/* {subscriptionData.map((item, index) => (
+                <motion.div key={index} variants={item}>
+                  <Card className="border-2 border-muted hover:border-gray-300 transition-all duration-300 hover:shadow-md h-full">
+                    <CardHeader>
+                      <CardTitle>{item.name}</CardTitle>
+                      <CardDescription>Current plan</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-3xl font-bold">
+                        {formatCurrency(item.price)}
+                      </div>
+                      <ul className="mt-6 space-y-2">
+                        {item.description.split(",").map((desc, index) => (
+                          <li key={index} className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-green-500" />
+                            <span>{desc}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                    <CardFooter>
+                      <Button
+                        variant="outline"
+                        className="w-full hover:bg-gray-100 transition-colors duration-300"
+                      >
+                        Current Plan
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              ))} */}
+
               <motion.div variants={item}>
                 <Card className="border-2 border-muted hover:border-gray-300 transition-all duration-300 hover:shadow-md h-full">
                   <CardHeader>
@@ -232,6 +277,7 @@ export const GarageProUpgrade = () => {
                     <Button
                       className="w-full bg-red-500 hover:bg-red-600 transition-all duration-300 shadow-md hover:shadow-lg"
                       whileHover={{ scale: 1.05 }}
+                      onClick={handleOpen}
                     >
                       Upgrade Now
                     </Button>
@@ -365,6 +411,7 @@ export const GarageProUpgrade = () => {
                   <Button
                     size="lg"
                     className="bg-red-500 hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-red-200"
+                    onClick={handleOpen}
                   >
                     Upgrade to Pro Today
                   </Button>
@@ -374,33 +421,7 @@ export const GarageProUpgrade = () => {
           </div>
         </section>
       </main>
-      {/* <footer className="border-t bg-white py-6 md:py-0">
-        <div className=" flex flex-col items-center justify-between gap-4 md:h-16 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            © 2025 GarageMaster. All rights reserved.
-          </p>
-          <div className="flex gap-4">
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              Terms
-            </Link>
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              Contact
-            </Link>
-          </div>
-        </div>
-      </footer> */}
+      <PaymentDialog open={open} setOpen={setOpen} />
     </div>
   );
 };

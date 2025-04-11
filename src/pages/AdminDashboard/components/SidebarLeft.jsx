@@ -1,5 +1,14 @@
 import { Avatar } from "./Avatar";
-import { Car, ChartPieIcon, ChevronRight, File, ServerCog } from "lucide-react";
+import {
+  Car,
+  CarFront,
+  CarIcon,
+  ChartPieIcon,
+  ChevronRight,
+  File,
+  LogOutIcon,
+  ServerCog,
+} from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { Title } from "./Title";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
@@ -51,6 +60,11 @@ export const SidebarLeft = () => {
                   icon={<ServerCog />}
                   title="Service System"
                   link={"viewServiceSystem"}
+                />
+                <SidebarItem
+                  icon={<CarFront />}
+                  title="Car Brand"
+                  link={"brandList"}
                 />
               </div>
             </div>

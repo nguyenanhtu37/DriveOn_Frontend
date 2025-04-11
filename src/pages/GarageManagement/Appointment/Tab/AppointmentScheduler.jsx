@@ -25,6 +25,8 @@ export const AppointmentScheduler = () => {
     setAppointments(formattedAppointments);
   }, [appointmentData.data]);
 
+  console.log(appointments);
+
   return (
     <div className="h-screen p-4 bg-white">
       <h1 className="text-2xl font-bold mb-4">Appointment Scheduler</h1>

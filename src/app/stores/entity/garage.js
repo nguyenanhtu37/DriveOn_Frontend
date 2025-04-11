@@ -264,3 +264,22 @@ export const useGetMyGarage = () => {
     data: query.data ?? {},
   };
 };
+
+export const useGetRegisterGarageCarOwner = () => {
+  const query = useQuery({
+    queryKey: ["registerGarageCarOwner"],
+    queryFn: garageService.getRegisterGarageCarOwner,
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};
+
+export const useUpdateRegisterGarage = () => {
+  const mutation = useMutation({
+    mutationFn: async ({ id, garage }) =>
+      garageService.updateGarageRegister(id, garage),
+  });
+  return mutation;
+};
