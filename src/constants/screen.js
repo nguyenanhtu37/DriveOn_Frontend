@@ -16,6 +16,7 @@ export const AbsoluteScreenPath = {
   FavoriteGarages: "/favorite-garages",
   GarageProUpgrade: "/garageProUpgrade",
   AppointmentDetail: "/appointment-detail",
+  Emergency: "/emergency",
 };
 
 export const GarageManagementScreenPath = {

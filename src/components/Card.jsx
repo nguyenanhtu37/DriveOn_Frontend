@@ -20,18 +20,17 @@ import useFavorites from "@/common/hooks/useFavorites";
 import { useUserStore } from "@/app/stores/view/user"; // Lấy user
 
 export function GarageCard({ id, garageName, rating, address, openTime, closeTime, imgs, isFavourited }) {
-  const user = useUserStore((state) => state.user); // ✅ Lấy user hiện tại
+  const user = useUserStore((state) => state.user); 
   const userId = user?._id || null;
 
   const [isHovered, setIsHovered] = useState(false);
   const [favoriteStatus, setFavoriteStatus] = useState(isFavourited);
   const navigate = useNavigate();
-  const { addToFavorites, removeFromFavorites } = useFavorites(userId); // ✅ Truyền userId
+  const { addToFavorites, removeFromFavorites } = useFavorites(userId); 
 
   const handleFavoriteToggle = async (e) => {
     e.stopPropagation();
-    if (!userId) return; // ✅ Không làm gì nếu chưa đăng nhập
-
+    if (!userId) return; 
     try {
       if (favoriteStatus) {
         await removeFromFavorites(id);
