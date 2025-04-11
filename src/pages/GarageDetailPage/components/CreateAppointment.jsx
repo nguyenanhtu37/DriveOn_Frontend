@@ -1,21 +1,14 @@
-import {
-  useCreateAppointment,
-  useGetAppointmentById,
-} from "@/app/stores/entity/appointment";
+import { useCreateAppointment } from "@/app/stores/entity/appointment";
 import { useGetService } from "@/app/stores/entity/service-detail";
 import { useGetMyVehicles } from "@/app/stores/entity/vehicle";
 import { useTabStore } from "@/app/stores/view/tab";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { AbsoluteScreenPath } from "@/constants/screen";
 import { toast } from "@/hooks/use-toast";
-import { GarageAppointmentCard } from "@/pages/ProfilePage/Tab/UserAppointment/GarageAppointmentCard";
 import { appointmentSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parse, set } from "date-fns";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-tailwindcss-select";
@@ -85,9 +78,9 @@ export const CreateAppointment = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full h-full flex justify-end items-start"
+      className="w-full h-full flex lg:justify-end lg:items-start"
     >
-      <div className="w-full max-w-[450px] p-6 mt-8 bg-white rounded-xl shadow-xl border border-[#1c1c1c]/10 flex flex-col gap-y-4">
+      <div className="w-full lg:max-w-[450px] p-6 lg:mt-8 bg-white rounded-xl shadow-xl border border-[#1c1c1c]/10 flex flex-col gap-y-4">
         <span className="text-lg font-semibold text-[#222222]">
           Make an appointment with the garage
         </span>
