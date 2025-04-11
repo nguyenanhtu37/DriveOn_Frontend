@@ -1,126 +1,160 @@
-import { useState } from "react";
-import useUpload from "@/app/services/Cloudinary/upload";
-import { useVehicles } from "@/common/hooks/useVehicle";
+import { useState, useEffect } from 'react';
+import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from 'react-router-dom';
+import { useVehicles } from '@/common/hooks/useVehicle';
+import { getBrands } from '@/app/services/brand';
+import { DeleteConfirmationModal } from '@/components/vehicle/DeleteConfirm';
 
-const VehicleForm = ({ initialData = {}, onSuccess, isEdit = false }) => {
-  const [formData, setFormData] = useState({
-    carBrand: initialData.carBrand || "",
-    carName: initialData.carName || "",
-    carYear: initialData.carYear || "",
-    carColor: initialData.carColor || "",
-    carPlate: initialData.carPlate || "",
-  });
+const VehicleCard = ({ vehicle, onEdit }) => {
+  const navigate = useNavigate();
+  const { deleteVehicle, fetchVehicles } = useVehicles();
+  const [brands, setBrands] = useState([]);
+  const [loadingBrands, setLoadingBrands] = useState(false);
 
+  // Safely destructure vehicle with default values
   const {
-    files,
-    progressList,
-    handleFileChange,
-    handleUpload,
-    handleRemove,
-  } = useUpload();
+    _id,
+    carBrand = '',
+    carName = '',
+    carYear = '',
+    carPlate = '',
+    carColor = '',
+    maintenanceHistory = [],
+    carImages = '',
+  } = vehicle || {};
 
-  const { addVehicle, updateVehicle } = useVehicles();
+  // Debug carImage
+  console.log('VehicleCard - Vehicle:', { _id, carName, carImages });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  // Fetch brands on mount
+  useEffect(() => {
+    const fetchBrandData = async () => {
+      setLoadingBrands(true);
+      try {
+        const brandData = await getBrands();
+        setBrands(brandData);
+      } catch (err) {
+        console.error('Error fetching brands:', err);
+      } finally {
+        setLoadingBrands(false);
+      }
+    };
+    fetchBrandData();
+  }, []);
+
+  // Find the brandName by matching carBrand (ObjectId) with brands array
+  const brand = brands.find((b) => b._id.toString() === carBrand.toString());
+  const brandName = brand ? brand.brandName : 'N/A';
+
+  // Check if maintenanceHistory is an array and has length > 0
+  const status = Array.isArray(maintenanceHistory) && maintenanceHistory.length > 0 ? 'Maintenance' : 'Active';
+
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+
+  const handleView = () => navigate(`/vehicle/${_id}`);
+  const handleEdit = () => onEdit(_id);
+
+  const handleDelete = async () => {
+    setIsConfirmDeleteOpen(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleConfirmDelete = async () => {
     try {
-      const uploadedUrls = await handleUpload();
-
-      const payload = {
-        ...formData,
-        carImages: uploadedUrls,
-      };
-
-      if (isEdit && initialData._id) {
-        await updateVehicle(initialData._id, payload);
-      } else {
-        await addVehicle(payload);
-      }
-
-      alert("Vehicle saved successfully");
-      onSuccess?.();
-    } catch (error) {
-      alert("Error saving vehicle: " + error.message);
+      await deleteVehicle(_id);
+      await fetchVehicles();
+      alert('Vehicle deleted successfully');
+      setIsConfirmDeleteOpen(false);
+      navigate(0);
+    } catch (err) {
+      alert('Error deleting vehicle: ' + err.message);
+      setIsConfirmDeleteOpen(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="text"
-        name="carName"
-        placeholder="Car Name"
-        value={formData.carName}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="text"
-        name="carYear"
-        placeholder="Car Year"
-        value={formData.carYear}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="text"
-        name="carColor"
-        placeholder="Car Color"
-        value={formData.carColor}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="text"
-        name="carPlate"
-        placeholder="Car Plate"
-        value={formData.carPlate}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="text"
-        name="carBrand"
-        placeholder="Car Brand ID"
-        value={formData.carBrand}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border rounded"
-      />
-
-      <div className="border p-2 rounded">
-        <label className="block mb-1 font-semibold">Upload Images</label>
-        <input type="file" multiple onChange={handleFileChange} />
-        <ul className="mt-2 space-y-1">
-          {files.map((file) => (
-            <li key={file.name} className="flex justify-between items-center">
-              <span>{file.name}</span>
-              <span>{progressList[file.name] || 0}%</span>
-              <button type="button" onClick={() => handleRemove(file)} className="text-red-500 ml-2">
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
+    <div className="bg-white rounded-lg shadow-md p-4">
+      {/* Vehicle Image */}
+      <div className="relative h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+        {carImages ? (
+          <img
+            src={carImages}
+            alt={carName}
+            className="w-full h-full object-cover rounded-lg"
+            onError={(e) => {
+              console.error('Image failed to load:', carImages);
+              e.target.style.display = 'none'; // Hide broken image
+            }}
+            onLoad={() => console.log('Image loaded successfully:', carImages)}
+          />
+        ) : (
+          <div className="text-gray-400 flex flex-col items-center">
+            <svg
+              className="w-12 h-12"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 16l4-4m0 0l4 4m-4-4v8m8-12h-4m4 0h-4m4 0v8"
+              ></path>
+            </svg>
+            <span>No Image Available</span>
+          </div>
+        )}
+        <span
+          className={`absolute top-2 left-2 text-white text-xs font-semibold px-2 py-1 rounded-full ${
+            status === 'Maintenance' ? 'bg-yellow-500' : 'bg-green-500'
+          }`}
+        >
+          {status}
+        </span>
       </div>
 
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        {isEdit ? "Update Vehicle" : "Add Vehicle"}
-      </button>
-    </form>
+      {/* Vehicle Info */}
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold">{carName}</h3>
+        <p className="text-gray-600">
+          Brand: <span className="font-medium">{loadingBrands ? 'Loading...' : brandName}</span>
+        </p>
+        <p className="text-gray-600">
+          Year: <span className="font-medium">{carYear || 'N/A'}</span>
+        </p>
+        <p className="text-gray-600">
+          License Plate: <span className="font-medium">{carPlate || 'N/A'}</span>
+        </p>
+        <p className="text-gray-600">
+          Color: <span className="font-medium">{carColor || 'N/A'}</span>
+        </p>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="mt-4 flex justify-between">
+        <button onClick={handleView} className="text-gray-500 hover:text-gray-700">
+          <EyeIcon className="w-5 h-5 inline-block mr-1" />
+          View
+        </button>
+        <button onClick={handleEdit} className="text-gray-500 hover:text-gray-700">
+          <PencilIcon className="w-5 h-5 inline-block mr-1" />
+          Edit
+        </button>
+        <button onClick={handleDelete} className="text-red-500 hover:text-red-700">
+          <TrashIcon className="w-5 h-5 inline-block mr-1" />
+          Delete
+        </button>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={isConfirmDeleteOpen}
+        onClose={() => setIsConfirmDeleteOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
+    </div>
   );
 };
 
-export default VehicleForm;
+export default VehicleCard;

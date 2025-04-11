@@ -36,47 +36,58 @@ export const useAuth = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await login(credentials);
+      const response = await login(credentials); // Updated service
       setUser(response.user); // Set global user state
-      console.log("Login response:", response);
       localStorage.setItem("token", response.token);
-
-      // Determine roles (handle both role names and ObjectIds)
-      let roles = response.roles || ["carowner"];
+  
+      // Determine roles
+      let roles = response.roles;
       if (roles.length > 0 && typeof roles[0] === "string" && roles[0].match(/^[0-9a-fA-F]{24}$/)) {
-        // If roles are ObjectIds, map to role names
         roles = roles.map((roleId) =>
           roleData.find((r) => r._id === roleId)?.roleName || "carowner"
         );
       }
       setUserRoles(roles);
-
-      // Check for "admin" or "staff" roles
+      setIsLoggedIn(true);
+  
+      // Redirect based on roles
       const isAdmin = roles.includes("admin");
       const isStaff = roles.includes("staff");
-
-      // Set logged-in state
-      setIsLoggedIn(true);
-
-      // Redirect based on roles
       if (isAdmin) {
-        navigate("/adminDashboard/"); // Redirect to admin dashboard
+        navigate("/adminDashboard/");
       } else if (isStaff) {
-        // Assuming staff needs a garageId; adjust as needed
-        const garageId = response.garageId || "defaultGarageId"; // Replace with actual logic
+        const garageId = response.user.garageId || "defaultGarageId"; // Adjust based on your user data
         navigate(`/garageManagement/${garageId}/staff`);
       } else {
-        navigate("/"); // Default redirect to home for carowner or other roles
+        navigate("/");
       }
     } catch (err) {
       const errorMessage =
-        err.message ||
-        "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
-      console.error("Login error:", errorMessage);
+        err.message || "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
+    }
+  };
+  
+  const handleLogout = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        await logout(token); // Updated service
+      }
+    } catch (err) {
+      setError(err.message || "Đăng xuất thất bại.");
+    } finally {
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      setUserRoles([]);
+      setUser(null);
+      setIsLoading(false);
+      navigate("/login");
     }
   };
 
@@ -101,28 +112,6 @@ export const useAuth = () => {
       throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        await logout(token);
-      }
-    } catch (err) {
-      const errorMessage = err.message || "Đăng xuất thất bại.";
-      console.error("Logout error:", errorMessage);
-      setError(errorMessage);
-    } finally {
-      // Always clear token and reset state, regardless of API success
-      localStorage.removeItem("token");
-      setIsLoggedIn(false);
-      setUserRoles([]);
-      setIsLoading(false);
-      navigate("/login");
     }
   };
 

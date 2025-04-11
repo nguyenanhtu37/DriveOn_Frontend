@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getFavoriteGarages, addFavoriteGarage, removeFavoriteGarage } from "@/app/services/favourite";
 
-const useFavorites = () => {
+const useFavorites = (userId = null) => { // Optional userId param
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -10,35 +10,40 @@ const useFavorites = () => {
     const fetchFavorites = async () => {
       setLoading(true);
       try {
-        const favoriteList = await getFavoriteGarages();
-        setFavorites(favoriteList);
+        const favoriteList = await getFavoriteGarages(userId); // Pass userId if provided
+        setFavorites(favoriteList || []); // Default to empty array if null
         setError(null);
       } catch (error) {
-        setError(error.message);
+        const errorMessage = error.response?.data?.message || error.message || "Failed to fetch favorites";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
     fetchFavorites();
-  }, []);
+  }, [userId]); // Re-fetch if userId changes
 
   const addToFavorites = async (garageId) => {
     try {
       await addFavoriteGarage(garageId);
-      const updatedFavorites = await getFavoriteGarages();
-      setFavorites(updatedFavorites);
+      const updatedFavorites = await getFavoriteGarages(userId); // Refresh list
+      setFavorites(updatedFavorites || []);
+      setError(null);
     } catch (error) {
-      setError(error.message);
+      const errorMessage = error.response?.data?.message || error.message || "Failed to add favorite";
+      setError(errorMessage);
       throw error;
     }
   };
 
   const removeFromFavorites = async (garageId) => {
     try {
-      await removeFavoriteGarage(garageId); // Your API call to remove from favorites
-      setFavorites((prev) => prev.filter((fav) => fav._id !== garageId)); // Update local state to reflect removal
+      await removeFavoriteGarage(garageId);
+      setFavorites((prev) => prev.filter((fav) => fav._id !== garageId)); // Optimistic update
+      setError(null);
     } catch (error) {
-      setError(error.message);
+      const errorMessage = error.response?.data?.message || error.message || "Failed to remove favorite";
+      setError(errorMessage);
       throw error;
     }
   };
