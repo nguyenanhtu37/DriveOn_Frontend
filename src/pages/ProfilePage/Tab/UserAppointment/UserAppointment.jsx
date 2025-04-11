@@ -87,7 +87,7 @@ export const UserAppointment = () => {
                 </TabsContent>
 
                 <TabsContent value="cancel" className="space-y-4">
-                  {pastAppointments.length === 0 ? (
+                  {cancelAppointments.length === 0 ? (
                     <div className="text-center py-6 text-muted-foreground">
                       You have no cancelled appointments.
                     </div>

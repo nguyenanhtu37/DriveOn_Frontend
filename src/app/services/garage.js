@@ -34,7 +34,7 @@ export const rejectGarage = async (id) => {
 };
 
 export const viewGarageExits = async () => {
-  const response = await axios.get("garage/existing");
+  const response = await axios.get("garage/view-all-garages-by-admin");
   return response.data;
 };
 
@@ -54,5 +54,15 @@ export const getGarageDetail = async (id) => {
 
 export const getMyGarage = async () => {
   const response = await axios.get("garage/garages");
+  return response.data;
+};
+
+export const getRegisterGarageCarOwner = async () => {
+  const response = await axios.get("garage/garage-registrations-carOwner");
+  return response.data;
+};
+
+export const updateGarageRegister = async (id, data) => {
+  const response = await axios.put(`garages/${id}`, data);
   return response.data;
 };

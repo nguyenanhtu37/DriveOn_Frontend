@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "@/common/layouts/MainLayout";
 import {
   AbsoluteScreenPath,
@@ -12,7 +12,6 @@ import NewPassword from "../../pages/forgot-password/New-password";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
 import SignUp from "../../pages/SignUp/SignUp";
-import ProfilePage from "@/pages/CarOwner/Profile/index";
 import { ViewExitsGarage } from "@/pages/AdminDashboard/ViewExitsGararge/ViewExitsGarage";
 import { GarageManagement } from "@/pages/GarageManagement/GarageManagement";
 import GarageDashboard from "@/pages/GarageManagement/Dashboard/GarageDashboard";
@@ -56,12 +55,12 @@ const router = createBrowserRouter(
         },
       ],
     },
+
     { path: AbsoluteScreenPath.Login, element: <Login /> },
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
     { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePageV2 /> },
-    // { path: AbsoluteScreenPath.ProfilePageV2, element: <ProfilePageV2 /> },
     { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
     { path: AbsoluteScreenPath.FavoriteGarages, element: <FavoriteGarages /> },
     {
@@ -97,7 +96,10 @@ const router = createBrowserRouter(
         {
           element: <Dashboard />,
           children: [
-            { index: true, element: <HomePage /> },
+            {
+              index: true,
+              element: <Navigate to={AdminScreenPath.ViewRegisterGarage} />,
+            },
             {
               path: AdminScreenPath.BrandList,
               element: <BrandList />,
