@@ -5,7 +5,6 @@ import CardAppointment from "./CardAppointment";
 import { Link, useParams } from "react-router-dom";
 
 const TagAppointment = ({ event }) => {
-  const { garageId } = useParams();
   return (
     <Dialog>
       <DialogTrigger asChild>

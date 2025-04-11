@@ -3,7 +3,7 @@ import { useProfile } from "../../../common/hooks/useProfile";
 import PersonalProfile from "../../../components/profile/PersonalProfile";
 import ChangePassword from "../../../components/profile/ChangePassword";
 import { Link } from "react-router-dom";
-import { Home, Car, LogOut, User, Menu, X } from "lucide-react";
+import { Home, Car, LogOut, User, Menu, X, Calendar } from "lucide-react";
 import { useAuth } from "../../../common/hooks/useAuth";
 
 const ProfilePage = () => {
@@ -11,7 +11,14 @@ const ProfilePage = () => {
   const [setIsChangingPassword] = useState(false); // Fixed typo
   const [activeTab, setActiveTab] = useState("profile");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { profile, setProfile, loading, updateProfile, refetchProfile, changePassword } = useProfile();
+  const {
+    profile,
+    setProfile,
+    loading,
+    updateProfile,
+    refetchProfile,
+    changePassword,
+  } = useProfile();
   const { handleLogout } = useAuth();
 
   const handleInputChange = (e) => {
@@ -64,7 +71,9 @@ const ProfilePage = () => {
     <div className="min-h-screen font-sans relative">
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed z-0"
-        style={{ backgroundImage: "url('/placeholder.svg?height=1080&width=1920')" }}
+        style={{
+          backgroundImage: "url('/placeholder.svg?height=1080&width=1920')",
+        }}
       ></div>
       <div className="relative z-10 min-h-screen bg-white/90">
         {/* Top Navigation */}
@@ -76,7 +85,9 @@ const ProfilePage = () => {
                   <div className="h-8 w-8 bg-blue-500 rounded-md flex items-center justify-center">
                     <User className="h-5 w-5 text-white" />
                   </div>
-                  <span className="ml-2 text-xl font-bold text-blue-600">MyProfile</span>
+                  <span className="ml-2 text-xl font-bold text-blue-600">
+                    MyProfile
+                  </span>
                 </div>
               </div>
 
@@ -96,6 +107,15 @@ const ProfilePage = () => {
                   <Car className="h-4 w-4 mr-1" />
                   <span>Vehicles</span>
                 </Link>
+                <Link
+                  to="/userAppointment"
+                  className="block px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                >
+                  <div className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    <span>Appointments</span>
+                  </div>
+                </Link>
                 <button
                   onClick={handleLogoutClick}
                   className="ml-2 px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 flex items-center"
@@ -111,7 +131,11 @@ const ProfilePage = () => {
                   onClick={toggleMobileMenu}
                   className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-gray-100 focus:outline-none"
                 >
-                  {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                  {mobileMenuOpen ? (
+                    <X className="h-6 w-6" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
                 </button>
               </div>
             </div>
@@ -137,6 +161,15 @@ const ProfilePage = () => {
                   <div className="flex items-center">
                     <Car className="h-4 w-4 mr-2" />
                     <span>Vehicles</span>
+                  </div>
+                </Link>
+                <Link
+                  to="/userAppointment"
+                  className="block px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                >
+                  <div className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    <span>Appointments</span>
                   </div>
                 </Link>
                 <button

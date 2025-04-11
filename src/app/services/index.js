@@ -5,3 +5,6 @@ export * as serviceDetailService from "./service-detail";
 export * as appointmentService from "./appointment";
 export * as vehicleService from "./vehicle";
 export * as distanceMatrixService from "./distance-matrix";
+export * as vehicleServiceV2 from "./vehicleV2";
+export * as brandServiceV2 from "./brandV2";
+export * as userService from "./user";
