@@ -60,7 +60,7 @@ export const ViewRegisterGarageDetail = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-6 p-6">
-          <div className="pt-4">
+          {/* <div className="pt-4">
             <h3 className="font-semibold text-lg mb-4 flex items-center justify-center p-2 rounded-md border shadow-sm">
               <User className="w-5 h-5 mr-2 text-red-500" />
               Garage owner
@@ -98,12 +98,12 @@ export const ViewRegisterGarageDetail = () => {
               <div className="flex items-start">
                 <Mail className="w-5 h-5 mt-1 mr-3 text-red-500 flex-shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-lg mb-1">Phone Garage</h3>
-                  <p className="text-gray-600">{garage.phone}</p>
+                  <h3 className="font-semibold text-lg mb-1">Email Garage</h3>
+                  <p className="text-gray-600">{garage.email}</p>
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <h3 className="font-semibold text-lg mb-4 flex items-center justify-center p-2 rounded-md border shadow-sm">
             <Info className="w-5 h-5 mr-2 text-red-500" />
             Garage Information

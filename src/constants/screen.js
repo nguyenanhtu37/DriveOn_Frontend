@@ -1,5 +1,3 @@
-
-
 export const AbsoluteScreenPath = {
   Entry: "/", // Entry screen
   Login: "/login", // Login screen
@@ -12,9 +10,12 @@ export const AbsoluteScreenPath = {
   PageNotFound: "/notFound",
   GarageDetail: "/garageDetail/:garageId",
   ProfilePage: "/profile",
+  ProfilePageV2: "/profileV2",
   VehicleList: "/vehicle",
   VehicleDetail: "/vehicle/:id",
   FavoriteGarages: "/favorite-garages",
+  GarageProUpgrade: "/garageProUpgrade",
+  AppointmentDetail: "/appointment-detail",
 };
 
 export const GarageManagementScreenPath = {

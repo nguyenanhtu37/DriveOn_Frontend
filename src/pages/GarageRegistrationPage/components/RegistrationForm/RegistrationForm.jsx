@@ -143,7 +143,7 @@ export default function RegistrationForm() {
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="(123) 456-7890"
+                      placeholder="09123456789"
                       {...field}
                       className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
                     />

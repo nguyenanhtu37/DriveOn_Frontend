@@ -33,3 +33,13 @@ export const getAppointmentById = async (appointmentId) => {
   const response = await axios.get(`/appointment/${appointmentId}`);
   return response.data;
 };
+
+export const getAppointmentByUserId = async () => {
+  const response = await axios.get(`/appointment/view-list-user-appointment`);
+  return response.data;
+};
+
+export const cancelAppointment = async (appointmentId) => {
+  const response = await axios.put(`/appointment/${appointmentId}/cancel`);
+  return response.data;
+};

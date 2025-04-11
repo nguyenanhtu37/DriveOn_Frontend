@@ -1,15 +1,23 @@
-import { useCreateAppointment } from "@/app/stores/entity/appointment";
+import {
+  useCreateAppointment,
+  useGetAppointmentById,
+} from "@/app/stores/entity/appointment";
 import { useGetService } from "@/app/stores/entity/service-detail";
 import { useGetMyVehicles } from "@/app/stores/entity/vehicle";
+import { useTabStore } from "@/app/stores/view/tab";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AbsoluteScreenPath } from "@/constants/screen";
 import { toast } from "@/hooks/use-toast";
+import { GarageAppointmentCard } from "@/pages/ProfilePage/Tab/UserAppointment/GarageAppointmentCard";
 import { appointmentSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parse } from "date-fns";
+import { format, parse, set } from "date-fns";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-tailwindcss-select";
 
 export const CreateAppointment = () => {
@@ -17,6 +25,9 @@ export const CreateAppointment = () => {
   const service = useGetService(garageId);
   const myVehicles = useGetMyVehicles();
   const createAppointment = useCreateAppointment();
+
+  const navigate = useNavigate();
+  const { setTab } = useTabStore();
 
   const serviceOptions = service?.data?.map(({ name, _id }) => ({
     label: name,
@@ -46,16 +57,20 @@ export const CreateAppointment = () => {
   const onSubmit = (data) => {
     const newAppointment = {
       garage: garageId,
-      start: data.date,
+      start: new Date(data.date).toISOString(),
       service: data.service.map(({ value }) => value),
       note: data.note,
       vehicle: data.vehicle.value,
     };
 
+    console.log("newAppointment", newAppointment);
+
     createAppointment.mutate(newAppointment, {
       onSuccess: () => {
         reset();
         toast({ title: "Create appointment successfully", duration: 2000 });
+        navigate(AbsoluteScreenPath.ProfilePageV2);
+        setTab("appointments");
       },
       onError: () => {
         toast({ title: "Create appointment failed", duration: 2000 });
@@ -90,22 +105,8 @@ export const CreateAppointment = () => {
                   <Input
                     id="date"
                     type="datetime-local"
-                    value={
-                      field.value
-                        ? format(field.value, "yyyy-MM-dd'T'HH:mm")
-                        : ""
-                    }
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value
-                          ? parse(
-                              e.target.value,
-                              "yyyy-MM-dd'T'HH:mm",
-                              new Date()
-                            )
-                          : null
-                      )
-                    }
+                    value={field.value ?? ""}
+                    onChange={(e) => field.onChange(e.target.value || null)}
                   />
                   {renderFieldError(errors.date)}
                 </>
@@ -185,6 +186,7 @@ export const CreateAppointment = () => {
             type="submit"
             animation
             className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
+            disabled={createAppointment.isPending}
           >
             Create Appointment
           </Button>

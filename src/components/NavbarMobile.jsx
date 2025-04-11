@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
-import { CircleUser, Heart, MessageCircle, Search } from "lucide-react";
+import { CircleUser, Heart, Filter, Car } from "lucide-react";
 
 const MENU_ITEMS = [
-  { icon: Search, label: "Search" },
+  { icon: Filter, label: "Filter" },
   { icon: Heart, label: "Favourited" },
-  { icon: MessageCircle, label: "Chat" },
+  { icon: Car, label: "Garage" },
   { icon: CircleUser, label: "Profile" },
   { icon: CircleUser, label: "Profile" },
 ];

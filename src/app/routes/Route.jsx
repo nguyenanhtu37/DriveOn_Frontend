@@ -9,7 +9,6 @@ import HomePage from "../../pages/HomePage/HomePage";
 import Login from "@/pages/Login/Login";
 import ForgotPassword from "../../pages/forgot-password/Forgot-password";
 import NewPassword from "../../pages/forgot-password/New-password";
-// import ProfilePage from "@/pages/CarOwner/Profile/index";
 import Dashboard from "@/pages/AdminDashboard/Dashboard";
 import { ViewRegisterGarage } from "@/pages/AdminDashboard/ViewRegisterGarage/ViewRegisterGarage";
 import SignUp from "../../pages/SignUp/SignUp";
@@ -32,10 +31,12 @@ import GarageDetailPage from "@/pages/GarageDetailPage/GarageDetailPage";
 
 import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
-import BrandList from "@/pages/AdminDashboard/Brand/BrandList"; 
+import BrandList from "@/pages/AdminDashboard/Brand/BrandList";
 import VehicleDetailsPage from "@/pages/CarOwner/Vehicle/VehicleDetails";
 import AppointmentId from "@/pages/GarageManagement/Appointment/AppointmentId";
 import FavoriteGarages from "@/pages/CarOwner/FavoriteGarage/FavoriteGarages";
+import { GarageProUpgrade } from "@/pages/GarageProUpgrade/GarageProUpgrade";
+import { ProfilePageV2 } from "@/pages/ProfilePage/ProfilePageV2";
 const router = createBrowserRouter(
   [
     {
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
       element: <MainLayout />,
       children: [
         { index: true, element: <HomePage /> },
+
         {
           element: <ProtectedRoute role={["carowner"]} />,
           children: [
@@ -58,9 +60,15 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
     { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
-    { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage /> },
+    { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePageV2 /> },
+    // { path: AbsoluteScreenPath.ProfilePageV2, element: <ProfilePageV2 /> },
     { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
-    { path: AbsoluteScreenPath.FavoriteGarages, element: <FavoriteGarages/>},
+    { path: AbsoluteScreenPath.FavoriteGarages, element: <FavoriteGarages /> },
+    {
+      path: AbsoluteScreenPath.GarageProUpgrade,
+      element: <GarageProUpgrade />,
+    },
+
     {
       path: AbsoluteScreenPath.VehicleDetail,
       element: <VehicleDetailsPage />,
