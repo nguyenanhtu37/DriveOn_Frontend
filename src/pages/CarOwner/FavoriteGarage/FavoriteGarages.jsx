@@ -1,9 +1,13 @@
 import useFavorites from "@/common/hooks/useFavorites";
 import { GarageCard } from "@/components/Card"; // Adjust path as needed
 import { Loader2, Heart } from "lucide-react"; // Added Heart for empty state
+import { useUserStore } from "@/app/stores/view/user";
 
 const FavoriteGarages = () => {
-    const { favorites, loading, error, removeFromFavorites } = useFavorites();
+  const user = useUserStore((state) => state.user);
+  const userId = user?._id;
+
+  const { favorites, loading, error, removeFromFavorites } = useFavorites(userId);
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
