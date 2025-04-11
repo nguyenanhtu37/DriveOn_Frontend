@@ -9,7 +9,7 @@ const Feedback = ({ garageId, currentUserId }) => {
   const [newFeedback, setNewFeedback] = useState({ rating: 0, text: '' });
   const [editingFeedback, setEditingFeedback] = useState(null);
   const [submitError, setSubmitError] = useState(null); // Lưu lỗi khi submit
-  const [isSubmitting, setIsSubmitting] = useState(false); // Trạng thái loading riêng cho submit
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
