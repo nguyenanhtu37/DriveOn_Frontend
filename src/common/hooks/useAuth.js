@@ -1,27 +1,74 @@
-// hooks/useAuth.js
+// useAuth.js
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, logout } from "../../app/services/login";
 import { signup } from "../../app/services/signup";
-import { requestPasswordReset, resetPassword } from "../../app/services/reset-password";
+import {
+  requestPasswordReset,
+  resetPassword,
+} from "../../app/services/reset-password";
+import { setUser } from "@/app/stores/view/user";
+
+const roleData = [
+  { _id: "67895c212e7333f925e9c0e9", roleName: "admin" },
+  { _id: "67895c322e7333f925e9c0ed", roleName: "manager" },
+  { _id: "67895c3e2e7333f925e9c0ef", roleName: "carowner" },
+  { _id: "67b60df8c465fe4f943b98cc", roleName: "staff" },
+];
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [userRoles, setUserRoles] = useState([]);
   const navigate = useNavigate();
 
-  // Handle normal login
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
   const handleLogin = async (credentials) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await login(credentials);
+      const response = await login(credentials); // gọi service login
+      setUser(response.user);
       localStorage.setItem("token", response.token);
-      navigate("/");
-      return response;
+  
+      // DEBUG: In ra roles từ backend
+      console.log("🚀 Raw roles from response:", response.roles);
+  
+      let roles = response.roles;
+  
+      // Map ObjectId sang roleName nếu cần
+      if (
+        roles.length &&
+        typeof roles[0] === "string" &&
+        roles[0].match(/^[0-9a-fA-F]{24}$/)
+      ) {
+        roles = roles.map((id) =>
+          roleData.find((r) => r._id === id)?.roleName || "unknown"
+        );
+      }
+  
+      console.log("🧠 Mapped roles:", roles); // In ra sau khi mapping
+  
+      setUserRoles(roles);
+      setIsLoggedIn(true);
+  
+      // ✅ Điều hướng
+      if (roles.includes("admin")) {
+        console.log("✅ Redirecting to admin dashboard...");
+        navigate("/adminDashboard");
+      } else {
+        console.log("➡️ Redirecting to homepage...");
+        navigate("/");
+      }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Login failed";
+      const errorMessage =
+        err.message || "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -29,35 +76,38 @@ export const useAuth = () => {
     }
   };
 
-  // Handle signup
-  const handleSignup = async (credentials) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await signup(credentials);
-      localStorage.setItem("token", response.token);
-      navigate("/login");
-      return response;
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || "Signup failed";
-      setError(errorMessage);
-      throw new Error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Handle logout
   const handleLogout = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      await logout(); // Call the API logout function
-      localStorage.removeItem("token");
-      navigate("/");
-      return { message: "Logged out successfully" };
+      const token = localStorage.getItem("token");
+      if (token) await logout(token);
     } catch (err) {
-      const errorMessage = err.message || "Logout failed";
+      setError(err.message || "Đăng xuất thất bại.");
+    } finally {
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      setUserRoles([]);
+      setUser(null);
+      setIsLoading(false);
+      navigate("/login");
+    }
+  };
+
+  const handleSignup = async (credentials) => {
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const response = await signup({
+        ...credentials,
+        roles: ["carowner"],
+      });
+      setSuccess(response.message || "Vui lòng kiểm tra email để xác minh tài khoản.");
+      navigate("/login");
+    } catch (err) {
+      const errorMessage = err.message || "Đăng ký thất bại. Vui lòng thử lại.";
+      console.error("Signup error:", errorMessage);
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -65,17 +115,15 @@ export const useAuth = () => {
     }
   };
 
-  // Request password reset
   const handleRequestPasswordReset = async (email) => {
     setIsLoading(true);
     setError(null);
     setSuccess(null);
     try {
-      const response = await requestPasswordReset(email);
-      setSuccess(response.message);
-      return response;
+      await requestPasswordReset(email);
+      setSuccess("Password reset email has been sent.");
     } catch (err) {
-      const errorMessage = err.message || "Failed to send reset email";
+      const errorMessage = err.message || "Không thể gửi email đặt lại mật khẩu.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -83,40 +131,30 @@ export const useAuth = () => {
     }
   };
 
-  // Reset password with token
-  const handleResetPassword = async (token, password) => {
+  const handleResetPassword = async (token, newPassword) => {
     setIsLoading(true);
     setError(null);
     setSuccess(null);
     try {
-      const response = await resetPassword(token, password);
-      setSuccess(response.message);
+      await resetPassword(token, newPassword);
+      setSuccess("Password reset thành công.");
       navigate("/login");
-      return response;
     } catch (err) {
-      const errorMessage = err.message || "Failed to reset password";
+      const errorMessage = err.message || "Reset password failed.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
-
-  // Handle Google OAuth login callback
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
-
-    if (token) {
-      localStorage.setItem("token", token);
-      navigate("/");
-    }
-  }, [navigate]);
 
   return {
     isLoading,
     error,
     success,
+    isLoggedIn,
+    userRoles,
+    setUserRoles,
     handleLogin,
     handleSignup,
     handleLogout,

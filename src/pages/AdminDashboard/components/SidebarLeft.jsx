@@ -44,7 +44,7 @@ export const SidebarLeft = () => {
                 />
                 <SidebarItem
                   icon={<Car />}
-                  title="Exits Garage"
+                  title="Exists Garage"
                   link={"viewExitsGarage"}
                 />
                 <SidebarItem

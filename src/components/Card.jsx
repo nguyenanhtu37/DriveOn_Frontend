@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import  { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,35 +12,53 @@ import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider, // Import TooltipProvider
 } from "@/components/ui/tooltip";
+import { useNavigate } from "react-router-dom";
+import useFavorites from "@/common/hooks/useFavorites";
+import { useUserStore } from "@/app/stores/view/user"; // Lấy user
 
-export function GarageCard({
-  garageName,
-  rating,
-  address,
-  openTime,
-  closeTime,
-  imgs,
-  isFavourited,
-}) {
-  const [isHovered, setIsHovered] = React.useState(false);
+export function GarageCard({ id, garageName, rating, address, openTime, closeTime, imgs, isFavourited }) {
+  const user = useUserStore((state) => state.user); 
+  const userId = user?._id || null;
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [favoriteStatus, setFavoriteStatus] = useState(isFavourited);
+  const navigate = useNavigate();
+  const { addToFavorites, removeFromFavorites } = useFavorites(userId); 
+
+  const handleFavoriteToggle = async (e) => {
+    e.stopPropagation();
+    if (!userId) return; 
+    try {
+      if (favoriteStatus) {
+        await removeFromFavorites(id);
+      } else {
+        await addToFavorites(id);
+      }
+      setFavoriteStatus(!favoriteStatus);
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
 
   return (
     <Card
-      className="w-full  mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-lg hover:-translate-y-1"
+      className="w-full h-full mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-lg border-none shadow-none rounded-xl"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => navigate(`/garageDetail/${id}`)}
     >
       <CardContent className="p-0">
-        <div className="relative">
-          <Swiper className="aspect-[4/3]">
+        <div className="relative rounded-b-xl overflow-hidden">
+          <Swiper className="aspect-[1.1] md:aspect-[1.5]">
             {imgs?.map((img, index) => (
               <SwiperSlide key={index}>
                 <img
                   src={img || "/placeholder.svg"}
                   className="w-full h-full object-cover"
+                  alt="Garage image"
                 />
               </SwiperSlide>
             ))}
@@ -50,25 +67,27 @@ export function GarageCard({
             variant="ghost"
             size="icon"
             className={`absolute top-2 right-2 z-10 transition-colors duration-300 ${
-              isFavourited
+              favoriteStatus
                 ? "text-red-500 hover:text-red-600"
                 : "text-white hover:text-red-300"
             }`}
+            onClick={handleFavoriteToggle}
           >
             <Heart
-              className={`h-6 w-6 ${isFavourited ? "fill-current" : ""}`}
+              className={`h-6 w-6 ${favoriteStatus ? "fill-current" : ""}`}
             />
             <span className="sr-only">
-              {isFavourited ? "Remove from favorites" : "Add to favorites"}
+              {favoriteStatus ? "Remove from favorites" : "Add to favorites"}
             </span>
           </Button>
         </div>
-        <div className="p-4">
+        <div className="pt-4 px-2 pb-2">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-lg font-semibold text-primary">{garageName}</h3>
             <Badge variant="secondary" className="flex items-center gap-1">
               <Star className="h-4 w-4" />
-              {/* <span>{rating.toFixed(1)}</span> */}
+              {/* Optionally show rating */}
+              <span>{rating ? rating.toFixed(1) : "N/A"}</span>
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mb-2">{address}</p>
@@ -78,6 +97,8 @@ export function GarageCard({
               {openTime} - {closeTime}
             </span>
           </div>
+
+          {/* Wrap Tooltip with TooltipProvider */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

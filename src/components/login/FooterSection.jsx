@@ -1,20 +1,24 @@
+"use client"
 
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"
 
 const FooterSection = ({ onRegisterClick }) => (
-  <p className="mt-4 text-sm text-center text-gray-600">
-    Not registered yet? 
-    <button 
-      className="text-purple-600 hover:underline ml-1"
-      onClick={onRegisterClick}
-    >
-      Register now
-    </button>
-  </p>
-);
+  <div className="mt-6 text-center">
+    <p className="text-sm text-body">
+      Not registered yet?{" "}
+      <button
+        className="text-primary font-medium hover:text-primary/80 hover:underline transition-colors"
+        onClick={onRegisterClick}
+      >
+        Register now
+      </button>
+    </p>
+  </div>
+)
 
 FooterSection.propTypes = {
   onRegisterClick: PropTypes.func.isRequired,
-};
+}
 
-export default FooterSection;
+export default FooterSection
+

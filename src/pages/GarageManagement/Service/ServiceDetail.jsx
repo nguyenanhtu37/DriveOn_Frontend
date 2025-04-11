@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { EditService } from "./EditService";
 import { set } from "date-fns";
 import { DeleteService } from "./DeleteService";
+import { formatToVND } from "@/lib/formatToVND";
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
@@ -61,11 +62,15 @@ const ServiceDetail = () => {
 
         <div className=" flex w-full justify-start items-start gap-x-2">
           <span className=" w-[120px] text-md font-semibold">Price: </span>
-          <span className=" text-md">{serviceDetail.data.price}</span>
+          <span className=" text-md">
+            {formatToVND(serviceDetail.data.price)}
+          </span>
         </div>
         <div className=" flex w-full justify-start items-start gap-x-2">
           <span className=" w-[120px] text-md font-semibold">Duration: </span>
-          <span className=" text-md">{serviceDetail.data.duration}</span>
+          <span className=" text-md">
+            {serviceDetail.data.duration} minutes
+          </span>
         </div>
         <div className=" flex w-full justify-start items-start gap-x-2">
           <span className=" w-[120px] text-md font-semibold">Waranty: </span>

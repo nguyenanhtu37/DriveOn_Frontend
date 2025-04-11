@@ -144,8 +144,9 @@ const CreateService = () => {
                 variant="ghost"
                 className="bg-red-200 hover:bg-red-300 transition-colors duration-100 ease-in-out"
                 type="submit"
+                disabled={addService.isPending}
               >
-                Create
+                {addService.isPending ? "Creating..." : "Create"}
               </Button>
             </DialogFooter>
           </form>

@@ -15,8 +15,10 @@ export const viewRegisterGarageDetail = async (id) => {
   return response.data;
 };
 
-export const getGarages = async () => {
-  const response = await axios.get("garage/garages");
+export const getGarages = async (params) => {
+  const response = await axios.get("garage/viewGarage", {
+    params,
+  });
   return response;
 };
 
@@ -37,10 +39,20 @@ export const viewGarageExits = async () => {
 };
 
 export const enableGarage = async (id) => {
-  const response = await axios.post(`garage/${id}/enable`);
+  const response = await axios.put(`garage/${id}/enable`);
   return response.data;
 };
 export const disableGarage = async (id) => {
-  const response = await axios.post(`garage/${id}/disable`);
+  const response = await axios.put(`garage/${id}/disable`);
+  return response.data;
+};
+
+export const getGarageDetail = async (id) => {
+  const response = await axios.get(`garage/garages/${id}`);
+  return response.data;
+};
+
+export const getMyGarage = async () => {
+  const response = await axios.get("garage/garages");
   return response.data;
 };

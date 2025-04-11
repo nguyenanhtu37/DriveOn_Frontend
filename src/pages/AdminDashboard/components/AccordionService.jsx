@@ -1,4 +1,3 @@
-import { useGetService } from "@/app/stores/entity/service";
 import {
   AccordionContent,
   AccordionItem,
@@ -12,9 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Cog, Edit, Trash2 } from "lucide-react";
+import { Cog } from "lucide-react";
 import { EditService } from "../ViewServiceSystem/components/EditService";
 import { DeleteService } from "../ViewServiceSystem/components/DeleteService";
+import { formatDate } from "@/lib/formatDate";
 
 const AccordionService = ({
   id,
@@ -42,10 +42,10 @@ const AccordionService = ({
               <p className="text-gray-700 dark:text-gray-300">{description}</p>
               <div className=" flex flex-col justify-start mt-4 items-start gap-2">
                 <span className="text-gray-700 dark:text-gray-300">
-                  Created at: {createAt}
+                  Created at: {formatDate(createAt)}
                 </span>
                 <span className="text-gray-700 dark:text-gray-300">
-                  Updated at: {updateAt}
+                  Updated at: {formatDate(updateAt)}
                 </span>
               </div>
             </div>
