@@ -46,7 +46,7 @@ const router = createBrowserRouter(
         { index: true, element: <HomePage /> },
 
         {
-          element: <ProtectedRoute role={["carowner"]} />,
+          element: <ProtectedRoute role={[""]} />,
           children: [
             {
               path: AbsoluteScreenPath.GarageDetail,
