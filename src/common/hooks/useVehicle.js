@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { getVehicles, addVehicle, updateVehicle, deleteVehicle, getVehicleById } from "@/app/services/vehicle";
+import { useState, useEffect, useCallback } from 'react';
+import { getVehicles, addVehicle, updateVehicle, deleteVehicle, getVehicleById } from '@/app/services/vehicle';
 
 export const useVehicles = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -11,7 +11,7 @@ export const useVehicles = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getVehicles();
+      const data = await getVehicles(); // Now returns populated carBrand
       setVehicles(data);
     } catch (err) {
       setError(err.message);
@@ -25,7 +25,7 @@ export const useVehicles = () => {
     setLoading(true);
     setError(null);
     try {
-      const vehicle = await getVehicleById(id);
+      const vehicle = await getVehicleById(id); // Now returns populated carBrand
       return vehicle;
     } catch (err) {
       setError(err.message);
@@ -41,7 +41,7 @@ export const useVehicles = () => {
     setError(null);
     try {
       const response = await addVehicle(vehicleData);
-      const newVehicle = response.vehicle;
+      const newVehicle = response.vehicle; // Populated carBrand
       setVehicles((prev) => [...prev, newVehicle]);
       return response;
     } catch (err) {
@@ -58,7 +58,7 @@ export const useVehicles = () => {
     setError(null);
     try {
       const response = await updateVehicle(id, vehicleData);
-      const updatedVehicle = response.vehicle;
+      const updatedVehicle = response.vehicle; // Populated carBrand
       setVehicles((prev) =>
         prev.map((v) => (v._id === id ? updatedVehicle : v))
       );
@@ -96,7 +96,7 @@ export const useVehicles = () => {
     loading,
     error,
     fetchVehicles,
-    fetchVehicleById,
+    fetchVehicleById,  // Ensure fetchVehicleById is returned
     addVehicle: addNewVehicle,
     updateVehicle: updateExistingVehicle,
     deleteVehicle: deleteExistingVehicle,
