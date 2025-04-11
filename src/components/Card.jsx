@@ -17,31 +17,28 @@ import {
 } from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
 import useFavorites from "@/common/hooks/useFavorites";
+import { useUserStore } from "@/app/stores/view/user"; // Lấy user
 
-export function GarageCard({
-  id,
-  garageName,
-  rating,
-  address,
-  openTime,
-  closeTime,
-  imgs,
-  isFavourited, // Initial state passed as a prop
-}) {
+export function GarageCard({ id, garageName, rating, address, openTime, closeTime, imgs, isFavourited }) {
+  const user = useUserStore((state) => state.user); // ✅ Lấy user hiện tại
+  const userId = user?._id || null;
+
   const [isHovered, setIsHovered] = useState(false);
-  const [favoriteStatus, setFavoriteStatus] = useState(isFavourited); // Local state for favorite button
+  const [favoriteStatus, setFavoriteStatus] = useState(isFavourited);
   const navigate = useNavigate();
-  const { addToFavorites, removeFromFavorites } = useFavorites();
+  const { addToFavorites, removeFromFavorites } = useFavorites(userId); // ✅ Truyền userId
 
   const handleFavoriteToggle = async (e) => {
-    e.stopPropagation(); // Prevent card click from triggering navigation
+    e.stopPropagation();
+    if (!userId) return; // ✅ Không làm gì nếu chưa đăng nhập
+
     try {
       if (favoriteStatus) {
-        await removeFromFavorites(id); // Remove from favorites
+        await removeFromFavorites(id);
       } else {
-        await addToFavorites(id); // Add to favorites
+        await addToFavorites(id);
       }
-      setFavoriteStatus(!favoriteStatus); // Toggle local favorite state
+      setFavoriteStatus(!favoriteStatus);
     } catch (error) {
       console.error("Error toggling favorite:", error);
     }
