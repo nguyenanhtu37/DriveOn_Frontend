@@ -1,3 +1,4 @@
+// useAuth.js
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, logout } from "../../app/services/login";
@@ -8,7 +9,6 @@ import {
 } from "../../app/services/reset-password";
 import { setUser } from "@/app/stores/view/user";
 
-// Hardcoded role data for mapping (replace with API call in production)
 const roleData = [
   { _id: "67895c212e7333f925e9c0e9", roleName: "admin" },
   { _id: "67895c322e7333f925e9c0ed", roleName: "manager" },
@@ -24,41 +24,46 @@ export const useAuth = () => {
   const [userRoles, setUserRoles] = useState([]);
   const navigate = useNavigate();
 
-  // Sync state with localStorage on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-    // Optionally fetch user roles from server if token exists
-    // Example: if (token) fetchUserRoles();
   }, []);
 
   const handleLogin = async (credentials) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await login(credentials); // Updated service
-      setUser(response.user); // Set global user state
+      const response = await login(credentials); // gọi service login
+      setUser(response.user);
       localStorage.setItem("token", response.token);
   
-      // Determine roles
+      // DEBUG: In ra roles từ backend
+      console.log("🚀 Raw roles from response:", response.roles);
+  
       let roles = response.roles;
-      if (roles.length > 0 && typeof roles[0] === "string" && roles[0].match(/^[0-9a-fA-F]{24}$/)) {
-        roles = roles.map((roleId) =>
-          roleData.find((r) => r._id === roleId)?.roleName || "carowner"
+  
+      // Map ObjectId sang roleName nếu cần
+      if (
+        roles.length &&
+        typeof roles[0] === "string" &&
+        roles[0].match(/^[0-9a-fA-F]{24}$/)
+      ) {
+        roles = roles.map((id) =>
+          roleData.find((r) => r._id === id)?.roleName || "unknown"
         );
       }
+  
+      console.log("🧠 Mapped roles:", roles); // In ra sau khi mapping
+  
       setUserRoles(roles);
       setIsLoggedIn(true);
   
-      // Redirect based on roles
-      const isAdmin = roles.includes("admin");
-      const isStaff = roles.includes("staff");
-      if (isAdmin) {
-        navigate("/adminDashboard/");
-      } else if (isStaff) {
-        const garageId = response.user.garageId || "defaultGarageId"; // Adjust based on your user data
-        navigate(`/garageManagement/${garageId}/staff`);
+      // ✅ Điều hướng
+      if (roles.includes("admin")) {
+        console.log("✅ Redirecting to admin dashboard...");
+        navigate("/adminDashboard");
       } else {
+        console.log("➡️ Redirecting to homepage...");
         navigate("/");
       }
     } catch (err) {
@@ -70,15 +75,13 @@ export const useAuth = () => {
       setIsLoading(false);
     }
   };
-  
+
   const handleLogout = async () => {
     setIsLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem("token");
-      if (token) {
-        await logout(token); // Updated service
-      }
+      if (token) await logout(token);
     } catch (err) {
       setError(err.message || "Đăng xuất thất bại.");
     } finally {
@@ -96,14 +99,11 @@ export const useAuth = () => {
     setError(null);
     setSuccess(null);
     try {
-      const submitData = {
+      const response = await signup({
         ...credentials,
-        roles: ["carowner"], // Default role for new users
-      };
-      const response = await signup(submitData);
-      setSuccess(
-        response.message || "Vui lòng kiểm tra email để xác minh tài khoản."
-      );
+        roles: ["carowner"],
+      });
+      setSuccess(response.message || "Vui lòng kiểm tra email để xác minh tài khoản.");
       navigate("/login");
     } catch (err) {
       const errorMessage = err.message || "Đăng ký thất bại. Vui lòng thử lại.";
@@ -123,9 +123,7 @@ export const useAuth = () => {
       await requestPasswordReset(email);
       setSuccess("Password reset email has been sent.");
     } catch (err) {
-      const errorMessage =
-        err.message || "Password reset email could not be sent.";
-      console.error("Request reset password error:", errorMessage);
+      const errorMessage = err.message || "Không thể gửi email đặt lại mật khẩu.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -139,11 +137,10 @@ export const useAuth = () => {
     setSuccess(null);
     try {
       await resetPassword(token, newPassword);
-      setSuccess("Password reset email has been sent.");
+      setSuccess("Password reset thành công.");
       navigate("/login");
     } catch (err) {
-      const errorMessage = err.message || "Password reset failed.";
-      console.error("Reset password error:", errorMessage);
+      const errorMessage = err.message || "Reset password failed.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {

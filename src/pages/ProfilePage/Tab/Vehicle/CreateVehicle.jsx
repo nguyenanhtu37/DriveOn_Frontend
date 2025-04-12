@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "@/hooks/use-toast";
 import { vehicleSchema } from "@/schema";
@@ -80,164 +79,130 @@ export const CreateVehicle = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
         <Button size="sm" className="bg-red-500 hover:bg-red-600">
-          <Car className="h-4 w-4 mr-2" />
-          Add Vehicle
+          <Car className="h-4 w-4 mr-2" /> Add Vehicle
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="w-full max-w-md max-h-[90vh] overflow-y-auto p-4 rounded-xl">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-y-4">
-              <h2 className="text-lg font-semibold">Add New Vehicle</h2>
-              <FormField
-                control={form.control}
-                name="carName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Car Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter Car Name"
-                        {...field}
-                        className="placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="carPlate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Car Plate</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter Car Plate"
-                        {...field}
-                        className="placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="carYear"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Car Year</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter Car Year"
-                        type="number"
-                        {...field}
-                        className="placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="carColor"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Car Color</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter Car Color"
-                        {...field}
-                        className="placeholder:text-slate-400"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="carBrand"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Car Brand</FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onChange={field.onChange}
-                        options={brandList}
-                        isMultiple={false}
-                        primaryColor="red"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  {files.length > 0 ? (
-                    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                      {files.map((file) => (
-                        <div
-                          key={file.name}
-                          className="relative w-full animate-fade-up animate-ease-in-out"
-                        >
-                          <div className="w-full flex flex-col gap-y-2">
-                            <img
-                              className="w-full sm:h-[100px] md:h-[120px] object-cover rounded-md"
-                              src={URL.createObjectURL(file)}
-                              alt=""
-                            />
-                            <Progress value={progressList[file.name]} />
-                          </div>
-                          <button
-                            type="button"
-                            className="absolute top-0 right-0 p-0.5 bg-white rounded-full shadow-sm"
-                          >
-                            <X size={12} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="border-2 border-dashed border-gray-200 rounded-lg flex flex-col gap-1 p-6 items-center">
-                      <FileIcon className="w-12 h-12" />
-                      <span className="text-sm font-medium text-gray-500">
-                        Drag and drop a file or click to browse
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        PDF, image, video, or audio
-                      </span>
-                    </div>
-                  )}
-                  <div className="space-y-2 text-sm">
-                    <Label htmlFor="file" className="text-sm font-medium">
-                      File
-                    </Label>
-                    <Input
-                      id="file"
-                      type="file"
-                      multiple
-                      placeholder="File"
-                      accept="image/*"
-                      onChange={handleFileChange}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-3 text-sm">
+            <h2 className="text-base font-semibold">Add New Vehicle</h2>
+
+            <FormField
+              control={form.control}
+              name="carName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Car Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Car Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="carPlate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Car Plate</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Car Plate" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="carYear"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Car Year</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="Enter Car Year" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="carColor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Car Color</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Car Color" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="carBrand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Car Brand</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={brandList}
+                      isMultiple={false}
+                      primaryColor="red"
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Card>
+              <CardContent className="p-4 space-y-2">
+                {files.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-2">
+                    {files.map((file) => (
+                      <div key={file.name} className="relative">
+                        <img
+                          className="w-full h-[80px] object-cover rounded-md"
+                          src={URL.createObjectURL(file)}
+                          alt="preview"
+                        />
+                        <Progress value={progressList[file.name]} />
+                        <button
+                          type="button"
+                          className="absolute top-0 right-0 p-0.5 bg-white rounded-full shadow-sm"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
-              <Button
-                type="submit"
-                size="sm"
-                className="bg-red-500 hover:bg-red-600"
-                disabled={createVehicle.isPending}
-              >
-                Submit
-              </Button>
-            </div>
+                ) : (
+                  <div className="border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center p-4">
+                    <FileIcon className="w-10 h-10" />
+                    <p className="text-xs text-gray-500">Upload car images</p>
+                  </div>
+                )}
+                <Input
+                  id="file"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </CardContent>
+            </Card>
+
+            <Button type="submit" size="sm" className="bg-red-500 hover:bg-red-600 mt-2">
+              Submit
+            </Button>
           </form>
         </Form>
       </DialogContent>

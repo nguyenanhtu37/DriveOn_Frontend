@@ -11,7 +11,7 @@ const useFavorites = (userId = null) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userId) return; // ✅ Đừng gọi API nếu chưa có userId (chưa login)
+    if (!userId) return; 
 
     const fetchFavorites = async () => {
       setLoading(true);
@@ -31,7 +31,7 @@ const useFavorites = (userId = null) => {
   }, [userId]);
 
   const addToFavorites = async (garageId) => {
-    if (!userId) return; // ✅ Đừng làm gì nếu chưa login
+    if (!userId) return; 
 
     try {
       await addFavoriteGarage(garageId);
@@ -47,7 +47,7 @@ const useFavorites = (userId = null) => {
   };
 
   const removeFromFavorites = async (garageId) => {
-    if (!userId) return; // ✅ Đừng làm gì nếu chưa login
+    if (!userId) return;
 
     try {
       await removeFavoriteGarage(garageId);
