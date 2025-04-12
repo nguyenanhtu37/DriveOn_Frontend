@@ -62,7 +62,7 @@ export const CreateAppointment = () => {
       onSuccess: () => {
         reset();
         toast({ title: "Create appointment successfully", duration: 2000 });
-        navigate(AbsoluteScreenPath.ProfilePageV2);
+        navigate(AbsoluteScreenPath.ProfilePage);
         setTab("appointments");
       },
       onError: () => {
