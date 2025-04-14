@@ -228,7 +228,7 @@ export const GarageProUpgrade = () => {
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <Card className="border-2 border-red-500 shadow-lg relative overflow-hidden">
+                <Card className="border-2 h-full border-red-500 shadow-lg relative overflow-hidden">
                   <motion.div
                     className="absolute -right-20 -top-20 w-40 h-40 bg-red-500 opacity-10 rounded-full"
                     animate={{ scale: [1, 1.2, 1] }}
@@ -254,10 +254,6 @@ export const GarageProUpgrade = () => {
                     <CardDescription>Best for professionals</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-baseline">
-                      <span className="text-3xl font-bold">100.000 VND</span>
-                      <span className="ml-1 text-muted-foreground">/month</span>
-                    </div>
                     <ul className="mt-6 space-y-2">
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />

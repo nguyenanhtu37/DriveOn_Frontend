@@ -10,3 +10,4 @@ export * as brandServiceV2 from "./brandV2";
 export * as userService from "./user";
 export * as payService from "./payos";
 export * as subscriptionService from "./subscription";
+export * as favoriteService from "./favoriteV2";
