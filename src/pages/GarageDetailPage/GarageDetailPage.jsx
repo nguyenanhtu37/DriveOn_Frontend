@@ -1,4 +1,12 @@
-import { Activity, Locate, Phone, Plus, Star } from "lucide-react";
+import {
+  Activity,
+  DoorClosed,
+  DoorOpen,
+  Locate,
+  Phone,
+  Plus,
+  Star,
+} from "lucide-react";
 import Service from "./components/Service";
 import { useGetGarageDetail } from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
@@ -10,12 +18,11 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const GarageDetailPage = () => {
   const { garageId } = useParams();
-  const garageDetail = useGetGarageDetail(garageId); 
+  const garageDetail = useGetGarageDetail(garageId);
   const currentUserId = localStorage.getItem("userId");
 
   // Handle loading state
   if (garageDetail.isLoading) return <Loading />;
-
 
   const averageRating = garageDetail.data.ratingAverage || 0;
 
@@ -119,10 +126,18 @@ const GarageDetailPage = () => {
                   </div>
                   <div className="flex flex-col gap-y-px">
                     <div className="text-md font-semibold text-[#222222]">
-                      Warranty
+                      Open
                     </div>
-                    <div className="text-md text-[#6a6a6a]">
-                      {garageDetail.data.warranty}
+                    <div className="text-md text-[#6a6a6a] flex items-center gap-x-2">
+                      <span className="flex items-center gap-x-1">
+                        <DoorOpen />
+                        {garageDetail.data.openTime}
+                      </span>{" "}
+                      -{" "}
+                      <span className="flex items-center gap-x-1">
+                        <DoorClosed />
+                        {garageDetail.data.closeTime}
+                      </span>
                     </div>
                   </div>
                 </div>

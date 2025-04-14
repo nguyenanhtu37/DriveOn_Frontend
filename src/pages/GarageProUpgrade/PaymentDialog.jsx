@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Check, Wallet, DollarSign, CreditCard, Map } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Check, CreditCard, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -15,70 +15,50 @@ import {
 import { useGetMyGarage } from "@/app/stores/entity/garage";
 import { useCreatePaymentLink } from "@/app/stores/entity/payos";
 import { formatCurrency } from "@/utils";
-
-const plans = [
-  {
-    id: "basic",
-    name: "1 month",
-    price: "5000",
-    features: [
-      "Truy cập toàn bộ nội dung",
-      "Hỗ trợ 24/7",
-      "Sử dụng trên 5 thiết bị",
-      "Tải xuống không giới hạn",
-    ],
-    savings: null,
-  },
-  {
-    id: "standard",
-    name: "3 months",
-    price: "199000",
-    features: [
-      "Truy cập toàn bộ nội dung",
-      "Hỗ trợ 24/7",
-      "Sử dụng trên 5 thiết bị",
-      "Tải xuống không giới hạn",
-    ],
-    savings: "Tiết kiệm 33% so với gói 1 tháng",
-  },
-  {
-    id: "premium",
-    name: "6 months",
-    price: "299000",
-    features: [
-      "Truy cập toàn bộ nội dung",
-      "Hỗ trợ 24/7",
-      "Sử dụng trên 5 thiết bị",
-      "Tải xuống không giới hạn",
-    ],
-    savings: "Tiết kiệm gần 50% so với gói 1 tháng",
-  },
-];
+import { useGetSubscription } from "@/app/stores/entity/subscription";
 
 export const PaymentDialog = ({ open, setOpen }) => {
-  const [selectedPlan, setSelectedPlan] = useState("standard");
+  const [selectedPlan, setSelectedPlan] = useState({});
   const [paymentMethod, setPaymentMethod] = useState("bank");
 
   const garages = useGetMyGarage();
 
-  const garage =
-    garages.isSuccess && garages.data.filter((garage) => garage.tag !== "pro");
-  const [garageId, setGarageId] = useState(garages.data[0]?._id);
+  const subscriptionPlans = useGetSubscription();
+
+  useEffect(() => {
+    if (subscriptionPlans.isSuccess) {
+      setSelectedPlan(subscriptionPlans.data[0]);
+    }
+  }, [subscriptionPlans.data, subscriptionPlans.isSuccess]);
+
+  const [garageChoose, setGarageChoose] = useState(null);
+
+  const garage = useMemo(() => {
+    if (garages.isSuccess) {
+      const filteredGarages = garages.data.filter(
+        (garage) => garage.tag !== "pro"
+      );
+      if (!garageChoose && filteredGarages.length > 0) {
+        setGarageChoose(filteredGarages[0]);
+      }
+      return filteredGarages;
+    }
+    return [];
+  }, [garages.isSuccess, garages.data, garageChoose]);
 
   const createPayment = useCreatePaymentLink();
 
   const handleCreatePayment = () => {
     createPayment.mutate(
       {
-        garageId: garageId,
-        amount: Number(plans.find((plan) => plan.id === selectedPlan).price),
-        description: "Upgrade service package",
-        // spell-checker: enable
+        garageId: garageChoose._id,
+        subscriptionId: selectedPlan._id,
+        idempotencyKey: crypto.randomUUID(),
       },
       {
         onSuccess: (data) => {
           console.log("Payment link created:", data.paymentLink.checkoutUrl);
-          window.open(data.paymentLink.checkoutUrl, "_blank");
+          window.location.href = data.paymentLink.checkoutUrl;
         },
       }
     );
@@ -99,25 +79,25 @@ export const PaymentDialog = ({ open, setOpen }) => {
           <div className="space-y-2">
             <Label>Select payment plan</Label>
             <div className="grid gap-4 md:grid-cols-3">
-              {plans.map((plan) => (
+              {subscriptionPlans.data?.map((plan) => (
                 <Card
-                  key={plan.id}
+                  key={plan._id}
                   className={`cursor-pointer transition-all ${
-                    selectedPlan === plan.id
+                    selectedPlan?._id === plan._id
                       ? "border-primary ring-2 ring-primary"
                       : "hover:border-primary/50"
                   }`}
-                  onClick={() => setSelectedPlan(plan.id)}
+                  onClick={() => setSelectedPlan(plan)}
                 >
                   <div className="p-4">
                     <h3 className="font-semibold">{plan.name}</h3>
                     <p className="text-xl font-bold">
-                      {formatCurrency(plan.price)}/tháng
+                      {formatCurrency(plan.price)}/{plan.month} month
                     </p>
                   </div>
                   <div className="p-4 pt-0">
                     <ul className="space-y-2">
-                      {plan.features.map((feature, index) => (
+                      {plan.description.split(", ").map((feature, index) => (
                         <li key={index} className="flex items-center">
                           <Check className="mr-2 h-4 w-4 text-primary" />
                           <span>{feature}</span>
@@ -142,21 +122,6 @@ export const PaymentDialog = ({ open, setOpen }) => {
             >
               <div>
                 <RadioGroupItem
-                  value="wallet"
-                  id="wallet"
-                  className="peer sr-only"
-                  disabled={true}
-                />
-                <Label
-                  htmlFor="wallet"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                >
-                  <Wallet className="mb-3 h-6 w-6" />
-                  E-wallet
-                </Label>
-              </div>
-              <div>
-                <RadioGroupItem
                   value="bank"
                   id="bank"
                   className="peer sr-only"
@@ -167,21 +132,6 @@ export const PaymentDialog = ({ open, setOpen }) => {
                 >
                   <CreditCard className="mb-3 h-6 w-6" />
                   Payment transfer
-                </Label>
-              </div>
-              <div>
-                <RadioGroupItem
-                  value="cash"
-                  id="cash"
-                  className="peer sr-only"
-                  disabled={true}
-                />
-                <Label
-                  htmlFor="cash"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                >
-                  <DollarSign className="mb-3 h-6 w-6" />
-                  Cash
                 </Label>
               </div>
             </RadioGroup>
@@ -198,11 +148,11 @@ export const PaymentDialog = ({ open, setOpen }) => {
                     <Card
                       key={garage._id}
                       className={`cursor-pointer transition-all ${
-                        garageId === garage._id
+                        garageChoose?._id === garage._id
                           ? "border-primary ring-2 ring-primary"
                           : "hover:border-primary/50"
                       }`}
-                      onClick={() => setGarageId(garage._id)}
+                      onClick={() => setGarageChoose(garage)}
                     >
                       <div className="p-4">
                         <h3 className="font-semibold">{garage.name}</h3>
@@ -244,10 +194,7 @@ export const PaymentDialog = ({ open, setOpen }) => {
               disabled={garages.data.length === 0}
               onClick={handleCreatePayment}
             >
-              Pay{" "}
-              {formatCurrency(
-                plans.find((plan) => plan.id === selectedPlan).price
-              )}
+              Pay {formatCurrency(selectedPlan.price)}
             </Button>
           </div>
         </div>
