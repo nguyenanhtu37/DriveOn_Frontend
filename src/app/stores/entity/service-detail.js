@@ -15,11 +15,14 @@ export const useGetService = (id) => {
 };
 
 export const useAddServiceGarage = () => {
+  const { garageId } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (service) =>
       serviceDetailService.addServiceGarage(service),
     onSuccess: () => {
+      navigate(`/garageManagement/${garageId}/services`);
       queryClient.invalidateQueries(["serviceGarage"]);
       toast({
         title: "Create service successfully",

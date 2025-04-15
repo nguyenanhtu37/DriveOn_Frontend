@@ -7,17 +7,15 @@ import { useMemo } from "react";
 const ProtectedRoute = ({ role, directTo }) => {
   const user = useUserStore((state) => state.user);
 
-  // Tính toán authorized khi user tồn tại
   const authorized = useMemo(() => {
     return (
       user &&
-      role.every((requiredRole) =>
+      role.some((requiredRole) =>
         user.roles.some((userRole) => userRole.roleName === requiredRole)
       )
     );
   }, [role, user]);
 
-  // Nếu user không tồn tại, chuyển ngay đến Login
   if (!user) {
     return <Navigate to={AbsoluteScreenPath.Login} />;
   }

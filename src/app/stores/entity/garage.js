@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFilterStore } from "@/app/stores/view/filter";
 import { useDebounce } from "react-haiku";
 import { getLocation } from "../view/user";
+import { useNavigate } from "react-router-dom";
+import { AdminScreenPath } from "@/constants/screen";
 
 export const useRegisterGarage = () => {
   const { toast } = useToast();
@@ -125,10 +127,12 @@ export const useGetRegisterGarages = () => {
   };
 };
 export const useApproveGarage = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.approveGarage(garageId),
     onSuccess: () => {
+      navigate(AdminScreenPath.ViewRegisterGarage);
       queryClient.invalidateQueries(["garage"]);
       toast({
         title: "Garage approved successfully",
@@ -259,4 +263,23 @@ export const useGetMyGarage = () => {
     ...query,
     data: query.data ?? {},
   };
+};
+
+export const useGetRegisterGarageCarOwner = () => {
+  const query = useQuery({
+    queryKey: ["registerGarageCarOwner"],
+    queryFn: garageService.getRegisterGarageCarOwner,
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};
+
+export const useUpdateRegisterGarage = () => {
+  const mutation = useMutation({
+    mutationFn: async ({ id, garage }) =>
+      garageService.updateGarageRegister(id, garage),
+  });
+  return mutation;
 };

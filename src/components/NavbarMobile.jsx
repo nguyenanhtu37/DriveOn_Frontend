@@ -1,12 +1,18 @@
+import { AbsoluteScreenPath } from "@/constants/screen";
 import { cn } from "@/lib/utils";
-import { CircleUser, Heart, MessageCircle, Search } from "lucide-react";
+import { CircleUser, Heart, Car, Home } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const MENU_ITEMS = [
-  { icon: Search, label: "Search" },
-  { icon: Heart, label: "Favourited" },
-  { icon: MessageCircle, label: "Chat" },
+  { icon: Home, label: "Home", link: "/" },
+  {
+    icon: Heart,
+    label: "Favourited",
+    link: AbsoluteScreenPath.FavoriteGarages,
+  },
+  { icon: Car, label: "Garage" },
   { icon: CircleUser, label: "Profile" },
-  { icon: CircleUser, label: "Profile" },
+  { icon: CircleUser, label: "Profile", link: AbsoluteScreenPath.ProfilePage },
 ];
 
 function NavbarMobile() {
@@ -17,15 +23,16 @@ function NavbarMobile() {
       )}
     >
       {MENU_ITEMS.map((item, index) => (
-        <div
+        <Link
           key={index}
           className="w-full flex flex-col gap-1 items-center cursor-pointer transition-colors hover:text-gray-700"
+          to={item.link || ""}
         >
           <item.icon size={22} className="text-gray-500" aria-hidden="true" />
           <span className="text-[10px] font-medium text-gray-600">
             {item.label}
           </span>
-        </div>
+        </Link>
       ))}
     </div>
   );

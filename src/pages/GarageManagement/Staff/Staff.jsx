@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlignCenter, ArrowDownUp, Circle, Plus, Search } from "lucide-react";
+import { ArrowDownUp, Circle, Plus, Search } from "lucide-react";
 import AddStaff from "./AddStaff";
 import {
   Tooltip,
@@ -25,6 +25,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Loading } from "@/components/Loading";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 export const Staff = () => {
   const { garageId } = useParams();
@@ -71,15 +72,15 @@ export const Staff = () => {
           </div>
         </div>
 
-        <div className=" flex items-center gap-1 px-2 py-1 max-w-[260px] w-full rounded-xl bg-white ring-1 ring-black ">
+        {/* <div className=" flex items-center gap-1 px-2 py-1 max-w-[260px] w-full rounded-xl bg-white ring-1 ring-black ">
           <Search size={16} />
           <input
+            onChange={handleSearch}
             type="text"
             placeholder="Search garage"
             className=" text-xs w-full h-full bg-transparent px-2 py-1 outline-none"
-            // onChange={handleSearchGarage}
           />
-        </div>
+        </div> */}
       </div>
       <Table className=" border border-gray-200 shadow-sm">
         <TableHeader>

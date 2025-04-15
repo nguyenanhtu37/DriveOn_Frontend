@@ -66,3 +66,22 @@ export const useGetAppointmentById = (appointmentId) => {
     data: query.data ?? {},
   };
 };
+
+export const useGetAppointmentByUserId = () => {
+  const query = useQuery({
+    queryKey: ["appointment", "user"],
+    queryFn: async () => appointmentService.getAppointmentByUserId(),
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};
+
+export const useCancelAppointment = () => {
+  const mutation = useMutation({
+    mutationFn: async (appointmentId) =>
+      appointmentService.cancelAppointment(appointmentId),
+  });
+  return mutation;
+};

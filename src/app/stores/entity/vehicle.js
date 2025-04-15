@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetMyVehicles = () => {
   const query = useQuery({
     queryKey: ["myVehicle"],
-    queryFn: () => vehicleService.getMyVehicles(),
+    queryFn: () => vehicleService.getVehicles(),
   });
 
   return {

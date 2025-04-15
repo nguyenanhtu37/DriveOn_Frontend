@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useVehicles } from "@/common/hooks/useVehicle";
 import { useBrands } from "@/common/hooks/useBrand";
 import { vehicleSchema } from "@/schema/vehicleSchema"; // Import the Zod schema
+import useUpload from "@/app/services/Cloudinary/upload"; // Import useUpload
 
 const EditVehicleForm = ({ vehicleId, onClose }) => {
   const navigate = useNavigate();
-  const { fetchVehicleById, updateVehicle, fetchVehicles, error: vehicleError } = useVehicles();
-  const { brands, loading: brandsLoading, error: brandsError } = useBrands();
+  const { fetchVehicleById, updateVehicle, fetchVehicles } = useVehicles();
+  const { brands, loading: brandsLoading } = useBrands();
+  const { files, progressList, handleFileChange, handleUpload, handleRemove } = useUpload(); // Handle file uploads
+
   const [formData, setFormData] = useState({
     carBrand: "",
     carName: "",
@@ -19,7 +22,6 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Fetch the vehicle details on mount
   useEffect(() => {
     const loadVehicle = async () => {
       setLoading(true);
@@ -45,26 +47,26 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
     loadVehicle();
   }, [vehicleId, fetchVehicleById]);
 
-  // Handle form submission with Zod validation
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
-      // Validate form data using the Zod schema
       vehicleSchema.parse(formData); // Will throw an error if validation fails
     } catch (err) {
-      setError(err.errors[0].message); // Set the error message from Zod validation
+      setError(err.errors[0].message);
       return;
     }
 
     setSubmitting(true);
+
     try {
-      // Update the vehicle with the current form data
-      await updateVehicle(vehicleId, formData);
-      // Refresh the vehicle list after update
+      // Upload images to Cloudinary and get the URLs
+      const uploadedUrls = await handleUpload();
+      const updatedData = { ...formData, carImages: uploadedUrls };
+
+      await updateVehicle(vehicleId, updatedData);
       await fetchVehicles();
-      // Navigate to the vehicle list page after successful update
       navigate("/vehicle");
     } catch (err) {
       setError(err.message || "Failed to update vehicle.");
@@ -73,28 +75,18 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
     }
   };
 
-  // Display loading or error state
-  if (loading) return <div className="p-4 text-center">Loading vehicle...</div>;
-  if (vehicleError) return <div className="p-4 text-center text-red-500">Error: {vehicleError}</div>;
+  if (loading) return <div>Loading vehicle...</div>;
 
-  // Form JSX
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <p className="text-gray-500 text-sm">Update your vehicle details.</p>
 
-      {/* Error Display */}
-      {error && <div className="text-red-500 text-sm" role="alert">{error}</div>}
-
-      {/* Brand and Model */}
+      {/* Brand, Model, Year, Color, License Plate Fields */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-gray-700 text-sm font-medium mb-1">Brand</label>
           {brandsLoading ? (
             <p className="text-gray-500">Loading brands...</p>
-          ) : brandsError ? (
-            <p className="text-red-500 text-sm">Error: {brandsError}</p>
-          ) : brands.length === 0 ? (
-            <p className="text-gray-500">No brands available</p>
           ) : (
             <select
               value={formData.carBrand}
@@ -126,12 +118,12 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
         </div>
       </div>
 
-      {/* Year and Color */}
+      {/* Year, Color, License Plate Fields */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-gray-700 text-sm font-medium mb-1">Year</label>
           <input
-            type="number"
+            type="text"
             value={formData.carYear}
             onChange={(e) => setFormData({ ...formData, carYear: e.target.value })}
             placeholder="e.g. 2020"
@@ -168,7 +160,43 @@ const EditVehicleForm = ({ vehicleId, onClose }) => {
         />
       </div>
 
-      {/* Buttons */}
+      {/* Image Upload Section */}
+      <div>
+        <label className="block text-gray-700 text-sm font-medium mb-1">Car Images</label>
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={submitting}
+        />
+        {files.length > 0 && (
+          <div className="mt-2">
+            {files.map((file, index) => (
+              <div key={index} className="flex items-center justify-between">
+                <span>{file.name}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemove(file)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        {progressList && Object.keys(progressList).map((fileName, index) => (
+          <div key={index}>
+            {fileName}: {progressList[fileName]}%
+          </div>
+        ))}
+      </div>
+
+      {/* Error Display */}
+      {error && <div className="text-red-500 text-sm">{error}</div>}
+
+      {/* Submit and Cancel Buttons */}
       <div className="flex justify-end space-x-4 mt-4">
         <button
           type="button"
