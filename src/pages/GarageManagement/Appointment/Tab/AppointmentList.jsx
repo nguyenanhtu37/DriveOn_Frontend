@@ -32,7 +32,8 @@ export const AppointmentList = () => {
   const filteredAppointments = useMemo(() => {
     return (
       appointmentData.data?.filter((appointment) => {
-        const appointmentDate = new Date(appointment.date);
+        const appointMentStartDate = new Date(appointment.start);
+        const appointMentEndDate = new Date(appointment.end);
 
         const adjustedEndDate = endDate
           ? new Date(new Date(endDate).setHours(23, 59, 59, 999))
@@ -40,9 +41,9 @@ export const AppointmentList = () => {
 
         const isWithinDateRange =
           (!startDate ||
-            appointmentDate.getTime() >= new Date(startDate).getTime()) &&
+            appointMentStartDate.getTime() >= new Date(startDate).getTime()) &&
           (!adjustedEndDate ||
-            appointmentDate.getTime() <= adjustedEndDate.getTime());
+            appointMentEndDate.getTime() <= adjustedEndDate.getTime());
 
         const isStatusIncluded =
           filterStatus.length === 0 ||
@@ -175,27 +176,19 @@ export const AppointmentList = () => {
         className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 items-start flex-wrap justify-start"
       >
         {filteredAppointments?.map((appointment) => (
-          <Link
-            className="h-full w-full"
+          <CardAppointment
             key={appointment._id}
-            to={`/garageManagement/${garageId}/appointments/${appointment._id}`}
-            asChild
-          >
-            <CardAppointment
-              key={appointment._id}
-              id={appointment._id}
-              clientName={appointment.user.name}
-              date={appointment.date}
-              notes={appointment.note}
-              status={appointment.status}
-              clientImage={appointment.user.avatar}
-              location={appointment.user.address}
-              start={appointment.start}
-              end={appointment.end}
-              serviceName={appointment.service.map((s) => s.name).join(", ")}
-              vehicle={appointment.vehicle.carName}
-            />
-          </Link>
+            id={appointment._id}
+            clientName={appointment.user.name}
+            notes={appointment.note}
+            status={appointment.status}
+            clientImage={appointment.user.avatar}
+            location={appointment.user.address}
+            start={appointment.start}
+            end={appointment.end}
+            serviceName={appointment.service.map((s) => s.name).join(", ")}
+            vehicle={appointment.vehicle.carName}
+          />
         ))}
       </div>
     </div>

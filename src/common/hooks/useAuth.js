@@ -6,7 +6,15 @@ import {
   requestPasswordReset,
   resetPassword,
 } from "../../app/services/reset-password";
-import { setUser, userLogout } from "@/app/stores/view/user";
+import { setUser } from "@/app/stores/view/user";
+
+// Hardcoded role data for mapping (replace with API call in production)
+const roleData = [
+  { _id: "67895c212e7333f925e9c0e9", roleName: "admin" },
+  { _id: "67895c322e7333f925e9c0ed", roleName: "manager" },
+  { _id: "67895c3e2e7333f925e9c0ef", roleName: "carowner" },
+  { _id: "67b60df8c465fe4f943b98cc", roleName: "staff" },
+];
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,11 +24,12 @@ export const useAuth = () => {
   const [userRoles, setUserRoles] = useState([]);
   const navigate = useNavigate();
 
-  // Đồng bộ trạng thái với localStorage khi khởi động
+  // Sync state with localStorage on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-    // Nếu cần lấy userRoles từ server, thêm logic ở đây
+    // Optionally fetch user roles from server if token exists
+    // Example: if (token) fetchUserRoles();
   }, []);
 
   const handleLogin = async (credentials) => {
@@ -28,14 +37,37 @@ export const useAuth = () => {
     setError(null);
     try {
       const response = await login(credentials);
-      setUser(response.user); // anh thêm dòng này tạo global state user
+      setUser(response.user); // Set global user state
       console.log("Login response:", response);
       localStorage.setItem("token", response.token);
-      // Giả định response chứa roles, nếu không thì cần API riêng để lấy roles
-      const roles = response.roles || ["carowner"];
+
+      // Determine roles (handle both role names and ObjectIds)
+      let roles = response.roles || ["carowner"];
+      if (roles.length > 0 && typeof roles[0] === "string" && roles[0].match(/^[0-9a-fA-F]{24}$/)) {
+        // If roles are ObjectIds, map to role names
+        roles = roles.map((roleId) =>
+          roleData.find((r) => r._id === roleId)?.roleName || "carowner"
+        );
+      }
       setUserRoles(roles);
+
+      // Check for "admin" or "staff" roles
+      const isAdmin = roles.includes("admin");
+      const isStaff = roles.includes("staff");
+
+      // Set logged-in state
       setIsLoggedIn(true);
-      navigate("/");
+
+      // Redirect based on roles
+      if (isAdmin) {
+        navigate("/adminDashboard/"); // Redirect to admin dashboard
+      } else if (isStaff) {
+        // Assuming staff needs a garageId; adjust as needed
+        const garageId = response.garageId || "defaultGarageId"; // Replace with actual logic
+        navigate(`/garageManagement/${garageId}/staff`);
+      } else {
+        navigate("/"); // Default redirect to home for carowner or other roles
+      }
     } catch (err) {
       const errorMessage =
         err.message ||
@@ -55,7 +87,7 @@ export const useAuth = () => {
     try {
       const submitData = {
         ...credentials,
-        roles: ["carowner"],
+        roles: ["carowner"], // Default role for new users
       };
       const response = await signup(submitData);
       setSuccess(
@@ -85,7 +117,7 @@ export const useAuth = () => {
       console.error("Logout error:", errorMessage);
       setError(errorMessage);
     } finally {
-      // Luôn xóa token và cập nhật trạng thái, bất kể API có thành công hay không
+      // Always clear token and reset state, regardless of API success
       localStorage.removeItem("token");
       setIsLoggedIn(false);
       setUserRoles([]);

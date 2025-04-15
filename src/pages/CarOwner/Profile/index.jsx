@@ -1,66 +1,64 @@
-"use client"
-
-import { useState } from "react"
-import { useProfile } from "../../../common/hooks/useProfile"
-import PersonalProfile from "../../../components/profile/PersonalProfile"
-import ChangePassword from "../../../components/profile/ChangePassword"
-import { Link } from "react-router-dom"
-import { Home, Car, LogOut, User, Menu, X } from 'lucide-react'
-import { useAuth } from "../../../common/hooks/useAuth"
+import { useState } from "react";
+import { useProfile } from "../../../common/hooks/useProfile";
+import PersonalProfile from "../../../components/profile/PersonalProfile";
+import ChangePassword from "../../../components/profile/ChangePassword";
+import { Link } from "react-router-dom";
+import { Home, Car, LogOut, User, Menu, X } from "lucide-react";
+import { useAuth } from "../../../common/hooks/useAuth";
 
 const ProfilePage = () => {
-  const [isEditing, setIsEditing] = useState(false)
-  const [ setIsChangingPassword] = useState(false)
-  const [activeTab, setActiveTab] = useState("profile")
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { profile, setProfile, loading, updateProfile, refetchProfile, changePassword } = useProfile()
-  const { handleLogout } = useAuth()
+  const [isEditing, setIsEditing] = useState(false);
+  const [setIsChangingPassword] = useState(false); // Fixed typo
+  const [activeTab, setActiveTab] = useState("profile");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { profile, setProfile, loading, updateProfile, refetchProfile, changePassword } = useProfile();
+  const { handleLogout } = useAuth();
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setProfile((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setProfile((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (updatedProfile) => {
     try {
-      await updateProfile(profile)
-      setIsEditing(false)
-      await refetchProfile()
+      await updateProfile(updatedProfile);
+      setIsEditing(false);
     } catch (err) {
-      console.error("Update failed:", err)
+      console.error("Update failed:", err);
     }
-  }
+  };
 
   const handleEditToggle = () => {
-    setIsEditing(true)
-  }
+    setIsEditing(true);
+  };
 
   const handleCancel = () => {
-    setIsEditing(false)
-    refetchProfile()
-  }
+    setIsEditing(false);
+    refetchProfile();
+  };
 
-  const handleChangePassword = async (oldPassword, newPassword) => {
-    await changePassword(oldPassword, newPassword)
-  }
+  const handleChangePasswordSubmit = async (oldPassword, newPassword) => {
+    await changePassword(oldPassword, newPassword);
+    setIsChangingPassword(false);
+    setActiveTab("profile");
+  };
 
   const handleCancelPassword = () => {
-    setIsChangingPassword(false)
-  }
+    setIsChangingPassword(false);
+    setActiveTab("profile");
+  };
 
   const handleLogoutClick = async () => {
     try {
-      await handleLogout()
+      await handleLogout();
     } catch (err) {
-      console.error("Logout failed:", err)
+      console.error("Logout failed:", err);
     }
-  }
+  };
 
   const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen)
-  }
-
-
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   return (
     <div className="min-h-screen font-sans relative">
@@ -123,7 +121,10 @@ const ProfilePage = () => {
           {mobileMenuOpen && (
             <div className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <Link to="/" className="block px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600">
+                <Link
+                  to="/"
+                  className="block px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                >
                   <div className="flex items-center">
                     <Home className="h-4 w-4 mr-2" />
                     <span>Home</span>
@@ -153,9 +154,8 @@ const ProfilePage = () => {
         </header>
 
         {/* Main Content */}
-        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"> 
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            {/* Profile Header */}
             <div className="bg-white/95 rounded-lg shadow overflow-hidden backdrop-blur-sm">
               <div className="px-4 py-5 sm:p-6">
                 {/* Tabs */}
@@ -173,8 +173,8 @@ const ProfilePage = () => {
                     </button>
                     <button
                       onClick={() => {
-                        setActiveTab("security")
-                        setIsChangingPassword(true)
+                        setActiveTab("security");
+                        setIsChangingPassword(true);
                       }}
                       className={`${
                         activeTab === "security"
@@ -198,8 +198,6 @@ const ProfilePage = () => {
                       onCancel={handleCancel}
                       loading={loading}
                     />
-
-                    {/* Action Buttons */}
                     {!isEditing && (
                       <div className="mt-6 flex justify-end">
                         <button
@@ -214,16 +212,11 @@ const ProfilePage = () => {
                 )}
 
                 {activeTab === "security" && (
-                  <div>
-                    <ChangePassword
-                      onChangePassword={handleChangePassword}
-                      onCancel={() => {
-                        handleCancelPassword()
-                        setActiveTab("profile")
-                      }}
-                      loading={loading}
-                    />
-                  </div>
+                  <ChangePassword
+                    onChangePassword={handleChangePasswordSubmit}
+                    onCancel={handleCancelPassword}
+                    loading={loading}
+                  />
                 )}
               </div>
             </div>
@@ -240,7 +233,7 @@ const ProfilePage = () => {
         </footer>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;

@@ -18,7 +18,6 @@ import { ViewExitsGarage } from "@/pages/AdminDashboard/ViewExitsGararge/ViewExi
 import { GarageManagement } from "@/pages/GarageManagement/GarageManagement";
 import GarageDashboard from "@/pages/GarageManagement/Dashboard/GarageDashboard";
 import Appointment from "@/pages/GarageManagement/Appointment/Appointment";
-import AppointmentDetail from "@/pages/GarageManagement/Appointment/AppointmentDetail";
 import { AppointmentScheduler } from "@/pages/GarageManagement/Appointment/Tab/AppointmentScheduler";
 import { ViewRegisterGarageDetail } from "@/pages/AdminDashboard/ViewRegisterGarageDetail/ViewRegisterGarageDetail";
 import { Staff } from "@/pages/GarageManagement/Staff/Staff";
@@ -33,9 +32,10 @@ import GarageDetailPage from "@/pages/GarageDetailPage/GarageDetailPage";
 
 import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
-import AddBrandPage from "@/pages/AdminDashboard/Brand/AddBrand";
+import BrandList from "@/pages/AdminDashboard/Brand/BrandList"; 
 import VehicleDetailsPage from "@/pages/CarOwner/Vehicle/VehicleDetails";
 import AppointmentId from "@/pages/GarageManagement/Appointment/AppointmentId";
+import FavoriteGarages from "@/pages/CarOwner/FavoriteGarage/FavoriteGarages";
 const router = createBrowserRouter(
   [
     {
@@ -60,6 +60,7 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
     { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePage /> },
     { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
+    { path: AbsoluteScreenPath.FavoriteGarages, element: <FavoriteGarages/>},
     {
       path: AbsoluteScreenPath.VehicleDetail,
       element: <VehicleDetailsPage />,
@@ -90,8 +91,8 @@ const router = createBrowserRouter(
           children: [
             { index: true, element: <HomePage /> },
             {
-              path: AdminScreenPath.AddCarBrand,
-              element: <AddBrandPage />,
+              path: AdminScreenPath.BrandList,
+              element: <BrandList />,
             },
             {
               path: AdminScreenPath.ViewRegisterGarage,
