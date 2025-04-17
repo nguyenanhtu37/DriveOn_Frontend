@@ -31,7 +31,7 @@ export const GarageManagementScreenPath = {
   StaffDetail: "staff/:id",
   Service: "services/",
   ServiceDetail: ":serviceId",
-  CreateService: "createService",
+  CountDownPro: "countdown",
 };
 
 export const AdminScreenPath = {

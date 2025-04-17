@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 function Dashboard() {
   return (
     <SidebarProvider>
-      <div className="   min-w-[378px] w-full min-h-screen h-full m-auto  flex items-start shadow-md bg-white border border-black/60 rounded-2xl overflow-hidden">
+      <div className="  w-full min-h-screen h-full m-auto  flex items-start shadow-md bg-white border border-black/60 rounded-2xl overflow-hidden">
         <SidebarLeft />
         <div className=" relative flex-1 flex-col ">
           <Header />

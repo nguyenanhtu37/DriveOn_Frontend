@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useGetAppointmentByUserId } from "@/app/stores/entity/appointment";
 import { GarageAppointmentCard } from "./GarageAppointmentCard";
+import { Loading } from "@/components/Loading";
 
 export const UserAppointment = () => {
   const appointmentData = useGetAppointmentByUserId();
@@ -33,6 +34,12 @@ export const UserAppointment = () => {
     .filter((app) => isPastAppointment(app.end) && app.status !== "Cancelled")
     .sort((a, b) => new Date(b.end) - new Date(a.end));
 
+  console.log(
+    "upcomingAppointments",
+    upcomingAppointments.map((app) => app.vehicle)
+  );
+
+  if (appointmentData.isLoading) return <Loading />;
   return (
     <TabsContent value="appointments" className="space-y-6 mt-6">
       <div>

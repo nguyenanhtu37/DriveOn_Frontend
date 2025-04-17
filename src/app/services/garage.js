@@ -66,3 +66,8 @@ export const updateGarageRegister = async (id, data) => {
   const response = await axios.put(`garages/${id}`, data);
   return response.data;
 };
+
+export const updateGarageInformation = async ({ id, data }) => {
+  const response = await axios.put(`garage/garages/${id}`, data);
+  return response.data;
+};

@@ -18,6 +18,7 @@ import { useTabStore } from "@/app/stores/view/tab";
 import { userLogout } from "@/app/stores/view/user";
 import { useNavigate } from "react-router-dom";
 import { RegisterGarage } from "./Tab/RegisterGarage/RegisterGarage";
+import { MyGarage } from "./Tab/MyGarage/MyGarage";
 
 export const ProfilePageV2 = () => {
   const profile = useGetProfile();
@@ -145,7 +146,7 @@ export const ProfilePageV2 = () => {
             </div>
           </div>
           <Tabs defaultValue={tab} className="w-full" onValueChange={setTab}>
-            <TabsList className="grid grid-cols-4 w-full max-w-md">
+            <TabsList className="grid grid-cols-5 w-fit">
               <TabsTrigger
                 value="vehicles"
                 className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
@@ -171,6 +172,12 @@ export const ProfilePageV2 = () => {
               >
                 Register Garage
               </TabsTrigger>
+              <TabsTrigger
+                value="myGarage"
+                className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
+              >
+                My Garage
+              </TabsTrigger>
             </TabsList>
 
             {/* Vehicles Tab */}
@@ -184,6 +191,9 @@ export const ProfilePageV2 = () => {
 
             {/* Register Garage Tab */}
             <RegisterGarage />
+
+            {/* My Garage Tab */}
+            <MyGarage />
           </Tabs>
         </div>
       </div>

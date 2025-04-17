@@ -112,3 +112,8 @@ export const passwordSchema = z
     message: "New password and confirm password must match",
     path: ["confirmPassword"],
   });
+
+export const appointmentUpdate = z.object({
+  updatedEndTime: z.string(),
+  nextMaintenance: z.string().optional(),
+});
