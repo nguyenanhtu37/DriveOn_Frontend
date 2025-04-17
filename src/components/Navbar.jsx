@@ -1,21 +1,15 @@
 import { AlignJustify, Globe } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useScrollPosition } from "react-haiku";
+import { Link, NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 import { AbsoluteScreenPath } from "../constants/screen";
-import { useUserStore } from "@/app/stores/view/user";
 
 function Navbar() {
-  const [scroll] = useScrollPosition();
   const { handleLogout, isLoading, error, isLoggedIn, userRoles } = useAuth();
   const [logoutError, setLogoutError] = useState(null);
-
-  const user = useUserStore((state) => state.user);
-  const isStaff = user.roles.some((role) => role.roleName === "staff");
 
   // Handle logout error display
   useEffect(() => {
