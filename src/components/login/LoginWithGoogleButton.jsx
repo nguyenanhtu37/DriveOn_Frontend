@@ -21,7 +21,7 @@
 // export default LoginWithGoogleButton
 
 import { GoogleLogin } from "@react-oauth/google";
-import handleSuccess from "../../app/services/handleSuccess";
+import handleGoogleLogin from "../../app/services/handleSuccess";
 import handleError from "../../app/services/handleError";
 
 const LoginWithGoogleButton = ({
@@ -35,7 +35,7 @@ const LoginWithGoogleButton = ({
     <div className="w-full">
       <GoogleLogin
         onSuccess={(credentialResponse) =>
-          handleSuccess({
+          handleGoogleLogin({
             credential: credentialResponse.credential,
             setUser,
             setUserRoles,

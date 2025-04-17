@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schema/loginSchema";
 import { useAuth } from "../../common/hooks/useAuth";
 import LoginWithGoogleButton from "./LoginWithGoogleButton";
+import handleGoogleLogin from "@/app/services/handleSuccess";
 import InputField from "../ui/InputField";
 import RememberMeSection from "./RememberMeSection";
 import SubmitButton from "./SubmitButton";
@@ -36,11 +37,18 @@ const LoginForm = () => {
     <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
       {/* <LoginWithGoogleButton /> */}
       <LoginWithGoogleButton
-        setUser={setUser}
-        setUserRoles={setUserRoles}
-        setIsLoggedIn={setIsLoggedIn}
-        navigate={navigate}
-        setError={setError}
+        onSuccess={(res) =>
+          handleGoogleLogin({
+            credential: res.credential,
+            setUser,
+            setUserRoles,
+            setIsLoggedIn,
+            navigate,
+            setError,
+          })
+        }
+        onError={() => alert("Login with Google failed")}
+        useOneTap
       />
 
       {authError && <p className="text-red-500 text-sm mb-2">{authError}</p>}
