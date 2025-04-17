@@ -34,7 +34,14 @@ const LoginForm = () => {
 
   return (
     <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
-      <LoginWithGoogleButton />
+      {/* <LoginWithGoogleButton /> */}
+      <LoginWithGoogleButton
+        setUser={setUser}
+        setUserRoles={setUserRoles}
+        setIsLoggedIn={setIsLoggedIn}
+        navigate={navigate}
+        setError={setError}
+      />
 
       {authError && <p className="text-red-500 text-sm mb-2">{authError}</p>}
 
