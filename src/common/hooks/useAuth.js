@@ -66,49 +66,6 @@ export const useAuth = () => {
     }
   };
 
-  const handleGoogleLogin = async ({
-    credential,
-    setUser,
-    setUserRoles,
-    setIsLoggedIn,
-    navigate,
-    setError,
-  }) => {
-    try {
-      const result = await axios.post("auth/google", {
-        token: credential,
-      });
-  
-      const { user, token, jwtToken } = result.data;
-      const finalToken = jwtToken || token;
-  
-      if (!finalToken || !user) throw new Error("Invalid response from server");
-  
-      localStorage.setItem("token", finalToken);
-      setUser(user);
-      setIsLoggedIn(true);
-  
-      const roles = user.roles.map((r) =>
-        typeof r === "string" ? r : r.roleName
-      );
-      setUserRoles(roles);
-  
-      if (roles.includes("admin")) {
-        navigate("/adminDashboard");
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Google login error:", error);
-      const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Đăng nhập bằng Google thất bại.";
-      if (setError) setError(message);
-      else alert(message);
-    }
-  };
-
   const handleLogout = async () => {
     setIsLoading(true);
     setError(null);
@@ -196,6 +153,5 @@ export const useAuth = () => {
     handleLogout,
     handleRequestPasswordReset,
     handleResetPassword,
-    handleGoogleLogin
   };
 };

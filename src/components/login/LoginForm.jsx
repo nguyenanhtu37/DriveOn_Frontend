@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schema/loginSchema";
 import { useAuth } from "../../common/hooks/useAuth";
 import LoginWithGoogleButton from "./LoginWithGoogleButton";
-import handleGoogleLogin from "../../common/hooks/useAuth";
+import handleGoogleLogin from "@/app/services/handleSuccess";
 import InputField from "../ui/InputField";
 import RememberMeSection from "./RememberMeSection";
 import SubmitButton from "./SubmitButton";
