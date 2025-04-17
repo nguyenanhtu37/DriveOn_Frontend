@@ -21,7 +21,7 @@
 // export default LoginWithGoogleButton
 
 import { GoogleLogin } from "@react-oauth/google";
-import handleGoogleLogin from "../../app/services/handleSuccess";
+import handleGoogleLogin from "../../common/hooks/useAuth";
 import handleError from "../../app/services/handleError";
 
 const LoginWithGoogleButton = ({
