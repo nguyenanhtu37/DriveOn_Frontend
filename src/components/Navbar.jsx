@@ -13,7 +13,6 @@ function Navbar() {
   const [scroll] = useScrollPosition();
   const { handleLogout, isLoading, error, isLoggedIn, userRoles } = useAuth();
   const [logoutError, setLogoutError] = useState(null);
-  const navigate = useNavigate();
 
   const user = useUserStore((state) => state.user);
   const isStaff = user.roles.some((role) => role.roleName === "staff");

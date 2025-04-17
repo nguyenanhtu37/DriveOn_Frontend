@@ -37,7 +37,6 @@ import FavoriteGarages from "@/pages/CarOwner/FavoriteGarage/FavoriteGarages";
 import { GarageProUpgrade } from "@/pages/GarageProUpgrade/GarageProUpgrade";
 import { ProfilePageV2 } from "@/pages/ProfilePage/ProfilePageV2";
 import CountdownPage from "@/pages/CountDownPage/CountDownPage";
-import { useUserStore } from "../stores/view/user";
 import GarageSetting from "@/pages/GarageManagement/GarageSetting/GarageSetting";
 
 const router = createBrowserRouter(
@@ -46,16 +45,7 @@ const router = createBrowserRouter(
       path: AbsoluteScreenPath.Entry,
       element: <MainLayout />,
       children: [
-        {
-          element: (
-            <ProtectedRoute
-              role={["carowner", "manager", "admin"]}
-              directTo={AbsoluteScreenPath.Login}
-            />
-          ),
-          children: [{ index: true, element: <HomePage /> }],
-        },
-
+        { index: true, element: <HomePage /> },
         {
           element: <ProtectedRoute role={["carowner"]} />,
           children: [
