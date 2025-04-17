@@ -1,14 +1,5 @@
 import { Avatar } from "./Avatar";
-import {
-  Car,
-  CarFront,
-  CarIcon,
-  ChartPieIcon,
-  ChevronRight,
-  File,
-  LogOutIcon,
-  ServerCog,
-} from "lucide-react";
+import { Car, CarFront, File, ServerCog } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { Title } from "./Title";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
@@ -23,48 +14,32 @@ export const SidebarLeft = () => {
             image="https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           />
           <div className=" flex flex-col w-full gap-y-7 ">
-            {/* <div className=" flex flex-col gap-y-2">
-              <Title title="Dashboards" />
-              <div className=" flex flex-col gap-y-1">
-                <SidebarItem
-                  icon={<ChartPieIcon />}
-                  title="Overview"
-                  link="overview"
-                />
-                <Dropdown listItem={dropdownList}>
-                  <SidebarItem
-                    isActive
-                    icon={<ChartPieIcon />}
-                    title="Overview"
-                    link=""
-                  />
-                </Dropdown>
-                <SidebarItem icon={<ChartPieIcon />} title="Garage" />
-              </div>
-            </div> */}
-
             <div className=" flex flex-col gap-y-2">
-              <Title title="Management Garage" />
+              {/* <Title title="Management Garage" /> */}
               <div className=" flex flex-col gap-y-2">
                 <SidebarItem
                   icon={<File />}
                   title="Register Garage"
                   link={"viewRegisterGarage"}
+                  role={["admin"]}
                 />
                 <SidebarItem
                   icon={<Car />}
                   title="Exists Garage"
                   link={"viewExitsGarage"}
+                  role={["admin"]}
                 />
                 <SidebarItem
                   icon={<ServerCog />}
                   title="Service System"
                   link={"viewServiceSystem"}
+                  role={["admin"]}
                 />
                 <SidebarItem
                   icon={<CarFront />}
                   title="Car Brand"
                   link={"brandList"}
+                  role={["admin"]}
                 />
               </div>
             </div>
