@@ -1,4 +1,3 @@
-import { AlignCenter, ArrowDownUp, Plus, Search } from "lucide-react";
 import { Row } from "../components/Row";
 import { useGetRegisterGarages } from "@/app/stores/entity/garage";
 import { formatDate } from "@/lib/formatDate";
@@ -26,29 +25,6 @@ export const ViewRegisterGarage = () => {
         Register Garage
       </div>
       <div className=" w-full flex flex-col gap-y-3">
-        <div className=" w-full p-2 flex items-center justify-between bg-blue-50 bg-opacity-55 rounded-lg ">
-          <div className=" flex gap-x-2 items-center justify-start">
-            <div className=" w-7 h-7 flex items-center cursor-pointer hover:opacity-75">
-              <Plus size={20} />
-            </div>
-            <div className=" w-7 h-7 flex items-center cursor-pointer hover:opacity-75">
-              <AlignCenter size={20} />
-            </div>
-            <div className=" w-7 h-7 flex items-center cursor-pointer hover:opacity-75">
-              <ArrowDownUp size={20} />
-            </div>
-          </div>
-
-          <div className=" flex items-center gap-1 px-2 py-1 max-w-[160px] w-full rounded-xl bg-white ring-1 ring-black ">
-            <Search size={16} />
-            <input
-              type="text"
-              placeholder="Search garage"
-              className=" text-xs w-full h-full bg-transparent outline-none"
-              // onChange={handleSearchGarage}
-            />
-          </div>
-        </div>
         <Table>
           <TableCaption>A list of garage register.</TableCaption>
           <TableHeader>

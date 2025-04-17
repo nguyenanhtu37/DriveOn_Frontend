@@ -283,3 +283,11 @@ export const useUpdateRegisterGarage = () => {
   });
   return mutation;
 };
+
+export const useUpdateGarageInformation = () => {
+  const mutation = useMutation({
+    mutationFn: garageService.updateGarageInformation,
+  });
+
+  return mutation;
+};

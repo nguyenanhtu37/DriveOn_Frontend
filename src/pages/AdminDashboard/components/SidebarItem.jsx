@@ -1,9 +1,25 @@
+import { useUserStore } from "@/app/stores/view/user";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import { useMemo } from "react";
 
 import { NavLink } from "react-router-dom";
 
-export const SidebarItem = ({ icon, title, link, props }) => {
+export const SidebarItem = ({ icon, title, link, props, role }) => {
+  const user = useUserStore((state) => state.user);
+  const authorized = useMemo(() => {
+    return (
+      user &&
+      role.some((requiredRole) =>
+        user.roles.some((userRole) => userRole.roleName === requiredRole)
+      )
+    );
+  }, [role, user]);
+
+  if (!authorized) {
+    return null;
+  }
+
   return (
     <NavLink
       to={link}

@@ -91,7 +91,6 @@ export const Staff = () => {
             <TableHead>Phone</TableHead>
             <TableHead>Password</TableHead>
             <TableHead className="text-center">Enabled/Disabled</TableHead>
-            <TableHead className="text-center">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -110,15 +109,6 @@ export const Staff = () => {
                   onCheckedChange={() => handleSwitch(staff._id, staff.status)}
                   className="data-[state=checked]:bg-green-300 data-[state=unchecked]:bg-input"
                 />
-              </TableCell>
-              <TableCell className="">
-                <Badge
-                  variant="secondary"
-                  className=" w-full p-1 flex justify-center items-center gap-1"
-                >
-                  Active
-                  <Circle size={16} className=" bg-green-200 rounded-full" />
-                </Badge>
               </TableCell>
             </TableRow>
           ))}
