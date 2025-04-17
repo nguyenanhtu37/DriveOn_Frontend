@@ -42,7 +42,7 @@ const LoginWithGoogleButton = ({
             setIsLoggedIn,
             navigate,
             setError,
-          })()
+          })
         }
         onError={handleError}
         ux_mode="popup"
