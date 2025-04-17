@@ -33,11 +33,28 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { VehicleImage } from "../components/VehicleImage";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { appointmentUpdate } from "@/schema";
+import { Input } from "@/components/ui/input";
 
 const AppointmentId = () => {
+  const { control, reset, handleSubmit } = useForm({
+    resolver: zodResolver(appointmentUpdate),
+    defaultValues: {
+      updatedEndTime: "",
+      nextMaintenance: "",
+    },
+  });
   const { garageId, appointmentId } = useParams();
   const navigate = useNavigate();
   const handleBack = () => {
@@ -47,6 +64,7 @@ const AppointmentId = () => {
     data: appointmentData,
     isLoading,
     isError,
+    refetch,
   } = useGetAppointmentById(appointmentId);
 
   const user = useMemo(() => {
@@ -85,11 +103,10 @@ const AppointmentId = () => {
       services: appointmentData?.service ? appointmentData.service.length : 0,
     };
   }, [appointmentData, appointmentId]);
-  const [status, setStatus] = useState(appointmentData?.status || "Pending");
+  const [status, setStatus] = useState();
   const confirmAppointmentMutation = useConfirmAppointment();
   const denyAppointmentMutation = useDenyAppointment();
   const completeAppointmentMutation = useCompleteAppointment();
-  console.log(appointment);
   const handleConfirm = () => {
     confirmAppointmentMutation.mutate(appointmentId, {
       onSuccess: () => {
@@ -127,24 +144,37 @@ const AppointmentId = () => {
     });
   };
 
-  const handleComplete = () => {
-    completeAppointmentMutation.mutate(appointmentId, {
-      onSuccess: () => {
-        setStatus("Completed");
-        toast({
-          title: "Success",
-          description: "Appointment completed successfully",
-        });
-      },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response.data.error,
-          variant: "destructive",
-        });
-      },
+  useEffect(() => {
+    setStatus(appointmentData.status);
+    reset({
+      updatedEndTime: appointmentData.end,
     });
-  };
+  }, [appointmentData, reset]);
+
+  const handleComplete = handleSubmit(async (data) => {
+    completeAppointmentMutation.mutate(
+      {
+        appointmentId,
+        data,
+      },
+      {
+        onSuccess: () => {
+          refetch();
+          toast({
+            title: "Success",
+            description: "Appointment completed successfully",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: "Error",
+            description: error.response.data.error,
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  });
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -405,26 +435,101 @@ const AppointmentId = () => {
                 <p className="text-gray-600">{appointment.notes}</p>
               </div>
 
-              <div className="flex gap-3 mt-6">
-                <Button
-                  className="bg-blue-600 hover:bg-blue-700"
-                  onClick={handleComplete}
-                >
-                  <CheckCheck className="h-4 w-4 mr-2" />
-                  Completed
-                </Button>
-                <Button
-                  className="bg-green-600 hover:bg-green-700"
-                  onClick={handleConfirm}
-                >
-                  <Check className="h-4 w-4 mr-2" />
-                  Accepted
-                </Button>
-                <Button variant="outline" onClick={handleReject}>
-                  <X className="h-4 w-4 mr-2" />
-                  Rejected
-                </Button>
-              </div>
+              {status !== "Completed" && (
+                <div className="flex gap-3 mt-6">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-blue-600 hover:bg-blue-700">
+                        <CheckCheck className="h-4 w-4 mr-2" />
+                        Completed
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto px-3">
+                      <DialogTitle>Do you want to update the time?</DialogTitle>
+                      <form>
+                        <div className="w-full flex flex-col gap-y-5 mt-2">
+                          <div className="flex flex-col gap-y-2">
+                            <label className="text-sm font-semibold text-[#222222]">
+                              Update End Time
+                            </label>
+                            <Controller
+                              name="updatedEndTime"
+                              control={control}
+                              render={({ field }) => (
+                                <>
+                                  <Input
+                                    id=""
+                                    type="datetime-local"
+                                    value={
+                                      field.value
+                                        ? format(
+                                            new Date(field.value),
+                                            "yyyy-MM-dd'T'HH:mm"
+                                          )
+                                        : ""
+                                    }
+                                    onChange={(e) =>
+                                      field.onChange(e.target.value || null)
+                                    }
+                                    min={new Date(appointment.end)
+                                      .toISOString()
+                                      .slice(0, 16)}
+                                  />
+                                </>
+                              )}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-y-2">
+                            <label className="text-sm font-semibold text-[#222222]">
+                              Next Maintenance
+                            </label>
+                            <Controller
+                              name="nextMaintenance"
+                              control={control}
+                              render={({ field }) => (
+                                <>
+                                  <Input
+                                    id=""
+                                    type="datetime-local"
+                                    value={field.value ?? ""}
+                                    onChange={(e) =>
+                                      field.onChange(e.target.value || null)
+                                    }
+                                    min={new Date(appointment.end)
+                                      .toISOString()
+                                      .slice(0, 16)}
+                                  />
+                                </>
+                              )}
+                            />
+                          </div>
+                          <div className="flex items-center justify-end"></div>
+                          <Button
+                            type="submit"
+                            className="bg-red-400 hover:bg-red-500"
+                            onClick={handleComplete}
+                          >
+                            <Check className="h-4 w-4 mr-2" />
+                            Completed
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Button
+                    className="bg-green-600 hover:bg-green-700"
+                    onClick={handleConfirm}
+                  >
+                    <Check className="h-4 w-4 mr-2" />
+                    Accepted
+                  </Button>
+                  <Button variant="outline" onClick={handleReject}>
+                    <X className="h-4 w-4 mr-2" />
+                    Rejected
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 

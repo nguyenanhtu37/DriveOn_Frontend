@@ -24,8 +24,11 @@ export const denyAppointment = async (appointmentId) => {
   const response = await axios.put(`/appointment/${appointmentId}/deny`);
   return response.data;
 };
-export const completeAppointment = async (appointmentId) => {
-  const response = await axios.put(`/appointment/${appointmentId}/complete`);
+export const completeAppointment = async ({ appointmentId, data }) => {
+  const response = await axios.put(
+    `/appointment/${appointmentId}/complete`,
+    data
+  );
   return response.data;
 };
 

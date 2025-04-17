@@ -50,8 +50,7 @@ export const useDenyAppointment = () => {
 
 export const useCompleteAppointment = () => {
   const mutation = useMutation({
-    mutationFn: async (appointmentId) =>
-      appointmentService.completeAppointment(appointmentId),
+    mutationFn: appointmentService.completeAppointment,
   });
   return mutation;
 };
