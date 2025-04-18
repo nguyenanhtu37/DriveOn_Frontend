@@ -79,17 +79,6 @@ export const appointmentSchema = z.object({
   }),
 });
 
-export const vehicleSchema = z.object({
-  carName: z.string().nonempty("Car name is required"),
-  carPlate: z.string().nonempty("Car plate is required"),
-  carYear: z.string().nonempty("Car year is required"),
-  carColor: z.string().nonempty("Car color is required"),
-  carBrand: z.object({
-    value: z.string().nonempty("Brand ID is required"),
-    label: z.string().nonempty("Brand name is required"),
-  }),
-  carImage: z.string().optional(),
-});
 
 export const userSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

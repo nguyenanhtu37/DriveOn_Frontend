@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useUpdateVehicle } from "@/app/stores/entity/vehicleV2";
 import { useGetBrands } from "@/app/stores/entity/brandV2";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { vehicleSchema } from "@/schema";
+import { updateVehicleSchema } from "@/schema/vehicleSchema"; // Assuming vehicleSchema now includes carPlate validation
 import useUpload from "@/app/services/Cloudinary/upload";
 import { useEffect } from "react";
 import Select from "react-tailwindcss-select";
@@ -57,7 +57,7 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
   })) || [];
 
   const form = useForm({
-    resolver: zodResolver(vehicleSchema),
+    resolver: zodResolver(updateVehicleSchema), // Using the schema with carPlate validation
     defaultValues: {
       carBrand: vehicle.carBrand
         ? { value: vehicle.carBrand, label: brandList.find((b) => b.value === vehicle.carBrand)?.label || "" }
