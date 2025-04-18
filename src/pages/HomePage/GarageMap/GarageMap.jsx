@@ -69,6 +69,7 @@ const GarageMap = () => {
                 openDays={garage.operating_days}
                 imgs={garage.interiorImages}
                 phone={garage.phone}
+                location={garage.location.coordinates}
               />
             </Popup>
           </Marker>

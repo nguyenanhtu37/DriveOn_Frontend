@@ -12,3 +12,4 @@ export * as payService from "./payos";
 export * as subscriptionService from "./subscription";
 export * as favoriteService from "./favoriteV2";
 export * as googleService from "./google";
+export * as feedbackServiceV2 from "./feedbackV2";
