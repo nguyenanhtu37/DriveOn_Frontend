@@ -43,19 +43,7 @@ export const getVehicleById = async (vehicleId) => {
   }
 };
 
-export const updateVehicle = async (vehicleId, updateData) => {
-  try {
-    if (!vehicleId) throw new Error("Vehicle ID is required");
-    const response = await axios.put(`${API_URL}/${vehicleId}`, updateData);
-    if (!response.data) {
-      throw new Error("Invalid response from server");
-    }
-    return response.data;
-  } catch (error) {
-    console.error('Update vehicle error:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update vehicle");
-  }
-};
+
 
 export const deleteVehicle = async (vehicleId) => {
   try {
