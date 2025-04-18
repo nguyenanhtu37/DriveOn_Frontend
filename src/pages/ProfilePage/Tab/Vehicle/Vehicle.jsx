@@ -60,7 +60,7 @@ export const Vehicle = () => {
                   <div className="flex justify-between items-start">
                     <CardTitle>{vehicle.carName}</CardTitle>
                   </div>
-                  <CardDescription>License: {vehicle.carPlate}</CardDescription>
+                  <CardDescription>Plate: {vehicle.carPlate}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 text-sm">
