@@ -57,8 +57,8 @@ export const serviceDetailSchema = z.object({
   description: z
     .string()
     .min(100, "Description must be at least 100 characters"),
-  price: z.number().min(0, "Minimum price 0 VND"),
-  duration: z.number().min(0, "Minimum time is 5 minutes"),
+  price: z.string(),
+  duration: z.string(),
   warranty: z.string().min(1, "Warranty must be at least 1"),
 });
 

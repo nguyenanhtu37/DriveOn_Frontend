@@ -6,6 +6,7 @@ import {
   Phone,
   Plus,
   Star,
+  Workflow,
 } from "lucide-react";
 import Service from "./components/Service";
 import { useGetGarageDetail } from "@/app/stores/entity/garage";
@@ -91,7 +92,7 @@ const GarageDetailPage = () => {
               <div className="w-full h-px bg-[#6a6a6a]/20 rounded-full"></div>
 
               {/* Contact Info */}
-              <div className="w-full py-8 flex flex-col gap-y-3">
+              <div className="w-full py-8 flex flex-col gap-y-4">
                 <div className="flex items-center gap-x-4">
                   <div className="size-10 flex items-start justify-center">
                     <Locate className="text-black" size={20} />
@@ -138,6 +139,30 @@ const GarageDetailPage = () => {
                         <DoorClosed />
                         {garageDetail.data.closeTime}
                       </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-x-4">
+                  <div className="size-10 flex items-start justify-center">
+                    <Workflow className="text-black" size={20} />
+                  </div>
+                  <div className="flex flex-col gap-y-px">
+                    <div className="text-md font-semibold text-[#222222]">
+                      Work on days
+                    </div>
+                    <div className="text-md text-[#6a6a6a] flex items-center gap-x-2">
+                      {garageDetail.data.operating_days.map((day, index) => (
+                        <span
+                          key={index}
+                          className="flex items-center gap-x- flex-wrap"
+                        >
+                          {day}
+                          {index < garageDetail.data.operating_days.length - 1
+                            ? ", "
+                            : ""}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>

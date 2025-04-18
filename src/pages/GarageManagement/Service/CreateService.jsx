@@ -23,15 +23,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/hooks/use-toast";
 import { serviceDetailSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectGroup } from "@radix-ui/react-select";
+import { useQueryClient } from "@tanstack/react-query";
 import { FileIcon, X } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CreateService = () => {
   const { garageId } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { files, progressList, handleFileChange, handleUpload, handleRemove } =
     useUpload();
   const serviceSystem = useGetService();
@@ -57,7 +61,24 @@ const CreateService = () => {
       warranty: data.warranty,
       images: uploadedUrls,
     };
-    addService.mutate(newService);
+    addService.mutate(newService, {
+      onSuccess: (data) => {
+        navigate(
+          `/garageManagement/${garageId}/services/${data.serviceDetail._id}`
+        );
+        queryClient.invalidateQueries(["serviceGarage"]);
+        toast({
+          title: "Create service successfully",
+          duration: 2000,
+        });
+      },
+      onError: () => {
+        toast({
+          title: "Create service failed",
+          duration: 2000,
+        });
+      },
+    });
   };
   return (
     <div className=" h-[100vh] w-full">
@@ -152,9 +173,6 @@ const CreateService = () => {
                           min={0}
                           placeholder="Price"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
                           className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 h-12"
                           type="number"
                         />
@@ -176,9 +194,6 @@ const CreateService = () => {
                         <Input
                           placeholder="Duration"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
                           className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 h-12"
                           type="number"
                           min={0}

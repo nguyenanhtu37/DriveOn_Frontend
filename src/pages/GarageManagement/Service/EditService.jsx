@@ -22,13 +22,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/hooks/use-toast";
 import { serviceDetailSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Save, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const EditService = ({ serviceDetail, setIsEdit }) => {
+  const { garageId, serviceId } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const editService = useUpdateServiceGarage();
   const serviceSystem = useGetService();
   const { files, progressList, handleFileChange, handleUpload, handleRemove } =
@@ -44,8 +50,8 @@ export const EditService = ({ serviceDetail, setIsEdit }) => {
     defaultValues: {
       name: serviceDetail.data.name,
       description: serviceDetail.data.description,
-      price: serviceDetail.data.price,
-      duration: serviceDetail.data.duration,
+      price: String(serviceDetail.data.price / 1000),
+      duration: String(serviceDetail.data.duration),
       warranty: serviceDetail.data.warranty,
       serviceSystem: serviceDetail.data.service._id,
     },
@@ -58,10 +64,34 @@ export const EditService = ({ serviceDetail, setIsEdit }) => {
     }
     const serviceUpdate = {
       ...data,
+      price: Number(data.price),
+      duration: Number(data.duration),
       service: data.serviceSystem,
       images: images.concat(imagesUpload),
     };
-    editService.mutate({ id: serviceDetail.data._id, service: serviceUpdate });
+
+    console.log(serviceUpdate);
+    editService.mutate(
+      { id: serviceDetail.data._id, service: serviceUpdate },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["serviceGarage"]);
+          navigate(`/garageManagement/${garageId}/services/${serviceId}`);
+          toast({
+            title: "Update service successfully",
+            duration: 2000,
+          });
+          setIsEdit(false);
+        },
+
+        onError: () => {
+          toast({
+            title: "Update service failed",
+            duration: 2000,
+          });
+        },
+      }
+    );
   };
   return (
     <Form {...form}>
@@ -216,9 +246,9 @@ export const EditService = ({ serviceDetail, setIsEdit }) => {
                     <Input
                       placeholder={serviceDetail.data.price}
                       {...field}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 h-12"
                       type="number"
+                      min={0}
                     />
                   </FormControl>
                   <FormMessage />
@@ -236,6 +266,8 @@ export const EditService = ({ serviceDetail, setIsEdit }) => {
                       placeholder={serviceDetail.data.duration}
                       {...field}
                       className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 h-12"
+                      type="number"
+                      min={0}
                     />
                   </FormControl>
                   <FormMessage />
