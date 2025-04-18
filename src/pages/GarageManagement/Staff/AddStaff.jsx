@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { staffSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Eye, EyeOff } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -177,12 +178,14 @@ const AddStaff = () => {
             />
 
             <div className=" flex justify-center items- gap-x-3 mt-2">
-              <Button
-                type="button"
-                className=" py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
-              >
-                Cancel
-              </Button>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  className=" py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
+                >
+                  Cancel
+                </Button>
+              </DialogTrigger>
               <Button variant="outline" type="submit" className=" py-2 ">
                 Create
               </Button>
