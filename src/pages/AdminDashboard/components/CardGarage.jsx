@@ -116,7 +116,7 @@ export const CardGarage = ({ garage }) => {
         </CardHeader>
 
         <CardContent className="p-4 pt-2 space-y-3">
-          <div className="grid grid-cols-2 gap-2 border-b pb-3">
+          {/* <div className="grid grid-cols-2 gap-2 border-b pb-3">
             <div className="space-y-1">
               <p className="text-xs font-medium text-muted-foreground">Owner</p>
               <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export const CardGarage = ({ garage }) => {
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="space-y-2">
             <div className="flex items-start gap-2">
@@ -164,7 +164,7 @@ export const CardGarage = ({ garage }) => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center pt-1">
+          {/* <div className="flex justify-between items-center pt-1">
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm">{garage.documentCount} Documents</span>
@@ -172,7 +172,7 @@ export const CardGarage = ({ garage }) => {
             <Button variant="outline" size="sm" className="h-8">
               Review
             </Button>
-          </div>
+          </div> */}
         </CardContent>
       </div>
 

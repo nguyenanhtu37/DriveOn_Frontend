@@ -17,12 +17,12 @@ import {
 import { useParams } from "react-router-dom";
 
 const sidebarItem = [
-  {
-    icon: <LayoutDashboard />,
-    title: "Dashboard",
-    link: "dashboard",
-    role: ["manager", "staff"],
-  },
+  // {
+  //   icon: <LayoutDashboard />,
+  //   title: "Dashboard",
+  //   link: "dashboard",
+  //   role: ["manager", "staff"],
+  // },
   { icon: <Users />, title: "Staff", link: "staff", role: ["manager"] },
   {
     icon: <CalendarDays />,
@@ -36,18 +36,18 @@ const sidebarItem = [
     link: "services",
     role: ["manager", "staff"],
   },
-  {
-    icon: <Star />,
-    title: "Feedback",
-    link: "feedback",
-    role: ["manager", "staff"],
-  },
-  {
-    icon: <Clock />,
-    title: "Expired",
-    link: "countdown",
-    role: ["manager", "staff"],
-  },
+  // {
+  //   icon: <Star />,
+  //   title: "Feedback",
+  //   link: "feedback",
+  //   role: ["manager", "staff"],
+  // },
+  // {
+  //   icon: <Clock />,
+  //   title: "Expired",
+  //   link: "countdown",
+  //   role: ["manager", "staff"],
+  // },
   // { icon: <Wallet />, title: "Transactions", link: "transactions" },
   {
     icon: <ArrowUp />,
