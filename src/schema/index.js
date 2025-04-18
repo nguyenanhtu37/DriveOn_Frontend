@@ -79,7 +79,6 @@ export const appointmentSchema = z.object({
   }),
 });
 
-
 export const userSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string(),
@@ -93,9 +92,9 @@ export const userSchema = z.object({
 
 export const passwordSchema = z
   .object({
-    currentPassword: z.string().min(8, "Current password is required"),
-    newPassword: z.string().min(8, "New password is required"),
-    confirmPassword: z.string().min(8, "Confirm password is required"),
+    currentPassword: z.string().min(6, "Current password is required"),
+    newPassword: z.string().min(6, "Must be at least 6 characters"),
+    confirmPassword: z.string().min(6, "Must be at least 6 characters"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "New password and confirm password must match",
