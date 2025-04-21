@@ -1,5 +1,4 @@
 import { SidebarLeft } from "./components/SidebarLeft";
-import { SidebarRight } from "./components/SidebarRight";
 import { Header } from "./components/Header";
 import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";

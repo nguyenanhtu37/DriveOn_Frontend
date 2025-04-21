@@ -2,6 +2,7 @@ import { useCreateAppointment } from "@/app/stores/entity/appointment";
 import { useGetService } from "@/app/stores/entity/service-detail";
 import { useGetMyVehicles } from "@/app/stores/entity/vehicle";
 import { useTabStore } from "@/app/stores/view/tab";
+import { useUserStore } from "@/app/stores/view/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +19,7 @@ export const CreateAppointment = () => {
   const service = useGetService(garageId);
   const myVehicles = useGetMyVehicles();
   const createAppointment = useCreateAppointment();
+  const user = useUserStore((state) => state.user);
 
   const navigate = useNavigate();
   const { setTab } = useTabStore();
@@ -175,14 +177,25 @@ export const CreateAppointment = () => {
           </div>
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            animation
-            className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
-            disabled={createAppointment.isPending}
-          >
-            Create Appointment
-          </Button>
+          {user ? (
+            <Button
+              type="submit"
+              animation
+              className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
+              disabled={createAppointment.isPending}
+            >
+              Create Appointment
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              animation
+              className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
+              onClick={() => navigate(AbsoluteScreenPath.Login)}
+            >
+              Create Appointment
+            </Button>
+          )}
         </div>
       </div>
     </form>

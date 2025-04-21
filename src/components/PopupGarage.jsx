@@ -1,7 +1,25 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Link } from "react-router-dom";
-const PopupGarage = ({ id, imgs, address, garageName, openDays, phone }) => {
+import { Button } from "./ui/button";
+import { getLocation } from "@/app/stores/view/user";
+import { openGoogleMap } from "@/lib/openGoogleMap";
+const PopupGarage = ({
+  id,
+  imgs,
+  address,
+  garageName,
+  openDays,
+  phone,
+  location,
+}) => {
+  const myLocation = getLocation();
+
+  const handleDirectionClick = (e) => {
+    e.stopPropagation();
+    openGoogleMap(location);
+  };
+
   return (
     <div className="rounded-lg w-[301px] rounded-t-[12px] overflow-hidden">
       <div className=" w-full h-[200px] rounded-t-lg mb-1">
@@ -35,6 +53,17 @@ const PopupGarage = ({ id, imgs, address, garageName, openDays, phone }) => {
           </span>
         </div>
       </Link>
+      {myLocation && (
+        <div className=" px-2 py-1">
+          <Button
+            variant="ghost"
+            className="p-0 text-xs text-gray-500 hover:text-red-500"
+            onClick={handleDirectionClick}
+          >
+            See instructions
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

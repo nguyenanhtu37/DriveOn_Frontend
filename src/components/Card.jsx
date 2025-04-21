@@ -189,7 +189,7 @@ export function GarageCard({
               className="p-0 text-xs text-gray-500 hover:text-red-500"
               onClick={handleDirectionClick}
             >
-              Direction
+              See instructions
             </Button>
           )}
         </div>

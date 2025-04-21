@@ -58,6 +58,7 @@
     "react-leaflet": "^4.2.1",
     "react-multi-select-component": "^4.3.4",
     "react-oauth": "^0.0.1",
+    "react-rating": "^2.0.5",
     "react-router-dom": "^7.1.1",
     "react-tailwindcss-select": "^1.8.5",
     "react-use-draggable-scroll": "^0.4.7",
