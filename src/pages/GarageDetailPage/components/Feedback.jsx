@@ -28,7 +28,7 @@ const Feedback = ({ garageId, currentUserId }) => {
 
     try {
       if (editingFeedback) {
-        await updateFeedback(editingFeedback.id, newFeedback, token);
+        await updateFeedback(editingFeedback._id, newFeedback, token);
         setEditingFeedback(null);
       } else {
         await addFeedback({ ...newFeedback, garage: garageId }, token);
@@ -64,7 +64,7 @@ const Feedback = ({ garageId, currentUserId }) => {
 
   // Hiển thị lỗi từ useFeedback (lỗi fetch ban đầu)
   if (error) return <div className="text-red-500">Error: {error}</div>;
-  console.log("Feedback user ID:", feedbacks.map(f => f.user?.id));
+  console.log("Feedback user ID:", feedbacks.map(f => f.user?._id));
   console.log("Current user ID:", currentUserId);
   return (
     <div className="w-full py-8 flex flex-col gap-y-6">
@@ -115,7 +115,7 @@ const Feedback = ({ garageId, currentUserId }) => {
         {Array.isArray(feedbacks) && feedbacks.length > 0 ? (
           feedbacks.map((feedback, index) => (
             <div
-              key={feedback.id || `feedback-${index}`}
+              key={feedback._id || `feedback-${index}`}
               className="border p-4 rounded-lg"
             >
               <div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ const Feedback = ({ garageId, currentUserId }) => {
                 </div>
               </div>
               <p className="text-[#6a6a6a] mt-2">{feedback.text}</p>
-              {token && feedback.user && String(feedback.user.id) === String(currentUserId) && (
+              {token && feedback.user && String(feedback.user._id) === String(currentUserId) && (
                 <div className="mt-2 flex gap-2">
                   <button
                     onClick={() => {
@@ -153,7 +153,7 @@ const Feedback = ({ garageId, currentUserId }) => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(feedback.id)}
+                    onClick={() => handleDelete(feedback._id)}
                     className="text-red-500 hover:underline"
                     disabled={isSubmitting}
                   >
