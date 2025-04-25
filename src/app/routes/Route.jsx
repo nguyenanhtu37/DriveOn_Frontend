@@ -27,7 +27,7 @@ import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
 import CreateService from "@/pages/GarageManagement/Service/CreateService";
 import PageNotFound from "@/pages/404/PageNotFound";
 import GarageDetailPage from "@/pages/GarageDetailPage/GarageDetailPage";
-
+import EmergencyGarageScreen from "@/pages/Emergency/Emergency";
 import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
 import BrandList from "@/pages/AdminDashboard/Brand/BrandList";
@@ -64,7 +64,7 @@ const router = createBrowserRouter(
       path: AbsoluteScreenPath.GarageProUpgrade,
       element: <GarageProUpgrade />,
     },
-
+    { path: AbsoluteScreenPath.Emergency, element: <EmergencyGarageScreen/> },
     {
       path: AbsoluteScreenPath.VehicleDetail,
       element: <VehicleDetailsPage />,
