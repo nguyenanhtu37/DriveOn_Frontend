@@ -6,7 +6,7 @@ const getFeedbackForGarage = async (id) => {
 };
 
 const addFeedback = async (data) => {
-  const response = await axios.post("/feedback", data);
+  const response = await axios.post("/feedback/add", data);
   return response.data;
 };
 
@@ -16,7 +16,7 @@ const updateFeedback = async (data) => {
 };
 
 const deleteFeedback = async (id) => {
-  const response = await axios.delete(`/feedback/${id}`);
+  const response = await axios.delete(`/feedback/delete/${id}`);
   return response.data;
 };
 

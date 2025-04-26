@@ -71,3 +71,13 @@ export const updateGarageInformation = async ({ id, data }) => {
   const response = await axios.put(`garage/garages/${id}`, data);
   return response.data;
 };
+
+export const getDashboardOverview = async (id) => {
+  const response = await axios.get(`garage/${id}/dashboardOverview`);
+  return response.data;
+};
+
+export const getDashboardCharts = async (id) => {
+  const response = await axios.get(`garage/${id}/dashboardChart`);
+  return response.data;
+};

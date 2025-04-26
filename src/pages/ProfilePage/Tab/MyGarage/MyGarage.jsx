@@ -22,6 +22,7 @@ export const MyGarage = () => {
               address={item.address}
               image={item.interiorImages[0]}
               rating={item.ratingAverage}
+              isPro={item.tag === "pro"}
             />
           ))
         )}

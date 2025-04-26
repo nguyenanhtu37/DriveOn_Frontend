@@ -291,3 +291,27 @@ export const useUpdateGarageInformation = () => {
 
   return mutation;
 };
+
+export const useGetDashboardOverview = (id) => {
+  const query = useQuery({
+    queryKey: ["dashboardOverview", id],
+    queryFn: () => garageService.getDashboardOverview(id),
+  });
+
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};
+
+export const useGetDashboardChart = (id) => {
+  const query = useQuery({
+    queryKey: ["dashboardChart", id],
+    queryFn: () => garageService.getDashboardCharts(id),
+  });
+
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

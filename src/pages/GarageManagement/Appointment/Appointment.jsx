@@ -12,6 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { LockIcon } from "lucide-react";
+import Reminder from "./Tab/Reminder";
 
 const Appointment = () => {
   const { garageId } = useParams();
@@ -64,11 +65,7 @@ const Appointment = () => {
       </TabsContent>
       <TabsContent value="reminder">
         {hasPro ? (
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Reminders</h2>
-            <p>Reminder functionality for PRO garages</p>
-            {/* Reminder content would go here */}
-          </div>
+          <Reminder />
         ) : (
           <div className="bg-white p-6 rounded-lg shadow text-center">
             <div className="flex flex-col items-center gap-4 py-8">
