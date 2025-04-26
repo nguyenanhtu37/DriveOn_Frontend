@@ -90,10 +90,10 @@ const BrandFormDialog = ({ onSubmit, onClose, initialData }) => {
 
         <div className="flex justify-end gap-3">
           <button type="button" onClick={onClose} className="text-gray-500">
-            Hủy
+            Cancel
           </button>
           <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-            Lưu
+            Save
           </button>
         </div>
       </form>
