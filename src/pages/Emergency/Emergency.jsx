@@ -1,86 +1,220 @@
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { openGoogleMap } from "@/lib/openGoogleMap"
-import { MapPin, Star } from "lucide-react";
-import useEmergencyGarages from "@/common/hooks/useEmergency";
+import { useEffect, useState, useRef } from "react";
+import { useUserStore } from "@/app/stores/view/user";
+import { useGeolocation } from "@/common/hooks/useGeolocation";
+import { fetchRescueGarages } from "@/app/services/emergency";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "@/pages/HomePage/GarageMap/leaflet.css";
+import L from "leaflet";
+import Loader from "@/components/Emergency/Loader";
+import GarageCard from "@/components/Emergency/GarageCard";
+import Navbar from "@/components/Navbar";
 
-const EmergencyGarageScreen = () => {
-  const { garages, loading, error } = useEmergencyGarages();
-  const [searchValue, setSearchValue] = useState("");
+// Custom icons for markers
+const garageIcon = L.icon({
+  iconUrl: "/garageMarker.png",
+  iconSize: [30, 30],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -35],
+});
+
+const userIcon = L.icon({
+  iconUrl: "/userMarker.png",
+  iconSize: [30, 30],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -35],
+});
+
+const locationDanang = [16.047079, 108.20623];
+
+const RescueGarages = () => {
+  const { location } = useUserStore();
+  const [geoError, setGeoError] = useState(null);
+  const [garages, setGarages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const mapRef = useRef(null);
+
+  useGeolocation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (Array.isArray(location) && location.length === 2 && location.every(coord => !isNaN(coord))) {
+        const [latitude, longitude] = location;
+        try {
+          setIsLoading(true);
+          setError(null);
+          const response = await fetchRescueGarages(latitude, longitude);
+
+          let data = [];
+          if (Array.isArray(response)) {
+            data = response;
+          } else if (response && Array.isArray(response.data)) {
+            data = response.data;
+          } else if (response && Array.isArray(response.garages)) {
+            data = response.garages;
+          } else {
+            throw new Error("Invalid API response format");
+          }
+
+          // Only keep garages with valid coordinates
+          const validGarages = data.filter(
+            garage =>
+              garage &&
+              typeof garage === "object" &&
+              garage._id &&
+              garage.name &&
+              garage.location &&
+              Array.isArray(garage.location.coordinates) &&
+              garage.location.coordinates.length === 2 &&
+              typeof garage.location.coordinates[0] === "number" &&
+              typeof garage.location.coordinates[1] === "number" &&
+              !isNaN(garage.location.coordinates[0]) &&
+              !isNaN(garage.location.coordinates[1])
+          );
+          setGarages(validGarages);
+        } catch (err) {
+          setError(err.message || "Failed to fetch garages");
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }, [location]);
+
+  if (geoError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-red-500 text-lg font-semibold">{geoError}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!location && !isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-gray-500 text-lg font-semibold">Waiting for location access...</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-red-500 text-lg font-semibold">{error}</p>
+        <button
+          onClick={() => setError(null)}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  const [lat, lng] = location || locationDanang;
 
   return (
-    <div className="p-4 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-4">Emergency Garage Nearby</h1>
-
-      <div className="flex items-center gap-2 mb-4">
-        <Input
-          placeholder="Enter your location (e.g., address, city, zip)"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-        <Button disabled>Find Garages</Button>
-      </div>
-
-      <p className="text-sm text-center text-muted-foreground mb-4">
-        Enter your location to find the nearest emergency garages
-      </p>
-
-      <Tabs defaultValue="nearby" className="mb-4">
-        <TabsList className="grid grid-cols-2 w-full">
-          <TabsTrigger value="nearby">Nearby Garages</TabsTrigger>
-          <TabsTrigger value="services">Emergency Services</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      {loading ? (
-        <div className="text-center">Loading garages...</div>
-      ) : error ? (
-        <div className="text-center text-red-500">{error}</div>
-      ) : (
-        <div className="space-y-4">
-          {garages.map((garage) => (
-            <Card key={garage._id} className="rounded-xl shadow">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="text-sm flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    {garage.distance?.toFixed(2)} km away
-                  </div>
-                  <div className="text-sm flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    {garage.ratingAverage || "N/A"}
-                  </div>
-                </div>
-                <h2 className="text-lg font-semibold mb-1">{garage.name}</h2>
-                <p className="text-sm text-muted-foreground mb-1">{garage.address}</p>
-                <p className="text-sm mb-2">{garage.hasEmergency ? "Open Now" : "Closed"}</p>
-                <div className="flex flex-wrap gap-2 text-sm mb-2">
-                  {(garage.services || ["Towing", "Battery Jump", "Tire Change"]).map((s) => (
-                    <span
-                      key={s}
-                      className="px-2 py-1 border rounded-md bg-muted text-muted-foreground"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => openGoogleMap([garage.lon, garage.lat])}
+    <div>
+      <Navbar />
+      <div className="px-2 md:px-10 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
+          {/* Map Section */}
+          <div className="sticky top-24 z-10 h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)] w-full">
+            <MapContainer
+              ref={mapRef}
+              center={[lat, lng]}
+              zoom={13}
+              scrollWheelZoom={true}
+              className="w-full h-full rounded-lg shadow-lg"
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
+              {location && (
+                <Marker position={[lat, lng]} icon={userIcon}>
+                  <Popup>
+                    <div className="text-center text-sm font-semibold text-gray-700 px-2 py-4">
+                      Your Location
+                    </div>
+                  </Popup>
+                </Marker>
+              )}
+              {garages.map((garage) => (
+                <Marker
+                  key={garage._id}
+                  position={[
+                    garage.location.coordinates[1],
+                    garage.location.coordinates[0],
+                  ]}
+                  icon={garageIcon}
                 >
-                  📞 Call {garage.phone || "N/A"}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                  <Popup>
+                    <div className="text-sm">
+                      <strong className="block text-base mb-1">{garage.name}</strong>
+                      <p className="text-gray-600">{garage.address || "No address available"}</p>
+                      <p className="mt-1">Rating: {garage.ratingAverage || "N/A"} / 5</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
+
+          {/* Garage List Section */}
+          <div className="overflow-y-auto h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)]">
+            {garages.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6">
+                {garages.map((garage) => (
+                  <GarageCard
+                    key={garage._id}
+                    id={garage._id}
+                    garageName={garage.name}
+                    rating={garage.ratingAverage}
+                    address={garage.address}
+                    imgs={garage.interiorImages}
+                    openTime={garage.openTime}
+                    closeTime={garage.closeTime}
+                    tag={garage.tag}
+                    location={garage.location?.coordinates}
+                    phone={garage.phone}
+                    distance={garage.distance}
+                    hasEmergency={garage.hasEmergency}
+                    description={garage.description}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full">
+                <h1 className="text-2xl font-semibold text-gray-500">
+                  No garages found within 50km
+                </h1>
+                <p className="text-gray-400 mt-2">
+                  Try adjusting your filters or location.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
-export default EmergencyGarageScreen;
+export default RescueGarages;

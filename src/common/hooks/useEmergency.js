@@ -1,31 +1,17 @@
-import { useEffect, useState } from "react";
-import { getEmergencyGarages } from "@/app/services/emergency";
-import { getLocation } from "@/app/stores/view/user";
+import useGeolocation from './useGeolocation';
 
-const useEmergencyGarages = () => {
+const EmergencyPage = () => {
+  const { location, error: geoError } = useGeolocation();
   const [garages, setGarages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-    
-  const fetchEmergencyGarages = async () => {
-    try {
-      const location = getLocation();
-      const [latitude, longitude] = location;
-      const data = await getEmergencyGarages(latitude, longitude);
-      setGarages(data);
-    } catch (err) {
-      setError("Failed to fetch emergency garages");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchEmergencyGarages();
-  }, []);
-
-  return { garages, loading, error };
+    if (geoError) {
+      setError('Unable to get your location. Please enable location services.');
+    } else if (location) {
+      setUserLocation([location.latitude, location.longitude]);
+      fetchGarages(location.latitude, location.longitude);
+    }
+  }, [location, geoError]);
 };
-
-export default useEmergencyGarages;
