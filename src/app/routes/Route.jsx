@@ -38,6 +38,7 @@ import { GarageProUpgrade } from "@/pages/GarageProUpgrade/GarageProUpgrade";
 import { ProfilePageV2 } from "@/pages/ProfilePage/ProfilePageV2";
 import CountdownPage from "@/pages/CountDownPage/CountDownPage";
 import GarageSetting from "@/pages/GarageManagement/GarageSetting/GarageSetting";
+import { Feedback } from "@/pages/GarageManagement/Feedback/Feedback";
 
 const router = createBrowserRouter(
   [
@@ -149,6 +150,10 @@ const router = createBrowserRouter(
             {
               path: GarageManagementScreenPath.AppointmentDetail,
               element: <AppointmentId />,
+            },
+            {
+              path: GarageManagementScreenPath.Feedback,
+              element: <Feedback />,
             },
             {
               path: GarageManagementScreenPath.Staff,

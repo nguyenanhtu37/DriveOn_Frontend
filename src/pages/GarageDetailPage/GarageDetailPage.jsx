@@ -14,16 +14,13 @@ import { useParams } from "react-router-dom";
 import { Loading } from "@/components/Loading";
 import { DialogService } from "./components/DialogService";
 import { CreateAppointment } from "./components/CreateAppointment";
-import Feedback from "./components/Feedback";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import FeedbackV2 from "./components/FeedbackV2";
 
 const GarageDetailPage = () => {
   const { garageId } = useParams();
   const garageDetail = useGetGarageDetail(garageId);
-  const currentUserId = localStorage.getItem("userId");
 
-  // Handle loading state
   if (garageDetail.isLoading) return <Loading />;
 
   const averageRating = garageDetail.data.ratingAverage || 0;
@@ -56,7 +53,7 @@ const GarageDetailPage = () => {
 
           {/* Main Content */}
           <div className="relative w-full flex flex-col justify-between lg:flex-row items-start mt-6">
-            <div className="w-full lg:w-[50%] flex-col items-start bg-white rounded-xl shadow-sm p-6">
+            <div className="w-full lg:w-[50%] flex-col items-start bg-white rounded-xl p-6">
               {/* Garage Info */}
               <div className="py-6 flex flex-col w-full gap-2">
                 <div className="flex items-center">
@@ -182,7 +179,7 @@ const GarageDetailPage = () => {
               <div className="w-full h-px bg-gray-200 my-2"></div>
 
               {/* Services */}
-              <div className="w-full py-8 flex flex-col gap-y-4">
+              <div className="w-full py-8 flex flex-col gap-y-4 z-0">
                 <div className="text-xl font-bold text-gray-800 flex w-full justify-between items-center">
                   Services
                   <DialogService />
@@ -193,8 +190,7 @@ const GarageDetailPage = () => {
               <div className="w-full h-px bg-gray-200 my-2"></div>
 
               {/* Feedback Section */}
-              <Feedback garageId={garageId} currentUserId={currentUserId} />
-              {/* <FeedbackV2 /> */}
+              {/* <Feedback garageId={garageId} currentUserId={currentUserId} /> */}
             </div>
 
             {/* Appointment Sticky Section */}
@@ -204,16 +200,18 @@ const GarageDetailPage = () => {
               </div>
             </div>
           </div>
+          <div className=" w-full h-px shadow-sm"></div>
+          <FeedbackV2 />
         </div>
       </div>
-      <div className="sticky w-fit left-4 bottom-20 lg:hidden">
+      <div className="sticky w-fit left-4 bottom-20 lg:hidden z-50">
         <Dialog>
           <DialogTrigger asChild>
             <button className="w-fit py-4 px-4 bg-red-500 text-white rounded-full shadow-xl hover:bg-red-600 transition-colors duration-200 ease-in-out flex items-center justify-center">
               <Plus size={24} />
             </button>
           </DialogTrigger>
-          <DialogContent className="p-0">
+          <DialogContent className="p-0 border-none rounded-xl">
             <CreateAppointment />
           </DialogContent>
         </Dialog>

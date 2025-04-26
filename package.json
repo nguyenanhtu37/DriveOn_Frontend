@@ -63,6 +63,7 @@
     "react-router-dom": "^7.1.1",
     "react-tailwindcss-select": "^1.8.5",
     "react-use-draggable-scroll": "^0.4.7",
+    "recharts": "^2.15.3",
     "swiper": "^11.2.1",
     "tailwind-merge": "^2.6.0",
     "vaul": "^1.1.2",

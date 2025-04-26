@@ -226,17 +226,6 @@ export const GarageAppointmentCard = ({ appointment }) => {
       </CardContent>
 
       <CardFooter className="flex justify-between bg-muted/30 pt-4">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline">Reschedule</Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Change appointment date and time</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
         {appointment.status === "Pending" && (
           <div className="space-x-2">
             <Dialog>

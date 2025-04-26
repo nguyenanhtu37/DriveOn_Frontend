@@ -6,10 +6,12 @@ import { useAuth } from "@/common/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 import { AbsoluteScreenPath } from "../constants/screen";
+import { useUserStore } from "@/app/stores/view/user";
 
 function Navbar() {
   const { handleLogout, isLoading, error, isLoggedIn, userRoles } = useAuth();
   const [logoutError, setLogoutError] = useState(null);
+  const { user } = useUserStore();
 
   // Handle logout error display
   useEffect(() => {
@@ -108,7 +110,7 @@ function Navbar() {
                     <AlignJustify size={16} />
                     <img
                       className="w-[30px] aspect-square rounded-full object-cover"
-                      src="https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                      src={user.avatar ?? "/placeholder.svg"}
                       alt="User Avatar"
                     />
                   </div>
