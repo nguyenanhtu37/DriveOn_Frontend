@@ -44,7 +44,7 @@ function Navbar() {
         </div>
 
         {/* Center */}
-        <div className="hidden md:block w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+        {/* <div className="hidden md:block w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
           <div
             className={cn(
               "flex justify-center items-center gap-x-3 transition-all duration-300 ease-in-out"
@@ -71,7 +71,7 @@ function Navbar() {
               Emergency
             </NavLink>
           </div>
-        </div>
+        </div> */}
 
         {/* Right */}
         <div className="hidden w-1/2 lg:w-1/3 md:flex justify-end items-center z-30">
