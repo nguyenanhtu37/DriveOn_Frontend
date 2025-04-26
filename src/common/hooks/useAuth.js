@@ -8,6 +8,7 @@ import {
   resetPassword,
 } from "../../app/services/reset-password";
 import { setUser } from "@/app/stores/view/user";
+import { requestPermissionAndGetToken } from "../../../firebase-messaging.js";
 
 const roleData = [
   { _id: "67895c212e7333f925e9c0e9", roleName: "admin" },
@@ -33,7 +34,17 @@ export const useAuth = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await login(credentials); // gọi service login
+      let deviceToken = null;
+      // deviceToken
+      try {
+        deviceToken = await requestPermissionAndGetToken();
+        console.log("Device token: ", deviceToken);
+      } catch (error) {
+        console.error("Failed to get device token: ", error);
+      };
+
+      // const response = await login(credentials); // gọi service login
+      const response = await login({ ...credentials, deviceToken }); // gọi service login
       setUser(response.user);
       localStorage.setItem("token", response.token);
 
