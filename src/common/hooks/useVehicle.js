@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getVehicles, addVehicle, updateVehicle, deleteVehicle, getVehicleById } from '@/app/services/vehicle';
+import { getVehicles, addVehicle,  deleteVehicle, getVehicleById } from '@/app/services/vehicle';
 
 export const useVehicles = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -53,23 +53,7 @@ export const useVehicles = () => {
   };
 
   // Update an existing vehicle
-  const updateExistingVehicle = async (id, vehicleData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await updateVehicle(id, vehicleData);
-      const updatedVehicle = response.vehicle; // Populated carBrand
-      setVehicles((prev) =>
-        prev.map((v) => (v._id === id ? updatedVehicle : v))
-      );
-      return response;
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   // Delete an existing vehicle
   const deleteExistingVehicle = async (id) => {

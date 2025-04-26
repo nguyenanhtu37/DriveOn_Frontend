@@ -1,7 +1,10 @@
+"use client";
+
 import { useCreateAppointment } from "@/app/stores/entity/appointment";
 import { useGetService } from "@/app/stores/entity/service-detail";
 import { useGetMyVehicles } from "@/app/stores/entity/vehicle";
 import { useTabStore } from "@/app/stores/view/tab";
+import { useUserStore } from "@/app/stores/view/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,15 +15,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-tailwindcss-select";
+import { useState } from "react";
 
 export const CreateAppointment = () => {
   const { garageId } = useParams();
   const service = useGetService(garageId);
   const myVehicles = useGetMyVehicles();
   const createAppointment = useCreateAppointment();
+  const user = useUserStore((state) => state.user);
 
   const navigate = useNavigate();
   const { setTab } = useTabStore();
+  const [showReview, setShowReview] = useState(false);
 
   const serviceOptions = service?.data?.map(({ name, _id }) => ({
     label: name,
@@ -47,6 +53,23 @@ export const CreateAppointment = () => {
     },
   });
 
+  const handleReview = (data) => {
+    if (data.date && data.service.length > 0 && data.vehicle.value) {
+      setShowReview(true);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Missing information",
+        description: "Please fill all required fields before proceeding",
+        duration: 2000,
+      });
+    }
+  };
+
+  const handleBackToEdit = () => {
+    setShowReview(false);
+  };
+
   const onSubmit = (data) => {
     const newAppointment = {
       garage: garageId,
@@ -56,8 +79,6 @@ export const CreateAppointment = () => {
       vehicle: data.vehicle.value,
     };
 
-    console.log("newAppointment", newAppointment);
-
     createAppointment.mutate(newAppointment, {
       onSuccess: () => {
         reset();
@@ -65,8 +86,14 @@ export const CreateAppointment = () => {
         navigate(AbsoluteScreenPath.ProfilePage);
         setTab("appointments");
       },
-      onError: () => {
-        toast({ title: "Create appointment failed", duration: 2000 });
+      onError: (error) => {
+        console.error("Create appointment error", error);
+        toast({
+          variant: "destructive",
+          title: "Create appointment failed",
+          description: error.response?.data.error,
+          duration: 2000,
+        });
       },
     });
   };
@@ -100,6 +127,7 @@ export const CreateAppointment = () => {
                     type="datetime-local"
                     value={field.value ?? ""}
                     onChange={(e) => field.onChange(e.target.value || null)}
+                    disabled={showReview}
                   />
                   {renderFieldError(errors.date)}
                 </>
@@ -123,6 +151,7 @@ export const CreateAppointment = () => {
                     options={serviceOptions}
                     isMultiple
                     primaryColor="red"
+                    isDisabled={showReview}
                   />
                   {renderFieldError(errors.service)}
                 </>
@@ -146,6 +175,7 @@ export const CreateAppointment = () => {
                     options={vehicleOptions}
                     isMultiple={false}
                     primaryColor="red"
+                    isDisabled={showReview}
                   />
                   {renderFieldError(errors.vehicle)}
                 </>
@@ -167,6 +197,7 @@ export const CreateAppointment = () => {
                     className="px-4 py-2"
                     value={field.value}
                     onChange={field.onChange}
+                    disabled={showReview}
                   />
                   {renderFieldError(errors.note)}
                 </>
@@ -174,15 +205,83 @@ export const CreateAppointment = () => {
             />
           </div>
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            animation
-            className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
-            disabled={createAppointment.isPending}
-          >
-            Create Appointment
-          </Button>
+          {/* Review or Submit Button */}
+          {!showReview ? (
+            <Button
+              type="button"
+              animation
+              className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
+              onClick={
+                user
+                  ? handleSubmit(handleReview)
+                  : () => navigate(AbsoluteScreenPath.Login)
+              }
+            >
+              Review Appointment
+            </Button>
+          ) : (
+            <div className="flex flex-col gap-y-4">
+              {/* Appointment Summary */}
+              <div className="p-4 border rounded-lg bg-gray-50">
+                <h3 className="font-semibold mb-2">Appointment Summary</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="grid grid-cols-[100px_1fr] gap-2">
+                    <span className="font-medium">Date:</span>
+                    <span>
+                      {new Date(control._formValues.date).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[100px_1fr] gap-2">
+                    <span className="font-medium">Services:</span>
+                    <span>
+                      {control._formValues.service
+                        .map((service) => service.label)
+                        .join(", ")}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[100px_1fr] gap-2">
+                    <span className="font-medium">Vehicle:</span>
+                    <span>{control._formValues.vehicle.label}</span>
+                  </div>
+                  {control._formValues.note && (
+                    <div className="grid grid-cols-[100px_1fr] gap-2">
+                      <span className="font-medium">Note:</span>
+                      <span>{control._formValues.note}</span>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-[100px_1fr] gap-2">
+                    <span className="font-medium">Duration:</span>
+                    <span>
+                      {service?.data?.find(
+                        (s) => s._id === control._formValues.service[0].value
+                      )?.duration || "N/A"}{" "}
+                      minutes
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-x-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={handleBackToEdit}
+                >
+                  Edit
+                </Button>
+                <Button
+                  type="submit"
+                  animation
+                  className="flex-1 bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
+                  disabled={createAppointment.isPending}
+                >
+                  Confirm & Create
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </form>

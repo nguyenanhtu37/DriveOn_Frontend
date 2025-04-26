@@ -1,3 +1,5 @@
+"use client";
+
 import {
   useApproveGarage,
   useGetRegisterGarageDetail,
@@ -7,191 +9,266 @@ import { Loading } from "@/components/Loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import {
-  ActivitySquare,
+  Calendar,
   Check,
-  DoorClosed,
-  DoorOpen,
-  Image,
+  Clock,
   Info,
   Mail,
   MapPin,
   Phone,
-  User,
   X,
 } from "lucide-react";
-
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 export const ViewRegisterGarageDetail = () => {
   const { id } = useParams();
-
   const garageFetch = useGetRegisterGarageDetail(id);
   const garage = garageFetch.data;
+  const [selectedImage, setSelectedImage] = useState(0);
 
   const approveGarage = useApproveGarage();
   const rejectGarage = useRejectGarage();
+
   const handleApprove = () => {
     approveGarage.mutate(id);
   };
+
   const handleReject = () => {
     rejectGarage.mutate(id, {});
   };
+
   if (garageFetch.isLoading) return <Loading />;
+
+  const getStatusBadge = (status) => {
+    if (status === "rejected")
+      return (
+        <Badge className="bg-red-100 text-red-600 hover:bg-red-100">
+          {status}
+        </Badge>
+      );
+    if (status === "disabled")
+      return (
+        <Badge className="bg-gray-100 text-gray-600 hover:bg-gray-100">
+          {status}
+        </Badge>
+      );
+    return (
+      <Badge className="bg-green-100 text-green-600 hover:bg-green-100">
+        {status}
+      </Badge>
+    );
+  };
+
   return (
-    <div className=" px-7 pt-7 w-full flex flex-col gap-y-5 items-start">
-      <Card className="w-full  mx-auto overflow-hidden transition-shadow duration-300 hover:shadow-lg">
-        <CardHeader className="bg-gradient-to-r bg-[#cdcdcd]  text-white shadow-md">
-          <CardTitle className="text-2xl font-bold flex items-center justify-between">
-            <div className=" flex items-center justify-start">
-              <Info className="mr-2" />
-              {garage.name}
-            </div>
-            <div className="flex justify-end">
-              <Badge>{garage.status}</Badge>
-            </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-6 p-6">
-          {/* <div className="pt-4">
-            <h3 className="font-semibold text-lg mb-4 flex items-center justify-center p-2 rounded-md border shadow-sm">
-              <User className="w-5 h-5 mr-2 text-red-500" />
-              Garage owner
-            </h3>
-            <div className=" flex flex-col gap-6 ">
-              <div className="flex items-center">
-                <img
-                  src="https://images.pexels.com/photos/640781/pexels-photo-640781.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="user"
-                  className="w-10 h-10 object-cover rounded-full"
-                />
-                <div className="ml-3 flex items-center">
-                  <h3 className="font-semibold text-lg mb-1">
-                    Trần Viết Ngọc Tâm
-                  </h3>
-                  <p className="text-gray-600">{garage.user.email}</p>
-                </div>
+    <div className="p-6 w-full">
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold mb-1 text-red-400">
+          {garage.name}
+        </h1>
+        <p className="text-sm text-gray-500">
+          Garage registration details. Review information before approval.
+        </p>
+      </div>
+
+      <div className="grid gap-6">
+        {/* Header with status */}
+        <div className="bg-white rounded-lg border p-5">
+          <div className="flex flex-col md:flex-row justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-red-50 rounded-md">
+                <MapPin className="h-5 w-5 text-red-400" />
               </div>
-              <div className="flex items-start">
-                <MapPin className="w-5 h-5 mt-1 mr-3 text-red-500 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">
-                    Personal Address
-                  </h3>
-                  <p className="text-gray-600">{garage.address}</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <Phone className="w-5 h-5 mt-1 mr-3 text-red-500 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">Phone Garage</h3>
-                  <p className="text-gray-600">{garage.phone}</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <Mail className="w-5 h-5 mt-1 mr-3 text-red-500 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">Email Garage</h3>
-                  <p className="text-gray-600">{garage.email}</p>
-                </div>
-              </div>
-            </div>
-          </div> */}
-          <h3 className="font-semibold text-lg mb-4 flex items-center justify-center p-2 rounded-md border shadow-sm">
-            <Info className="w-5 h-5 mr-2 text-red-500" />
-            Garage Information
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-            <div className="flex items-start">
-              <MapPin className="w-5 h-5 mt-1 mr-3 text-red-500 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg mb-2">Address</h3>
-                <p className="text-gray-600">{garage.address}</p>
+                <h3 className="font-medium">Address</h3>
+                <p className="text-sm text-gray-500 mt-1">{garage.address}</p>
               </div>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-start">
-                <Phone className="w-5 h-5 mt-1 mr-3 text-red-500 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">Phone Garage</h3>
-                  <p className="text-gray-600">{garage.phone}</p>
+            <div className="flex items-center gap-2">
+              {garage.status.map((status, index) => (
+                <div key={index}>{getStatusBadge(status)}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Information */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-lg border p-5">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="p-2 bg-red-50 rounded-md">
+                <Phone className="h-5 w-5 text-red-400" />
+              </div>
+              <div>
+                <h3 className="font-medium">Phone</h3>
+                <p className="text-sm text-gray-500 mt-1">{garage.phone}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-red-50 rounded-md">
+                <Mail className="h-5 w-5 text-red-400" />
+              </div>
+              <div>
+                <h3 className="font-medium">Email</h3>
+                <p className="text-sm text-gray-500 mt-1">{garage.email}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Working Hours */}
+          <div className="bg-white rounded-lg border p-5">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="p-2 bg-red-50 rounded-md">
+                <Clock className="h-5 w-5 text-red-400" />
+              </div>
+              <div>
+                <h3 className="font-medium">Working Hours</h3>
+                <div className="flex gap-4 text-sm text-gray-500 mt-1">
+                  <p>Open: {garage.openTime}</p>
+                  <p>Close: {garage.closeTime}</p>
                 </div>
               </div>
-              <div className="flex items-start">
-                <Mail className="w-5 h-5 mt-1 mr-3 text-red-500 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">Email</h3>
-                  <p className="text-gray-600">{garage.email}</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-red-50 rounded-md">
+                <Calendar className="h-5 w-5 text-red-400" />
+              </div>
+              <div>
+                <h3 className="font-medium">Operating Days</h3>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {garage.operating_days.map((day, index) => (
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="bg-white text-xs"
+                    >
+                      {day.substring(0, 3)}
+                    </Badge>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-          {garage.description && (
-            <div className="border-t pt-4">
-              <h3 className="font-semibold text-lg mb-2 flex items-center">
-                <Info className="w-5 h-5 mr-2 text-red-500" />
-                Description
-              </h3>
-              <p className="text-gray-600">{garage.description}</p>
-            </div>
-          )}
-          <div className="border-t pt-4">
-            <h3 className="font-semibold text-lg mb-2 flex items-center">
-              <ActivitySquare className="w-5 h-5 mr-2 text-red-500" />
-              Working
-            </h3>
-            <div className=" flex justify-start items-center gap-4">
-              <div className=" flex items-center">
-                <DoorOpen className="w-5 h-5 mr-2  " />
-                {garage.openTime}
+        </div>
+
+        {/* Description */}
+        {garage.description && (
+          <div className="bg-white rounded-lg border p-5">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-red-50 rounded-md">
+                <Info className="h-5 w-5 text-red-400" />
               </div>
-              <div className=" flex items-center">
-                <DoorClosed className="w-5 h-5 mr-2  " />
-                {garage.closeTime}
+              <div>
+                <h3 className="font-medium">Description</h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  {garage.description}
+                </p>
               </div>
             </div>
           </div>
-          <div className="border-t pt-4">
-            <h3 className="font-semibold text-lg mb-2 flex items-center">
-              <Image className="w-5 h-5 mr-2 text-red-500" />
-              Garage Image
+        )}
+
+        {/* Images */}
+        {garage.interiorImages && garage.interiorImages.length > 0 && (
+          <div className="bg-white rounded-lg border p-5">
+            <h3 className="font-medium mb-4 flex items-center">
+              <div className="p-1 bg-red-50 rounded-md mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-red-400"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              </div>
+              Interior Images
             </h3>
-            <div className=" flex justify-start items-center flex-wrap gap-4">
-              {garage.interiorImages.map((image) => (
+            <div className="mb-4">
+              <img
+                src={garage.interiorImages[selectedImage] || "/placeholder.svg"}
+                alt="garage interior"
+                className="w-full h-[300px] object-cover rounded-md"
+              />
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {garage.interiorImages.map((image, index) => (
                 <img
-                  key={image}
-                  src={image}
-                  alt="garage"
-                  className=" size-36 object-cover rounded-lg"
+                  key={index}
+                  src={image || "/placeholder.svg"}
+                  alt={`thumbnail ${index + 1}`}
+                  className={`w-16 h-16 object-cover rounded-md cursor-pointer ${
+                    selectedImage === index ? "ring-2 ring-red-400" : ""
+                  }`}
+                  onClick={() => setSelectedImage(index)}
                 />
               ))}
             </div>
           </div>
-        </CardContent>
-        <CardFooter className="flex justify-end items-center gap-4">
+        )}
+
+        {/* Owner Information */}
+        {garage.user && garage.user.length > 0 && (
+          <div className="bg-white rounded-lg border p-5">
+            <h3 className="font-medium mb-4 flex items-center">
+              <div className="p-1 bg-red-50 rounded-md mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-red-400"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              Owner Information
+            </h3>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <span className="text-red-400 font-medium">
+                  {garage.user[0].name.charAt(0)}
+                </span>
+              </div>
+              <div>
+                <p className="font-medium">{garage.user[0].name}</p>
+                <p className="text-sm text-gray-500">{garage.user[0].email}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex justify-end gap-3 mt-2">
           <Button
             onClick={handleReject}
-            variant="ghost"
-            className="font-semibold text-red-500 hover:text-red-600"
+            variant="outline"
+            className="border-red-200 text-red-600 hover:bg-red-50"
           >
-            <X className=" h-4 w-4" /> Reject
+            <X className="h-4 w-4 mr-2" /> Reject
           </Button>
           <Button
             onClick={handleApprove}
-            variant="ghost"
-            className=" text-green-500 hover:text-green-600 font-semibold"
+            className="bg-red-400 hover:bg-red-500 text-white"
           >
-            <Check className=" h-4 w-4" /> Approve
+            <Check className="h-4 w-4 mr-2" /> Approve
           </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

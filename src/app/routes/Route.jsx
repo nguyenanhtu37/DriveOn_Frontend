@@ -27,7 +27,7 @@ import ServiceDetail from "@/pages/GarageManagement/Service/ServiceDetail";
 import CreateService from "@/pages/GarageManagement/Service/CreateService";
 import PageNotFound from "@/pages/404/PageNotFound";
 import GarageDetailPage from "@/pages/GarageDetailPage/GarageDetailPage";
-
+import EmergencyGarageScreen from "@/pages/Emergency/Emergency";
 import VehicleListPage from "@/pages/CarOwner/Vehicle/VehicleList";
 import AddVehiclePage from "@/pages/CarOwner/Vehicle/AddVehicle";
 import BrandList from "@/pages/AdminDashboard/Brand/BrandList";
@@ -38,6 +38,7 @@ import { GarageProUpgrade } from "@/pages/GarageProUpgrade/GarageProUpgrade";
 import { ProfilePageV2 } from "@/pages/ProfilePage/ProfilePageV2";
 import CountdownPage from "@/pages/CountDownPage/CountDownPage";
 import GarageSetting from "@/pages/GarageManagement/GarageSetting/GarageSetting";
+import { Feedback } from "@/pages/GarageManagement/Feedback/Feedback";
 
 const router = createBrowserRouter(
   [
@@ -47,13 +48,8 @@ const router = createBrowserRouter(
       children: [
         { index: true, element: <HomePage /> },
         {
-          element: <ProtectedRoute role={["carowner"]} />,
-          children: [
-            {
-              path: AbsoluteScreenPath.GarageDetail,
-              element: <GarageDetailPage />,
-            },
-          ],
+          path: AbsoluteScreenPath.GarageDetail,
+          element: <GarageDetailPage />,
         },
       ],
     },
@@ -62,14 +58,27 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
     { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
-    { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePageV2 /> },
+    {
+      element: (
+        <ProtectedRoute
+          role={["carowner", "admin"]}
+          directTo={AbsoluteScreenPath.Login}
+        />
+      ),
+      children: [
+        { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePageV2 /> },
+        {
+          path: AbsoluteScreenPath.FavoriteGarages,
+          element: <FavoriteGarages />,
+        },
+      ],
+    },
     { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
-    { path: AbsoluteScreenPath.FavoriteGarages, element: <FavoriteGarages /> },
     {
       path: AbsoluteScreenPath.GarageProUpgrade,
       element: <GarageProUpgrade />,
     },
-
+    { path: AbsoluteScreenPath.Emergency, element: <EmergencyGarageScreen/> },
     {
       path: AbsoluteScreenPath.VehicleDetail,
       element: <VehicleDetailsPage />,
@@ -156,8 +165,17 @@ const router = createBrowserRouter(
               element: <AppointmentId />,
             },
             {
-              path: GarageManagementScreenPath.Staff,
-              element: <Staff />,
+              path: GarageManagementScreenPath.Feedback,
+              element: <Feedback />,
+            },
+            {
+              element: <ProtectedRoute role={["manager"]} />,
+              children: [
+                {
+                  path: GarageManagementScreenPath.Staff,
+                  element: <Staff />,
+                },
+              ],
             },
             {
               path: GarageManagementScreenPath.Service,
@@ -167,11 +185,11 @@ const router = createBrowserRouter(
                   path: GarageManagementScreenPath.ServiceDetail,
                   element: <ServiceDetail />,
                 },
+                {
+                  path: GarageManagementScreenPath.CreateService,
+                  element: <CreateService />,
+                },
               ],
-            },
-            {
-              path: GarageManagementScreenPath.CreateService,
-              element: <CreateService />,
             },
             {
               path: GarageManagementScreenPath.CountDownPro,

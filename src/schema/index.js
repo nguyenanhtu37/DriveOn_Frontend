@@ -54,12 +54,9 @@ export const serviceSchema = z.object({
 export const serviceDetailSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
   serviceSystem: z.string().nonempty("Service system is required"),
-  description: z
-    .string()
-    .min(100, "Description must be at least 100 characters"),
-  price: z.number().min(0, "Minimum price 0 VND"),
-  duration: z.number().min(0, "Minimum time is 5 minutes"),
-  warranty: z.string().min(1, "Warranty must be at least 1"),
+  description: z.string().min(20, "Description must be at least 20 characters"),
+  price: z.string(),
+  duration: z.string(),
 });
 
 export const appointmentSchema = z.object({
@@ -79,18 +76,6 @@ export const appointmentSchema = z.object({
   }),
 });
 
-export const vehicleSchema = z.object({
-  carName: z.string().nonempty("Car name is required"),
-  carPlate: z.string().nonempty("Car plate is required"),
-  carYear: z.string().nonempty("Car year is required"),
-  carColor: z.string().nonempty("Car color is required"),
-  carBrand: z.object({
-    value: z.string().nonempty("Brand ID is required"),
-    label: z.string().nonempty("Brand name is required"),
-  }),
-  carImage: z.string().optional(),
-});
-
 export const userSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string(),
@@ -104,9 +89,9 @@ export const userSchema = z.object({
 
 export const passwordSchema = z
   .object({
-    currentPassword: z.string().min(8, "Current password is required"),
-    newPassword: z.string().min(8, "New password is required"),
-    confirmPassword: z.string().min(8, "Confirm password is required"),
+    currentPassword: z.string().min(6, "Current password is required"),
+    newPassword: z.string().min(6, "Must be at least 6 characters"),
+    confirmPassword: z.string().min(6, "Must be at least 6 characters"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "New password and confirm password must match",

@@ -1,8 +1,5 @@
-"use client";
-
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CardAppointment from "./CardAppointment";
-import { Link, useParams } from "react-router-dom";
 
 const TagAppointment = ({ event }) => {
   return (
