@@ -35,7 +35,7 @@ const Feedback = ({ garageId, currentUserId }) => {
 
     try {
       if (editingFeedback) {
-        await updateFeedback(editingFeedback.id, newFeedback, token);
+        await updateFeedback(editingFeedback._id, newFeedback, token);
         setEditingFeedback(null);
       } else {
         await addFeedback({ ...newFeedback, garage: garageId }, token);
@@ -137,7 +137,7 @@ const Feedback = ({ garageId, currentUserId }) => {
         {Array.isArray(feedbacks) && feedbacks.length > 0 ? (
           feedbacks.map((feedback, index) => (
             <div
-              key={feedback.id || `feedback-${index}`}
+              key={feedback._id || `feedback-${index}`}
               className="border p-4 rounded-lg"
             >
               <div className="flex items-center gap-2">
