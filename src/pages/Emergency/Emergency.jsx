@@ -205,9 +205,6 @@ const RescueGarages = () => {
                 <h1 className="text-2xl font-semibold text-gray-500">
                   No garages found within 50km
                 </h1>
-                <p className="text-gray-400 mt-2">
-                  Try adjusting your filters or location.
-                </p>
               </div>
             )}
           </div>

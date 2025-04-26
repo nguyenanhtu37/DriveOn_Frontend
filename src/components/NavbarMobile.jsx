@@ -1,6 +1,6 @@
 import { AbsoluteScreenPath } from "@/constants/screen";
 import { cn } from "@/lib/utils";
-import { CircleUser, Heart, Car, Home } from "lucide-react";
+import { CircleUser, Heart, Car, Home, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MENU_ITEMS = [
@@ -11,7 +11,7 @@ const MENU_ITEMS = [
     link: AbsoluteScreenPath.FavoriteGarages,
   },
   { icon: Car, label: "Garage" },
-  { icon: CircleUser, label: "Profile" },
+  { icon: Activity, label: "Emergency", link: AbsoluteScreenPath.Emergency },
   { icon: CircleUser, label: "Profile", link: AbsoluteScreenPath.ProfilePage },
 ];
 
