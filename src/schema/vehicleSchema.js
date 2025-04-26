@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Regex for common Vietnamese license plate formats (more comprehensive)
-const vietnamesePlateRegex = /^[A-Z\d]{1,3}[-\s]\d{3,6}([\.\-]\d{1,2})?$/;
+const vietnamesePlateRegex = /^(\d{2}[A-Z]{1,2})-\d{3,5}(\.\d{2})?$/;
 
 export const vehicleSchema = z.object({
   carBrand: z.object({

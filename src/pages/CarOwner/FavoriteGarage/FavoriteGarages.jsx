@@ -44,7 +44,7 @@ const FavoriteGarages = () => {
 
         {!loading && !error && (
           <div className="bg-white rounded-lg shadow-sm p-6">
-            {favorites.length === 0 ? (
+           {favorites.length === 0 ? (
               <div className="text-center py-12">
                 <Heart className="h-12 w-12 text-gray-400 mx-auto" />
                 <p className="mt-4 text-xl font-semibold text-gray-700">
@@ -61,11 +61,9 @@ const FavoriteGarages = () => {
                     key={garage._id}
                     id={garage._id}
                     garageName={garage.name}
-                    rating={garage.ratingAverage}
                     address={garage.address}
-                    openTime={garage.openTime}
-                    closeTime={garage.closeTime}
-                    imgs={Array.isArray(garage.imgs) ? garage.imgs : []}
+                    phone={garage.phone}
+                    imgs={Array.isArray(garage.interiorImages) ? garage.interiorImages : []}
                     isFavorited={true}
                     onRemove={() => removeFromFavorites(garage._id)}
                   />

@@ -8,8 +8,9 @@ import L from "leaflet";
 import Loader from "@/components/Emergency/Loader";
 import GarageCard from "@/components/Emergency/GarageCard";
 import Navbar from "@/components/Navbar";
+import osm from "@/constants/osm-provider";
+import PopupGarage from "@/components/PopupGarage";
 
-// Custom icons for markers
 const garageIcon = L.icon({
   iconUrl: "/garageMarker.png",
   iconSize: [30, 30],
@@ -141,11 +142,11 @@ const RescueGarages = () => {
               center={[lat, lng]}
               zoom={13}
               scrollWheelZoom={true}
-              className="w-full h-full rounded-lg shadow-lg"
+              style={{ width: "100%", height: "100%" }}
             >
               <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                attribution={osm.maptiler.attribution}
+                url={osm.maptiler.url}
               />
               {location && (
                 <Marker position={[lat, lng]} icon={userIcon}>
@@ -164,13 +165,20 @@ const RescueGarages = () => {
                     garage.location.coordinates[0],
                   ]}
                   icon={garageIcon}
+                  eventHandlers={{
+                    click: () => setSelectedGarage(garage),
+                  }}
                 >
                   <Popup>
-                    <div className="text-sm">
-                      <strong className="block text-base mb-1">{garage.name}</strong>
-                      <p className="text-gray-600">{garage.address || "No address available"}</p>
-                      <p className="mt-1">Rating: {garage.ratingAverage || "N/A"} / 5</p>
-                    </div>
+                    <PopupGarage
+                      id={garage._id}
+                      garageName={garage.name}
+                      address={garage.address}
+                      openDays={garage.operating_days}
+                      imgs={garage.interiorImages}
+                      phone={garage.phone}
+                      location={garage.location.coordinates}
+                    />
                   </Popup>
                 </Marker>
               ))}
@@ -205,9 +213,6 @@ const RescueGarages = () => {
                 <h1 className="text-2xl font-semibold text-gray-500">
                   No garages found within 50km
                 </h1>
-                <p className="text-gray-400 mt-2">
-                  Try adjusting your filters or location.
-                </p>
               </div>
             )}
           </div>
