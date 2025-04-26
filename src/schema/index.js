@@ -54,12 +54,9 @@ export const serviceSchema = z.object({
 export const serviceDetailSchema = z.object({
   name: z.string().min(2, "Service name must be at least 2 characters"),
   serviceSystem: z.string().nonempty("Service system is required"),
-  description: z
-    .string()
-    .min(100, "Description must be at least 100 characters"),
+  description: z.string().min(20, "Description must be at least 20 characters"),
   price: z.string(),
   duration: z.string(),
-  warranty: z.string().min(1, "Warranty must be at least 1"),
 });
 
 export const appointmentSchema = z.object({

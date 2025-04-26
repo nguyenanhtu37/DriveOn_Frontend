@@ -25,9 +25,10 @@ export const SidebarItem = ({ icon, title, link, props, role }) => {
       to={link}
       className={({ isActive }) =>
         cn(
-          "relative w-full h-9 rounded-md px-2 flex gap-x-1 items-center cursor-pointer group/item",
-          isActive &&
-            "bg-[#1C1C1C] bg-opacity-5 before:w-1 before:h-4 before:bg-[#1C1C1C] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:rounded-md"
+          "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all",
+          isActive
+            ? "bg-red-300 text-red-600"
+            : "text-gray-600 hover:bg-red-50 hover:text-red-600"
         )
       }
       {...props}
