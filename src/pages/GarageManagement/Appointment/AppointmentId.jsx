@@ -286,7 +286,7 @@ const AppointmentId = () => {
                   <div>
                     <div className="font-medium">Car brand</div>
                     <div className="text-sm text-gray-500">
-                      {appointmentData.vehicle.carBrand}
+                      {appointmentData.vehicle.carBrand.brandName}
                     </div>
                   </div>
                 </div>

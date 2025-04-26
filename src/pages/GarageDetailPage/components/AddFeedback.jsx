@@ -78,13 +78,13 @@ export const AddFeedback = () => {
 
           <div>
             <label htmlFor="feedback-text" className="block mb-2 font-medium">
-              Nhận xét của bạn
+              Your Comment
             </label>
             <Textarea
               id="feedback-text"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Chia sẻ trải nghiệm của bạn về dịch vụ..."
+              placeholder="Share your experience about the service..."
               rows={4}
             />
           </div>
@@ -94,7 +94,7 @@ export const AddFeedback = () => {
             className="w-full md:w-auto mt-4"
             onClick={handleSubmit}
           >
-            {addFeedback.isPending ? "Đang gửi..." : "Gửi đánh giá"}
+            {addFeedback.isPending ? "Loading..." : "Submit a review"}
           </Button>
         </div>
       </DialogContent>

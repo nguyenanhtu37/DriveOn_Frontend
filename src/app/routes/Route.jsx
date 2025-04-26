@@ -58,9 +58,22 @@ const router = createBrowserRouter(
     { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
     { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
     { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
-    { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePageV2 /> },
+    {
+      element: (
+        <ProtectedRoute
+          role={["carowner", "admin"]}
+          directTo={AbsoluteScreenPath.Login}
+        />
+      ),
+      children: [
+        { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePageV2 /> },
+        {
+          path: AbsoluteScreenPath.FavoriteGarages,
+          element: <FavoriteGarages />,
+        },
+      ],
+    },
     { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
-    { path: AbsoluteScreenPath.FavoriteGarages, element: <FavoriteGarages /> },
     {
       path: AbsoluteScreenPath.GarageProUpgrade,
       element: <GarageProUpgrade />,
@@ -156,8 +169,13 @@ const router = createBrowserRouter(
               element: <Feedback />,
             },
             {
-              path: GarageManagementScreenPath.Staff,
-              element: <Staff />,
+              element: <ProtectedRoute role={["manager"]} />,
+              children: [
+                {
+                  path: GarageManagementScreenPath.Staff,
+                  element: <Staff />,
+                },
+              ],
             },
             {
               path: GarageManagementScreenPath.Service,
@@ -167,11 +185,11 @@ const router = createBrowserRouter(
                   path: GarageManagementScreenPath.ServiceDetail,
                   element: <ServiceDetail />,
                 },
+                {
+                  path: GarageManagementScreenPath.CreateService,
+                  element: <CreateService />,
+                },
               ],
-            },
-            {
-              path: GarageManagementScreenPath.CreateService,
-              element: <CreateService />,
             },
             {
               path: GarageManagementScreenPath.CountDownPro,

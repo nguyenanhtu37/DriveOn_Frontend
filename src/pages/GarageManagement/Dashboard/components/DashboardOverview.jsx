@@ -52,8 +52,8 @@ export function DashboardOverview() {
           Garage Overview
         </h2>
         <p className="text-muted-foreground text-sm">
-          Tổng quan các chỉ số hoạt động của garage hiện tại. Nhấn vào từng mục
-          để xem chi tiết.
+          Overview of current garage performance indicators. Click on each item
+          to view details.
         </p>
       </div>
 

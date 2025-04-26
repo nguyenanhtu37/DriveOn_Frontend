@@ -45,6 +45,7 @@ const CardAppointment = ({
   status,
   notes,
   vehicle,
+  avatar,
 }) => {
   const { garageId } = useParams();
   const navigate = useNavigate();
@@ -143,7 +144,7 @@ const CardAppointment = ({
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <div className="flex items-center space-x-4">
             <Avatar className="h-10 w-10 border">
-              <AvatarImage src="https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
+              <AvatarImage src={avatar} />
               <AvatarFallback />
             </Avatar>
             <div>

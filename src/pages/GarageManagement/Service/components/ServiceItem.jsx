@@ -1,7 +1,6 @@
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import clsx from "clsx";
-import { ArrowRight, Settings } from "lucide-react";
-import React from "react";
+import { ChevronRight, Clock, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const ServiceItem = ({ service, garageId }) => {
@@ -17,13 +16,31 @@ const ServiceItem = ({ service, garageId }) => {
         )
       }
     >
-      <div className="flex flex-1 items-center gap-x-2">
-        <Settings size={16} className="shrink-0 group-hover:animate-spin" />
-        <span className="text-md font-semibold line-clamp-1 ">
-          {service.name}
-        </span>
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600 group-hover:bg-red-200">
+          <Settings className="h-5 w-5" />
+        </div>
+        <div className="flex-1 overflow-hidden">
+          <h3 className="font-medium text-gray-800 line-clamp-1 group-hover:text-red-700">
+            {service.name}
+          </h3>
+          <p className="mt-1 text-xs text-gray-500 line-clamp-2">
+            {service.description}
+          </p>
+          <div className="mt-2 flex items-center gap-2">
+            <Badge
+              variant="outline"
+              className="flex items-center gap-1 bg-gray-50 text-gray-700 border-gray-200 px-2 py-0.5 text-xs"
+            >
+              <Clock className="h-3 w-3" />
+              {service.duration} phút
+            </Badge>
+            <span className="ml-auto text-red-500 opacity-0 transition-opacity group-hover:opacity-100">
+              <ChevronRight className="h-4 w-4" />
+            </span>
+          </div>
+        </div>
       </div>
-      <ArrowRight size={16} className="hidden group-hover:flex" />
     </NavLink>
   );
 };
