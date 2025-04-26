@@ -44,7 +44,7 @@ export const ViewRegisterGarage = () => {
                 index={index}
                 key={item._id}
                 id={item._id}
-                // image={item.user[0].avatar}
+                image={item.user[0].avatar}
                 username={item.user[0].name}
                 garage={item.name}
                 address={item.address}

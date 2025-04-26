@@ -107,17 +107,14 @@ export function GarageCard({
 
         <CardContent className="p-0">
           <div className="relative">
-            <Swiper className="aspect-[1.3]">
+            <Swiper className="aspect-[1.1] md:aspect-[1.5]">
               {imgs?.map((img, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative">
-                    <img
-                      src={img || "/placeholder.svg"}
-                      className="w-full h-full object-cover"
-                      alt="Garage image"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  </div>
+                  <img
+                    src={img || "/placeholder.svg"}
+                    className="w-full h-full object-cover"
+                    alt="Garage image"
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -178,7 +175,7 @@ export function GarageCard({
                 className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 px-3 py-1.5 flex items-center gap-1.5"
               >
                 <CheckCircle className="h-4 w-4 text-red-500" />
-                <span className="font-medium">Verified Pro</span>
+                <span className="font-medium">Pro</span>
               </Badge>
             </div>
 

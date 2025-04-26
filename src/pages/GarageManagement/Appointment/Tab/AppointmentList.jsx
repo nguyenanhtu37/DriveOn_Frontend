@@ -188,6 +188,7 @@ export const AppointmentList = () => {
             end={appointment.end}
             serviceName={appointment.service.map((s) => s.name).join(", ")}
             vehicle={appointment.vehicle.carName}
+            avatar={appointment.user.avatar}
           />
         ))}
       </div>
