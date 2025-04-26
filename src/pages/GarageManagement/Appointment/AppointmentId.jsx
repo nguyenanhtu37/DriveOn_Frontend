@@ -30,7 +30,6 @@ import {
   Phone,
   RectangleHorizontal,
   Settings,
-  User,
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -392,32 +391,6 @@ const AppointmentId = () => {
 
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <User className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500">Salesperson</div>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage
-                            src={appointment.salesAvatar}
-                            alt={appointment.salesperson}
-                          />
-                          <AvatarFallback>
-                            {appointment.salesperson
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium">
-                          {appointment.salesperson}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <FileText className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
@@ -456,26 +429,24 @@ const AppointmentId = () => {
                               name="updatedEndTime"
                               control={control}
                               render={({ field }) => (
-                                <>
-                                  <Input
-                                    id=""
-                                    type="datetime-local"
-                                    value={
-                                      field.value
-                                        ? format(
-                                            new Date(field.value),
-                                            "yyyy-MM-dd'T'HH:mm"
-                                          )
-                                        : ""
-                                    }
-                                    onChange={(e) =>
-                                      field.onChange(e.target.value || null)
-                                    }
-                                    min={new Date(appointment.end)
-                                      .toISOString()
-                                      .slice(0, 16)}
-                                  />
-                                </>
+                                <Input
+                                  id=""
+                                  type="datetime-local"
+                                  value={
+                                    field.value
+                                      ? format(
+                                          new Date(field.value),
+                                          "yyyy-MM-dd'T'HH:mm"
+                                        )
+                                      : ""
+                                  }
+                                  onChange={(e) =>
+                                    field.onChange(e.target.value || null)
+                                  }
+                                  min={new Date(appointment.end)
+                                    .toISOString()
+                                    .slice(0, 16)}
+                                />
                               )}
                             />
                           </div>
@@ -487,19 +458,17 @@ const AppointmentId = () => {
                               name="nextMaintenance"
                               control={control}
                               render={({ field }) => (
-                                <>
-                                  <Input
-                                    id=""
-                                    type="datetime-local"
-                                    value={field.value ?? ""}
-                                    onChange={(e) =>
-                                      field.onChange(e.target.value || null)
-                                    }
-                                    min={new Date(appointment.end)
-                                      .toISOString()
-                                      .slice(0, 16)}
-                                  />
-                                </>
+                                <Input
+                                  id=""
+                                  type="datetime-local"
+                                  value={field.value ?? ""}
+                                  onChange={(e) =>
+                                    field.onChange(e.target.value || null)
+                                  }
+                                  min={new Date(appointment.end)
+                                    .toISOString()
+                                    .slice(0, 16)}
+                                />
                               )}
                             />
                           </div>

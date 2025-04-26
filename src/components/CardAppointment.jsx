@@ -39,12 +39,9 @@ import { useNavigate, useParams } from "react-router-dom";
 const CardAppointment = ({
   id,
   clientName,
-  clientImage,
   serviceName,
   start,
   end,
-  duration,
-  location,
   status,
   notes,
   vehicle,
@@ -200,36 +197,38 @@ const CardAppointment = ({
         >
           View Details
         </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[180px]">
-            {status !== "confirmed" && (
-              <DropdownMenuItem onClick={() => handleConfirm()}>
-                <Check className="mr-2 h-4 w-4 text-green-500" />
-                <span>Accepted</span>
-              </DropdownMenuItem>
-            )}
-            {status !== "completed" && (
-              <DropdownMenuItem onClick={() => handleComplete()}>
-                <Check className="mr-2 h-4 w-4 text-blue-500" />
-                <span>Mark Completed</span>
-              </DropdownMenuItem>
-            )}
-            {status !== "cancelled" && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleReject()}>
-                  <X className="mr-2 h-4 w-4 text-red-500" />
-                  <span>Reject</span>
+        {status !== "Completed" && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[180px]">
+              {status !== "confirmed" && (
+                <DropdownMenuItem onClick={() => handleConfirm()}>
+                  <Check className="mr-2 h-4 w-4 text-green-500" />
+                  <span>Accepted</span>
                 </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              )}
+              {status !== "completed" && (
+                <DropdownMenuItem onClick={() => handleComplete()}>
+                  <Check className="mr-2 h-4 w-4 text-blue-500" />
+                  <span>Mark Completed</span>
+                </DropdownMenuItem>
+              )}
+              {status !== "cancelled" && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => handleReject()}>
+                    <X className="mr-2 h-4 w-4 text-red-500" />
+                    <span>Reject</span>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </CardFooter>
     </Card>
   );

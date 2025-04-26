@@ -173,7 +173,7 @@ export const PaymentDialog = ({ open, setOpen }) => {
               <Separator />
             </>
           ) : (
-            <div className="flex items-center justify-center h-screen">
+            <div className="flex items-center justify-center ">
               <h1 className="text-2xl font-semibold text-gray-500">
                 No garages found
               </h1>
@@ -191,7 +191,7 @@ export const PaymentDialog = ({ open, setOpen }) => {
             <Button
               className="bg-red-500 hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-red-200"
               type="submit"
-              disabled={garages.data.length === 0}
+              disabled={!garages.length > 0}
               onClick={handleCreatePayment}
             >
               Pay {formatCurrency(selectedPlan.price)}

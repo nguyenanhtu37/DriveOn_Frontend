@@ -7,10 +7,11 @@ import {
 import { useGetMyGarage } from "@/app/stores/entity/garage";
 import { MapPin, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Badge } from "../ui/badge";
 
-export const GarageItem = ({ id, name, address, image, rating }) => (
+export const GarageItem = ({ id, name, address, image, rating, isPro }) => (
   <Link to={`/garageManagement/${id}`}>
-    <div className="w-full p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div className=" relative w-full p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] border border-gray-100 dark:border-gray-700 overflow-hidden">
       <div className="flex items-start gap-4">
         {/* Image with gradient overlay */}
         <div className="relative min-w-[80px] h-[80px] rounded-lg overflow-hidden">
@@ -43,20 +44,15 @@ export const GarageItem = ({ id, name, address, image, rating }) => (
             <MapPin className="w-3.5 h-3.5" />
             <span className="text-xs">{address}</span>
           </div>
-
-          {/* Services */}
-          {/* <div className="mt-3 flex flex-wrap gap-1">
-            {services.map((service, index) => (
-              <span
-                key={index}
-                className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full"
-              >
-                {service}
-              </span>
-            ))}
-          </div> */}
         </div>
       </div>
+      {isPro && (
+        <div className="absolute top-2 left-2  z-50">
+          <Badge className="bg-red-500 text-white border-none px-2 py-1 text-xs font-medium">
+            PRO
+          </Badge>
+        </div>
+      )}
     </div>
   </Link>
 );
@@ -84,6 +80,7 @@ const DialogMyGarage = () => {
               address={item.address}
               image={item.interiorImages[0]}
               rating={item.ratingAverage}
+              isPro={item.tag === "pro"}
             />
           ))}
         </div>

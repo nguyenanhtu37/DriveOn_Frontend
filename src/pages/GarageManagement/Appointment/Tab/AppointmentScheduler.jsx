@@ -20,6 +20,7 @@ export const AppointmentScheduler = () => {
         title: appointment.service[0].name,
         start: new Date(appointment.start),
         end: new Date(appointment.end),
+        status: appointment.status,
       };
     });
     setAppointments(formattedAppointments);

@@ -46,3 +46,24 @@ export const cancelAppointment = async (appointmentId) => {
   const response = await axios.put(`/appointment/${appointmentId}/cancel`);
   return response.data;
 };
+
+export const getNextMaintenance = async (garageId) => {
+  const response = await axios.get(
+    `/appointment/garage/${garageId}/next-maintenance`
+  );
+  return response.data;
+};
+
+export const createAppointmentReminder = async (data) => {
+  const response = await axios.post("/appointment/create-by-staff", data);
+  return response.data;
+};
+
+export const isCalledAppointment = async (appointmentId) => {
+  await axios.put(`/appointment/isCalled/${appointmentId}`);
+};
+
+export const createAppointmentByStaff = async (data) => {
+  const response = await axios.post("/appointment/create-by-staff", data);
+  return response.data;
+};
