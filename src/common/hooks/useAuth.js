@@ -73,7 +73,7 @@ export const useAuth = () => {
       let deviceToken = null;
       try {
         deviceToken = await requestPermissionAndGetToken();
-        // console.log("Device token: ", deviceToken);
+        console.log("Device token: ", deviceToken);
       } catch (error) {
         console.error("Failed to get device token: ", error);
       };

@@ -42,9 +42,6 @@ export const requestPermissionAndGetToken = async () => {
   }
 };
 
-export const onMessageListener = () =>
-  new Promise((resolve, reject) => {
-    onMessage(messaging, (payload) => {
-      resolve(payload);
-    }, reject);
-  });
+export const onMessageListener = (callback) => {
+  onMessage(messaging, callback); 
+};

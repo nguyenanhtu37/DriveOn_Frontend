@@ -6,7 +6,7 @@ import { onMessageListener } from "../firebase-messaging.js";
 import { ToastContainer, toast as reactToast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "./components/Modal";
-import CustomToast from "./components/CustomToast"; 
+import CustomToast from "./components/CustomToast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,48 +22,49 @@ function App() {
   const [modalContent, setModalContent] = useState({ title: "", body: "" });
 
   useEffect(() => {
-    onMessageListener()
-      .then((payload) => {
-        console.log("New foreground message received:", payload);
+    const handleMessage = (payload) => {
+      console.log("New foreground message received:", payload);
 
-        const { title, body } = payload.notification || {};
+      const { title, body } = payload.notification || {};
+      const notificationId = payload.messageId || `${title}-${body}`;
 
-        if (!title || !body) {
-          console.warn("No notification payload found");
-          return;
+      if (!title || !body) {
+        console.warn("No notification payload found");
+        return;
+      }
+
+      reactToast.info(
+        <CustomToast
+          title={title}
+          body={body}
+          details={{ name: "Nguyễn Văn A", vehicle: "Toyota Camry", location: "Hà Nội" }}
+        />,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          icon: false,
+          style: {
+            background: "transparent",
+            boxShadow: "none",
+            padding: 0,
+          },
         }
+      );
 
-        reactToast.info(
-          <CustomToast
-            title={title}
-            body={body}
-            details={{ name: "Nguyễn Văn A", vehicle: "Toyota Camry", location: "Hà Nội" }}
-          />,
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "colored",
-            icon: false,
-            style: {
-              background: "transparent",
-              boxShadow: "none",
-              padding: 0,
-            },
-          }
-        );
+      if (Notification.permission === "granted") {
+        new Notification(title, {
+          body: body,
+          icon: "https://res.cloudinary.com/dt2akiv9y/image/upload/v1743097602/unnamed_ewf2fc.webp",
+        });
+      }
+    };
 
-        if (Notification.permission === "granted") {
-          new Notification(title, {
-            body: body,
-            icon: 'https://res.cloudinary.com/dt2akiv9y/image/upload/v1743097602/unnamed_ewf2fc.webp',
-          });
-        }
-      })
-      .catch((err) => console.error("Failed to receive foreground message:", err));
+    onMessageListener(handleMessage);
   }, []);
 
   const handleCloseModal = () => {
@@ -81,7 +82,7 @@ function App() {
       <ToastContainer
         position="top-right"
         autoClose={5000}
-        hideProgressBar={true}
+        hideProgressBar
         newestOnTop
         closeOnClick={false}
         pauseOnHover
