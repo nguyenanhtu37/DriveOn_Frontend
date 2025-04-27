@@ -1,7 +1,8 @@
 import useFavorites from "@/common/hooks/useFavorites";
-import { GarageCard } from "@/components/Card";
+import FavoriteGarageCard from "./FavouriteCard";
 import { Loader2, Heart } from "lucide-react";
 import { useUserStore } from "@/app/stores/view/user";
+import NavbarMobile from "@/components/NavbarMobile";
 
 const FavoriteGarages = () => {
   const user = useUserStore((state) => state.user);
@@ -9,20 +10,26 @@ const FavoriteGarages = () => {
 
   const { favorites, loading, error, removeFromFavorites } = useFavorites(userId);
 
-  console.log("Favorites:", favorites); // Debug
+  // Đảm bảo dữ liệu garage hợp lệ, tránh lỗi khi thiếu trường
+  const safeFavorites = Array.isArray(favorites)
+    ? favorites.filter(
+      (garage) =>
+        garage &&
+        garage._id &&
+        garage.name &&
+        garage.address
+    )
+    : [];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto mb-10">
-        <h2 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-          Your Favorite Garages
-        </h2>
-        <p className="mt-3 text-lg text-gray-600">
-          Manage your favorite garages with ease.
-        </p>
-      </div>
-
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 flex flex-col pb-20 md:pb-0">
+      <NavbarMobile />
+      <div className="flex-1 w-full max-w-7xl mx-auto py-8 px-2 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 tracking-tight text-center">
+            Your Favorite Garages
+          </h2>
+        </div>  
         {loading && (
           <div className="flex flex-col items-center justify-center h-64 bg-white rounded-lg shadow-sm">
             <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
@@ -43,8 +50,8 @@ const FavoriteGarages = () => {
         )}
 
         {!loading && !error && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
-           {favorites.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+            {safeFavorites.length === 0 ? (
               <div className="text-center py-12">
                 <Heart className="h-12 w-12 text-gray-400 mx-auto" />
                 <p className="mt-4 text-xl font-semibold text-gray-700">
@@ -55,15 +62,16 @@ const FavoriteGarages = () => {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {favorites.map((garage) => (
-                  <GarageCard
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                {safeFavorites.map((garage) => (
+                  <FavoriteGarageCard
                     key={garage._id}
                     id={garage._id}
                     garageName={garage.name}
                     address={garage.address}
                     phone={garage.phone}
                     imgs={Array.isArray(garage.interiorImages) ? garage.interiorImages : []}
+                    rating={garage.ratingAverage || garage.rating || 0}
                     isFavorited={true}
                     onRemove={() => removeFromFavorites(garage._id)}
                   />
