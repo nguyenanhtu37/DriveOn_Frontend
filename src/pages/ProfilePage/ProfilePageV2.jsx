@@ -19,6 +19,7 @@ import { userLogout } from "@/app/stores/view/user";
 import { useNavigate } from "react-router-dom";
 import { RegisterGarage } from "./Tab/RegisterGarage/RegisterGarage";
 import { MyGarage } from "./Tab/MyGarage/MyGarage";
+import NavbarMobile from "@/components/NavbarMobile"; // Import NavbarMobile
 
 export const ProfilePageV2 = () => {
   const profile = useGetProfile();
@@ -64,7 +65,7 @@ export const ProfilePageV2 = () => {
   if (profile.isLoading) return <Loading />;
   return (
     <div className="min-h-screen bg-white">
-      <div className=" mx-auto py-8 pt-4 px-4">
+      <div className="mx-auto py-8 pt-4 px-4">
         <Button
           variant="outline"
           className="rounded-full p-2 size-9 mb-2"
@@ -124,9 +125,9 @@ export const ProfilePageV2 = () => {
                 <PopoverTrigger asChild>
                   <Button
                     size="sm"
-                    className="bg-white  hover:bg-gray-100 border border-gray-300 w-fit flex items-center justify-center min-w-0"
+                    className="bg-white hover:bg-gray-100 border border-gray-300 w-fit flex items-center justify-center min-w-0"
                   >
-                    <EllipsisVertical color="black" className="h-4 w-4 " />
+                    <EllipsisVertical color="black" className="h-4 w-4" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
@@ -153,7 +154,6 @@ export const ProfilePageV2 = () => {
               >
                 Vehicles
               </TabsTrigger>
-
               <TabsTrigger
                 value="appointments"
                 className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
@@ -197,6 +197,8 @@ export const ProfilePageV2 = () => {
           </Tabs>
         </div>
       </div>
+      {/* Mobile Navbar */}
+      <NavbarMobile />
     </div>
   );
 };
