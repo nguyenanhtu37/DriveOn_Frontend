@@ -26,7 +26,7 @@ export const requestPermissionAndGetToken = async () => {
       });
 
       if (currentToken) {
-        // console.log("Device token:", currentToken);
+        console.log("Device token:", currentToken);
         return currentToken;
       } else {
         console.warn("No registration token available. Request permission to generate one.");
