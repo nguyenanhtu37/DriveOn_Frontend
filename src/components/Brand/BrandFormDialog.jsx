@@ -92,7 +92,7 @@ const BrandFormDialog = ({ onSubmit, onClose, initialData }) => {
           <button type="button" onClick={onClose} className="text-gray-500">
             Cancel
           </button>
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+          <button type="submit" className="bg-black text-white px-4 py-2 rounded hover:bg-gray-900 transition">
             Save
           </button>
         </div>

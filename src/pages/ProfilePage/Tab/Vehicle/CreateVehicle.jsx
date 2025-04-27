@@ -126,7 +126,7 @@ export const CreateVehicle = () => {
                 <FormItem>
                   <FormLabel>Car Plate</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Car Plate" {...field} />
+                    <Input placeholder="Enter Car Plate (Examples: 30A-12345)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
