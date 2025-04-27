@@ -18,7 +18,7 @@ export const requestPermissionAndGetToken = async () => {
   try {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
-      // console.log("Notification permission granted.");
+      console.log("Notification permission granted.");
 
       const currentToken = await getToken(messaging, {
         vapidKey: "BM46UVyYJv-wL0SXWynBC4sznSxiZ9Yh954DC3kQvqjoWj6hg9Wx6Hbpi4mC_oKH3wGM9d8Yowi5hD9qcoTSIEo",
