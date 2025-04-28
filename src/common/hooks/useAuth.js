@@ -47,13 +47,13 @@ export const useAuth = () => {
 
       // ✅ Điều hướng
       if (roles.some((userRole) => userRole.roleName === "admin")) {
-        navigate("/admin");
+        return navigate("/admin");
       }
       if (roles.some((userRole) => userRole.roleName === "staff")) {
-        navigate(`/garageManagement/${response.user.garageList[0]._id}`);
+        return navigate(`/garageManagement/${response.user.garageList[0]._id}`);
       } else {
         console.log("➡️ Redirecting to homepage...");
-        navigate("/");
+        return navigate("/");
       }
     } catch (err) {
       const errorMessage =

@@ -107,7 +107,9 @@ export const ViewExitsGarage = () => {
                   <TableCell>{garage.phone}</TableCell>
                   <TableCell>{garage.email}</TableCell>
                   <TableCell>{garage.status.join(", ")}</TableCell>
-                  <TableCell>{garage.ratingAverage}</TableCell>
+                  <TableCell className="text-end">
+                    {garage.ratingAverage}⭐
+                  </TableCell>
                   <TableCell className="text-center">
                     <Switch
                       checked={garage.status.includes("enabled")}
