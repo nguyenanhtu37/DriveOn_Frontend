@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
 import { useGetMyGarage } from "@/app/stores/entity/garage";
 import { MapPin, Star } from "lucide-react";
@@ -11,7 +10,7 @@ import { Badge } from "../ui/badge";
 
 export const GarageItem = ({ id, name, address, image, rating, isPro }) => (
   <Link to={`/garageManagement/${id}`}>
-    <div className=" relative w-full p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div className="relative w-full p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] border border-gray-100 dark:border-gray-700 overflow-hidden">
       <div className="flex items-start gap-4">
         {/* Image with gradient overlay */}
         <div className="relative min-w-[80px] h-[80px] rounded-lg overflow-hidden">
@@ -47,7 +46,7 @@ export const GarageItem = ({ id, name, address, image, rating, isPro }) => (
         </div>
       </div>
       {isPro && (
-        <div className="absolute top-2 left-2  z-50">
+        <div className="absolute top-2 left-2 z-50">
           <Badge className="bg-red-500 text-white border-none px-2 py-1 text-xs font-medium">
             PRO
           </Badge>
@@ -57,32 +56,33 @@ export const GarageItem = ({ id, name, address, image, rating, isPro }) => (
   </Link>
 );
 
-const DialogMyGarage = () => {
+const DialogMyGarage = ({ open, onOpenChange }) => {
   const myGarage = useGetMyGarage();
 
-  if (myGarage.isLoading || !myGarage?.data?.length) return null;
+  if (myGarage.isLoading) return null;
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div className="text-sm w-full px-3 py-2 text-[#222222] ease-in-out hover:bg-[#f7f6f6] font-roboto cursor-pointer">
-          Garage
-        </div>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto px-3">
         <DialogTitle>My garages</DialogTitle>
         <div className="w-full flex flex-col gap-y-5 mt-2">
-          {myGarage.data.map((item) => (
-            <GarageItem
-              key={item._id}
-              id={item._id}
-              name={item.name}
-              address={item.address}
-              image={item.interiorImages[0]}
-              rating={item.ratingAverage}
-              isPro={item.tag === "pro"}
-            />
-          ))}
+          {myGarage.data && myGarage.data.length > 0 ? (
+            myGarage.data.map((item) => (
+              <GarageItem
+                key={item._id}
+                id={item._id}
+                name={item.name}
+                address={item.address}
+                image={item.interiorImages[0]}
+                rating={item.ratingAverage}
+                isPro={item.tag === "pro"}
+              />
+            ))
+          ) : (
+            <div className="text-center text-gray-500 py-8">
+              You don't have any garages yet.
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

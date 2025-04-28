@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/app/stores/view/user";
 import { useGeolocation } from "@/common/hooks/useGeolocation";
 import { fetchRescueGarages } from "@/app/services/emergency";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import "@/pages/HomePage/GarageMap/leaflet.css";
 import L from "leaflet";
 import Loader from "@/components/Emergency/Loader";
@@ -10,6 +10,7 @@ import GarageCard from "@/components/Emergency/GarageCard";
 import Navbar from "@/components/Emergency/Navbar";
 import osm from "@/constants/osm-provider";
 import PopupGarage from "@/components/PopupGarage";
+import NavbarMobile from "@/components/NavbarMobile";
 
 const garageIcon = L.icon({
   iconUrl: "/garageMarker.png",
@@ -27,6 +28,18 @@ const userIcon = L.icon({
 
 const locationDanang = [16.047079, 108.20623];
 
+// Fetch driving route from OSRM API
+async function fetchRoute(from, to) {
+  // from: [lat, lng], to: [lat, lng]
+  const url = `https://router.project-osrm.org/route/v1/driving/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.routes && data.routes.length > 0) {
+    return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+  }
+  return null;
+}
+
 const RescueGarages = () => {
   const { location } = useUserStore();
   const [geoError, setGeoError] = useState(null);
@@ -34,7 +47,8 @@ const RescueGarages = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const mapRef = useRef(null);
-
+  const [directionCoords, setDirectionCoords] = useState(null);
+  const [selectedGarage, setSelectedGarage] = useState(null);
   useGeolocation();
 
   useEffect(() => {
@@ -131,64 +145,109 @@ const RescueGarages = () => {
   const [lat, lng] = location || locationDanang;
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
-      <div className="px-2 md:px-10 mt-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
-          {/* Map Section */}
-          <div className="sticky top-24 z-10 h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)] w-full">
-            <MapContainer
-              ref={mapRef}
-              center={[lat, lng]}
-              zoom={13}
-              scrollWheelZoom={true}
-              style={{ width: "100%", height: "100%" }}
-            >
-              <TileLayer
-                attribution={osm.maptiler.attribution}
-                url={osm.maptiler.url}
-              />
-              {location && (
-                <Marker position={[lat, lng]} icon={userIcon}>
-                  <Popup>
-                    <div className="text-center text-sm font-semibold text-gray-700 px-2 py-4">
-                      Your Location
-                    </div>
-                  </Popup>
-                </Marker>
-              )}
-              {garages.map((garage) => (
-                <Marker
-                  key={garage._id}
-                  position={[
-                    garage.location.coordinates[1],
-                    garage.location.coordinates[0],
-                  ]}
-                  icon={garageIcon}
+      <NavbarMobile />
+      <div className="flex-1 flex flex-col md:flex-row gap-4 md:gap-8 px-0 md:px-10 mt-2 md:mt-4">
+        {/* Map Section */}
+        <div className="w-full md:w-1/2 sticky top-20 z-10 h-[300px] xs:h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)]">
+          <MapContainer
+            ref={mapRef}
+            center={[lat, lng]}
+            zoom={13}
+            scrollWheelZoom={true}
+            style={{ width: "100%", height: "100%", borderRadius: "1rem" }}
+            className="shadow-lg"
+          >
+            <TileLayer
+              attribution={osm.maptiler.attribution}
+              url={osm.maptiler.url}
+            />
+            {location && (
+              <Marker position={[lat, lng]} icon={userIcon}>
+                <Popup>
+                  <div className="text-center text-sm font-semibold text-gray-700 px-2 py-4">
+                    Your Location
+                  </div>
+                </Popup>
+              </Marker>
+            )}
+            {garages.map((garage) => (
+              <Marker
+                key={garage._id}
+                position={[
+                  garage.location.coordinates[1],
+                  garage.location.coordinates[0],
+                ]}
+                icon={garageIcon}
+                eventHandlers={{
+                  click: async () => {
+                    setSelectedGarage(garage);
+                    // Show direction when clicking marker
+                    const route = await fetchRoute(
+                      [lat, lng],
+                      [garage.location.coordinates[1], garage.location.coordinates[0]]
+                    );
+                    setDirectionCoords(
+                      route || [[lat, lng], [garage.location.coordinates[1], garage.location.coordinates[0]]]
+                    );
+                  },
+                }}
+              >
+                <Popup>
+                  <PopupGarage
+                    id={garage._id}
+                    garageName={garage.name}
+                    address={garage.address}
+                    openDays={garage.operating_days}
+                    imgs={garage.interiorImages}
+                    phone={garage.phone}
+                    location={garage.location.coordinates}
+                  />
+                </Popup>
+              </Marker>
+            ))}
+            {/* Polyline for directions */}
+            {directionCoords && (
+              <>
+                <Polyline
+                  positions={directionCoords}
+                  pathOptions={{ color: "#f43f5e", weight: 6, opacity: 0.85 }}
                   eventHandlers={{
-                    click: () => setSelectedGarage(garage),
+                    click: () => {
+                      setDirectionCoords(null);
+                      setSelectedGarage(null);
+                    },
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 16,
+                    right: 16,
+                    zIndex: 1000,
                   }}
                 >
-                  <Popup>
-                    <PopupGarage
-                      id={garage._id}
-                      garageName={garage.name}
-                      address={garage.address}
-                      openDays={garage.operating_days}
-                      imgs={garage.interiorImages}
-                      phone={garage.phone}
-                      location={garage.location.coordinates}
-                    />
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          </div>
-
-          {/* Garage List Section */}
-          <div className="overflow-y-auto h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)]">
+                  <button
+                    className="bg-white border border-gray-300 rounded px-3 py-1 text-sm text-gray-700 shadow hover:bg-red-500 hover:text-white transition"
+                    onClick={() => {
+                      setDirectionCoords(null);
+                      setSelectedGarage(null);
+                    }}
+                  >
+                    Clear Direction
+                  </button>
+                </div>
+              </>
+            )}
+          </MapContainer>
+        </div>
+  
+        {/* Garage List Section */}
+        <div className="w-full md:w-1/2 flex flex-col">
+          <div className="overflow-y-auto h-[320px] xs:h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)] px-2 md:px-0">
             {garages.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 gap-4 md:gap-6">
                 {garages.map((garage) => (
                   <GarageCard
                     key={garage._id}
@@ -205,12 +264,23 @@ const RescueGarages = () => {
                     distance={garage.distance}
                     hasEmergency={garage.hasEmergency}
                     description={garage.description}
+                    onGetDirections={async (garageLocation) => {
+                      setSelectedGarage(garageLocation);
+                      // Fetch driving route from OSRM
+                      const route = await fetchRoute(
+                        [lat, lng],
+                        [garageLocation[1], garageLocation[0]]
+                      );
+                      setDirectionCoords(
+                        route || [[lat, lng], [garageLocation[1], garageLocation[0]]]
+                      );
+                    }}
                   />
                 ))}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-full">
-                <h1 className="text-2xl font-semibold text-gray-500">
+                <h1 className="text-2xl font-semibold text-gray-500 text-center">
                   No garages found within 50km
                 </h1>
               </div>
