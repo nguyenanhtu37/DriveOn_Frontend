@@ -191,7 +191,7 @@ export const PaymentDialog = ({ open, setOpen }) => {
             <Button
               className="bg-red-500 hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-red-200"
               type="submit"
-              disabled={!garages.length > 0}
+              disabled={!garage.length > 0}
               onClick={handleCreatePayment}
             >
               Pay {formatCurrency(selectedPlan.price)}

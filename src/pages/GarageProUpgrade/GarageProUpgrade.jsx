@@ -157,38 +157,6 @@ export const GarageProUpgrade = () => {
               viewport={{ once: true, amount: 0.3 }}
               className="grid gap-6 lg:grid-cols-2 lg:gap-12"
             >
-              {/* {subscriptionData.map((item, index) => (
-                <motion.div key={index} variants={item}>
-                  <Card className="border-2 border-muted hover:border-gray-300 transition-all duration-300 hover:shadow-md h-full">
-                    <CardHeader>
-                      <CardTitle>{item.name}</CardTitle>
-                      <CardDescription>Current plan</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-3xl font-bold">
-                        {formatCurrency(item.price)}
-                      </div>
-                      <ul className="mt-6 space-y-2">
-                        {item.description.split(",").map((desc, index) => (
-                          <li key={index} className="flex items-center gap-2">
-                            <Check className="h-4 w-4 text-green-500" />
-                            <span>{desc}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                    <CardFooter>
-                      <Button
-                        variant="outline"
-                        className="w-full hover:bg-gray-100 transition-colors duration-300"
-                      >
-                        Current Plan
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </motion.div>
-              ))} */}
-
               <motion.div variants={item}>
                 <Card className="border-2 border-muted hover:border-gray-300 transition-all duration-300 hover:shadow-md h-full">
                   <CardHeader>
