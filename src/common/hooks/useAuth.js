@@ -93,7 +93,7 @@ export const useAuth = () => {
 
       // ✅ Điều hướng
       if (roles.some((userRole) => userRole.roleName === "admin")) {
-        navigate("/adminDashboard");
+        navigate("/admin");
       }
       if (roles.some((userRole) => userRole.roleName === "staff")) {
         navigate(`/garageManagement/${response.user.garageList[0]._id}`);

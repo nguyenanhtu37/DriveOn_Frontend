@@ -37,10 +37,12 @@ export const GarageManagementScreenPath = {
 };
 
 export const AdminScreenPath = {
-  BrandList: "/adminDashboard/brandList",
-  AdminDashBoard: "/adminDashboard/",
+  BrandList: "brandList",
+  Admin: "/admin/",
   ViewRegisterGarage: "viewRegisterGarage",
   ViewRegisterGarageDetail: "viewRegisterGarage/:id",
   ViewExitsGarage: "viewExitsGarage",
   viewServiceSystem: "viewServiceSystem",
+  UserManagement: "userManagement",
+  Dashboard: "dashboard",
 };

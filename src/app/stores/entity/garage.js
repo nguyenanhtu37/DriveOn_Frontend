@@ -184,14 +184,14 @@ export const useGetRegisterGarageDetail = (id) => {
   };
 };
 
-export const useGetGarageExits = () => {
+export const useGetGarageExits = ({ page, keySearch }) => {
   const query = useQuery({
-    queryKey: ["garageExits"],
-    queryFn: garageService.viewGarageExits,
+    queryKey: ["garageExits", page, keySearch],
+    queryFn: () => garageService.viewGarageExits({ page, keySearch }),
   });
   return {
     ...query,
-    data: query.data ?? [],
+    data: query.data ?? {},
     meta: query.data?.meta ?? null,
   };
 };

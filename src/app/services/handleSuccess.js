@@ -14,7 +14,7 @@ const handleSuccess = async (credentialResponse) => {
 
   // ✅ Điều hướng
   if (roles.some((userRole) => userRole.roleName === "admin")) {
-    window.location.href("/adminDashboard");
+    window.location.href("/admin");
   }
   if (roles.some((userRole) => userRole.roleName === "staff")) {
     window.location.href(`/garageManagement/${result.user.garageList[0]._id}`);

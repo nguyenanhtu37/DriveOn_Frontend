@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import { SidebarGarage } from "./components/SidebarGarage";
-import { Header } from "../AdminDashboard/components/Header";
+import { Header } from "../LayoutAdmin/components/Header";
 
 export const GarageManagement = () => {
   return (

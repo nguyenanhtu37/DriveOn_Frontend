@@ -33,8 +33,10 @@ export const rejectGarage = async (id) => {
   return response.data;
 };
 
-export const viewGarageExits = async () => {
-  const response = await axios.get("garage/view-all-garages-by-admin");
+export const viewGarageExits = async ({ page, keySearch }) => {
+  const response = await axios.get("garage/view-all-garages-by-admin", {
+    params: { page, keySearch },
+  });
   return response.data;
 };
 
