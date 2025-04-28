@@ -41,182 +41,199 @@ import { Feedback } from "@/pages/GarageManagement/Feedback/Feedback";
 import { UserManagement } from "@/pages/LayoutAdmin/UserManagement/UserManagement";
 import LayoutAdmin from "@/pages/LayoutAdmin/LayoutAdmin";
 import { Dashboard } from "@/pages/LayoutAdmin/Dashboard/Dashboard";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const router = createBrowserRouter(
   [
     {
-      path: AbsoluteScreenPath.Entry,
-      element: <MainLayout />,
-      children: [
-        { index: true, element: <HomePage /> },
-        {
-          path: AbsoluteScreenPath.GarageDetail,
-          element: <GarageDetailPage />,
-        },
-      ],
-    },
-
-    { path: AbsoluteScreenPath.Login, element: <Login /> },
-    { path: AbsoluteScreenPath.ForgotPassword, element: <ForgotPassword /> },
-    { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
-    { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
-    {
-      element: (
-        <ProtectedRoute
-          role={["carowner", "admin"]}
-          directTo={AbsoluteScreenPath.Login}
-        />
-      ),
-      children: [
-        { path: AbsoluteScreenPath.ProfilePage, element: <ProfilePageV2 /> },
-        {
-          path: AbsoluteScreenPath.FavoriteGarages,
-          element: <FavoriteGarages />,
-        },
-      ],
-    },
-    { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
-    {
-      path: AbsoluteScreenPath.GarageProUpgrade,
-      element: <GarageProUpgrade />,
-    },
-    { path: AbsoluteScreenPath.Emergency, element: <EmergencyGarageScreen /> },
-    {
-      path: AbsoluteScreenPath.VehicleDetail,
-      element: <VehicleDetailsPage />,
-    },
-    { path: AbsoluteScreenPath.AddVehiclePage, element: <AddVehiclePage /> },
-    {
-      element: (
-        <ProtectedRoute
-          role={["carowner", "manager"]}
-          directTo={AbsoluteScreenPath.Login}
-        />
-      ),
+      element: <ScrollToTop />,
       children: [
         {
-          path: AbsoluteScreenPath.GarageRegistrationPage,
-          element: <GarageRegistrationPage />,
-        },
-      ],
-    },
-
-    //Admin route
-    {
-      path: AdminScreenPath.Admin,
-      element: <ProtectedRoute role={["admin"]} />,
-      children: [
-        {
-          element: <LayoutAdmin />,
+          path: AbsoluteScreenPath.Entry,
+          element: <MainLayout />,
           children: [
+            { index: true, element: <HomePage /> },
             {
-              index: true,
-              element: <Navigate to={AdminScreenPath.Dashboard} />,
-            },
-            {
-              path: AdminScreenPath.Dashboard,
-              element: <Dashboard />,
-            },
-            {
-              path: AdminScreenPath.BrandList,
-              element: <BrandList />,
-            },
-            {
-              path: AdminScreenPath.ViewRegisterGarage,
-              element: <ViewRegisterGarage />,
-            },
-            {
-              path: AdminScreenPath.ViewRegisterGarageDetail,
-              element: <ViewRegisterGarageDetail />,
-            },
-            {
-              path: AdminScreenPath.ViewExitsGarage,
-              element: <ViewExitsGarage />,
-            },
-            {
-              path: AdminScreenPath.viewServiceSystem,
-              element: <ViewServiceSystem />,
-            },
-            {
-              path: AdminScreenPath.UserManagement,
-              element: <UserManagement />,
+              path: AbsoluteScreenPath.GarageDetail,
+              element: <GarageDetailPage />,
             },
           ],
         },
-      ],
-    },
-
-    //Garage Management route
-    {
-      path: GarageManagementScreenPath.GarageManagement,
-      element: <ProtectedRoute role={["manager", "staff"]} />,
-      children: [
+        { path: AbsoluteScreenPath.Login, element: <Login /> },
         {
-          element: <GarageManagement />,
+          path: AbsoluteScreenPath.ForgotPassword,
+          element: <ForgotPassword />,
+        },
+        { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
+        { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
+        {
+          element: (
+            <ProtectedRoute
+              role={["carowner", "admin"]}
+              directTo={AbsoluteScreenPath.Login}
+            />
+          ),
           children: [
             {
-              index: true,
-              element: <GarageDashboard />,
+              path: AbsoluteScreenPath.ProfilePage,
+              element: <ProfilePageV2 />,
             },
             {
-              path: GarageManagementScreenPath.GarageDashboard,
-              element: <GarageDashboard />,
-            },
-            {
-              path: GarageManagementScreenPath.Appointment,
-              element: <Appointment />,
-            },
-            {
-              path: GarageManagementScreenPath.AppointmentScheduler,
-              element: <AppointmentScheduler />,
-            },
-            {
-              path: GarageManagementScreenPath.AppointmentDetail,
-              element: <AppointmentId />,
-            },
-            {
-              path: GarageManagementScreenPath.Feedback,
-              element: <Feedback />,
-            },
-            {
-              element: <ProtectedRoute role={["manager"]} />,
-              children: [
-                {
-                  path: GarageManagementScreenPath.Staff,
-                  element: <Staff />,
-                },
-              ],
-            },
-            {
-              path: GarageManagementScreenPath.Service,
-              element: <Service />,
-              children: [
-                {
-                  path: GarageManagementScreenPath.ServiceDetail,
-                  element: <ServiceDetail />,
-                },
-                {
-                  path: GarageManagementScreenPath.CreateService,
-                  element: <CreateService />,
-                },
-              ],
-            },
-            {
-              path: GarageManagementScreenPath.CountDownPro,
-              element: <CountdownPage />,
-            },
-            {
-              path: GarageManagementScreenPath.Settings,
-              element: <GarageSetting />,
+              path: AbsoluteScreenPath.FavoriteGarages,
+              element: <FavoriteGarages />,
             },
           ],
         },
-      ],
-    },
+        { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
+        {
+          path: AbsoluteScreenPath.GarageProUpgrade,
+          element: <GarageProUpgrade />,
+        },
+        {
+          path: AbsoluteScreenPath.Emergency,
+          element: <EmergencyGarageScreen />,
+        },
+        {
+          path: AbsoluteScreenPath.VehicleDetail,
+          element: <VehicleDetailsPage />,
+        },
+        {
+          path: AbsoluteScreenPath.AddVehiclePage,
+          element: <AddVehiclePage />,
+        },
+        {
+          element: (
+            <ProtectedRoute
+              role={["carowner", "manager"]}
+              directTo={AbsoluteScreenPath.Login}
+            />
+          ),
+          children: [
+            {
+              path: AbsoluteScreenPath.GarageRegistrationPage,
+              element: <GarageRegistrationPage />,
+            },
+          ],
+        },
 
-    {
-      path: AbsoluteScreenPath.PageNotFound,
-      element: <PageNotFound />,
+        //Admin route
+        {
+          path: AdminScreenPath.Admin,
+          element: <ProtectedRoute role={["admin"]} />,
+          children: [
+            {
+              element: <LayoutAdmin />,
+              children: [
+                {
+                  index: true,
+                  element: <Navigate to={AdminScreenPath.Dashboard} />,
+                },
+                {
+                  path: AdminScreenPath.Dashboard,
+                  element: <Dashboard />,
+                },
+                {
+                  path: AdminScreenPath.BrandList,
+                  element: <BrandList />,
+                },
+                {
+                  path: AdminScreenPath.ViewRegisterGarage,
+                  element: <ViewRegisterGarage />,
+                },
+                {
+                  path: AdminScreenPath.ViewRegisterGarageDetail,
+                  element: <ViewRegisterGarageDetail />,
+                },
+                {
+                  path: AdminScreenPath.ViewExitsGarage,
+                  element: <ViewExitsGarage />,
+                },
+                {
+                  path: AdminScreenPath.viewServiceSystem,
+                  element: <ViewServiceSystem />,
+                },
+                {
+                  path: AdminScreenPath.UserManagement,
+                  element: <UserManagement />,
+                },
+              ],
+            },
+          ],
+        },
+
+        //Garage Management route
+        {
+          path: GarageManagementScreenPath.GarageManagement,
+          element: <ProtectedRoute role={["manager", "staff"]} />,
+          children: [
+            {
+              element: <GarageManagement />,
+              children: [
+                {
+                  index: true,
+                  element: <GarageDashboard />,
+                },
+                {
+                  path: GarageManagementScreenPath.GarageDashboard,
+                  element: <GarageDashboard />,
+                },
+                {
+                  path: GarageManagementScreenPath.Appointment,
+                  element: <Appointment />,
+                },
+                {
+                  path: GarageManagementScreenPath.AppointmentScheduler,
+                  element: <AppointmentScheduler />,
+                },
+                {
+                  path: GarageManagementScreenPath.AppointmentDetail,
+                  element: <AppointmentId />,
+                },
+                {
+                  path: GarageManagementScreenPath.Feedback,
+                  element: <Feedback />,
+                },
+                {
+                  element: <ProtectedRoute role={["manager"]} />,
+                  children: [
+                    {
+                      path: GarageManagementScreenPath.Staff,
+                      element: <Staff />,
+                    },
+                  ],
+                },
+                {
+                  path: GarageManagementScreenPath.Service,
+                  element: <Service />,
+                  children: [
+                    {
+                      path: GarageManagementScreenPath.ServiceDetail,
+                      element: <ServiceDetail />,
+                    },
+                    {
+                      path: GarageManagementScreenPath.CreateService,
+                      element: <CreateService />,
+                    },
+                  ],
+                },
+                {
+                  path: GarageManagementScreenPath.CountDownPro,
+                  element: <CountdownPage />,
+                },
+                {
+                  path: GarageManagementScreenPath.Settings,
+                  element: <GarageSetting />,
+                },
+              ],
+            },
+          ],
+        },
+
+        {
+          path: AbsoluteScreenPath.PageNotFound,
+          element: <PageNotFound />,
+        },
+      ],
     },
   ],
   {

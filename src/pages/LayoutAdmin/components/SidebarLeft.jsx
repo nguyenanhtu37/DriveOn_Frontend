@@ -8,6 +8,7 @@ import {
   User,
   Settings,
   LayoutDashboard,
+  Wallet,
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import {
@@ -73,6 +74,12 @@ const navigationItems = [
         icon: <User className="h-4 w-4" />,
         title: "User Management",
         link: "userManagement",
+        role: ["admin"],
+      },
+      {
+        icon: <Wallet className="h-4 w-4" />,
+        title: "Transaction History",
+        link: "transactionHistory",
         role: ["admin"],
       },
     ],

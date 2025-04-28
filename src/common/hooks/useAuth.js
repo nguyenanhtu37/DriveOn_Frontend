@@ -8,7 +8,7 @@ import {
   resetPassword,
 } from "../../app/services/reset-password";
 import { setUser } from "@/app/stores/view/user";
-import { requestPermissionAndGetToken } from "../../../firebase-messaging.js"
+import { requestPermissionAndGetToken } from "../../../firebase-messaging.js";
 
 const roleData = [
   { _id: "67895c212e7333f925e9c0e9", roleName: "admin" },
@@ -76,7 +76,7 @@ export const useAuth = () => {
         console.log("Device token: ", deviceToken);
       } catch (error) {
         console.error("Failed to get device token: ", error);
-      };
+      }
 
       // const response = await login(credentials); // gọi service login
       const response = await login({ ...credentials, deviceToken }); // gọi service login
@@ -93,14 +93,13 @@ export const useAuth = () => {
 
       // ✅ Điều hướng
       if (roles.some((userRole) => userRole.roleName === "admin")) {
-        navigate("/admin");
+        return navigate("/admin");
       }
       if (roles.some((userRole) => userRole.roleName === "staff")) {
-        navigate(`/garageManagement/${response.user.garageList[0]._id}`);
-      } else {
-        // console.log("➡️ Redirecting to homepage...");
-        navigate("/");
+        return navigate(`/garageManagement/${response.user.garageList[0]._id}`);
       }
+      console.log("➡️ Redirecting to homepage...");
+      return navigate("/");
     } catch (err) {
       const errorMessage =
         err.message ||
