@@ -13,3 +13,5 @@ export * as subscriptionService from "./subscription";
 export * as favoriteService from "./favoriteV2";
 export * as googleService from "./google";
 export * as feedbackServiceV2 from "./feedbackV2";
+export * as transactionService from "./transaction";
+export * as adminService from "./admin";

@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowDownUp, Circle, Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import AddStaff from "./AddStaff";
 import {
   Tooltip,
@@ -25,7 +24,6 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Loading } from "@/components/Loading";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
 
 export const Staff = () => {
   const { garageId } = useParams();
@@ -66,21 +64,7 @@ export const Staff = () => {
               </DialogContent>
             </Dialog>
           </div>
-
-          <div className=" w-7 h-7 flex items-center cursor-pointer hover:opacity-75">
-            <ArrowDownUp size={20} />
-          </div>
         </div>
-
-        {/* <div className=" flex items-center gap-1 px-2 py-1 max-w-[260px] w-full rounded-xl bg-white ring-1 ring-black ">
-          <Search size={16} />
-          <input
-            onChange={handleSearch}
-            type="text"
-            placeholder="Search garage"
-            className=" text-xs w-full h-full bg-transparent px-2 py-1 outline-none"
-          />
-        </div> */}
       </div>
       <Table className=" border border-gray-200 shadow-sm">
         <TableHeader>

@@ -1,6 +1,5 @@
 import { useUserStore } from "@/app/stores/view/user";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 
 import { NavLink } from "react-router-dom";
@@ -33,11 +32,6 @@ export const SidebarItem = ({ icon, title, link, props, role }) => {
       }
       {...props}
     >
-      <div className=" w-4 h-4">
-        {link === undefined && (
-          <ChevronRight size={16} color="#1C1C1C" className=" opacity-20" />
-        )}
-      </div>
       <div className=" flex items-center justify-start gap-x-2">
         <div className=" w-4 h-4">
           {icon && (

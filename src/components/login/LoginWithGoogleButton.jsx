@@ -20,7 +20,7 @@ const LoginWithGoogleButton = () => {
         });
         let roles = data.user.roles;
         if (roles.some((userRole) => userRole.roleName === "admin")) {
-          navigate("/adminDashboard");
+          navigate("/admin");
         }
         if (roles.some((userRole) => userRole.roleName === "staff")) {
           navigate(`/garageManagement/${data.user.garageList[0]._id}`);

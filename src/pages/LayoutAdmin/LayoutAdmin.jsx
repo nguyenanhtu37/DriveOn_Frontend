@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
-function Dashboard() {
+function LayoutAdmin() {
   return (
     <SidebarProvider>
       <div className="  w-full min-h-screen h-full m-auto  flex items-start shadow-md bg-white border border-black/60 rounded-2xl overflow-hidden">
@@ -21,4 +21,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default LayoutAdmin;

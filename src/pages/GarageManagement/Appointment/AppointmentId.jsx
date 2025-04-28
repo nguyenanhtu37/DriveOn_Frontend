@@ -154,7 +154,11 @@ const AppointmentId = () => {
     completeAppointmentMutation.mutate(
       {
         appointmentId,
-        data,
+        data: {
+          ...data,
+          updatedEndTime: new Date(data.updatedEndTime).toISOString(),
+          nextMaintenance: new Date(data.nextMaintenance).toISOString(),
+        },
       },
       {
         onSuccess: () => {
@@ -261,14 +265,6 @@ const AppointmentId = () => {
                     <div>{user.phone}</div>
                   </div>
                 </div>
-
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <div className="text-sm text-gray-500">Address</div>
-                    <div>{user.address}</div>
-                  </div>
-                </div>
               </div>
             </CardContent>
           </Card>
@@ -330,10 +326,6 @@ const AppointmentId = () => {
         <div className="md:col-span-2">
           <Card className="mb-6">
             <CardHeader className="flex flex-row items-start justify-between pb-2">
-              <div>
-                <p className="text-sm text-gray-500">Deal #{appointment.id}</p>
-                <h1 className="text-2xl font-bold">{appointment.title}</h1>
-              </div>
               <Badge
                 variant="outline"
                 className={cn("px-3 py-1", getStatusColor(status))}
@@ -350,7 +342,7 @@ const AppointmentId = () => {
                       <Calendar className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-500">start</div>
+                      <div className="text-sm text-gray-500">Start</div>
                       <div className="font-medium">{appointment.start}</div>
                     </div>
                   </div>

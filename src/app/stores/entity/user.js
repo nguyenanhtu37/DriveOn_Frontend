@@ -30,3 +30,30 @@ export const useChangePassword = () => {
 
   return mutation;
 };
+
+export const useGetALlUser = (page) => {
+  const query = useQuery({
+    queryKey: ["user", "all", page],
+    queryFn: () => userService.getAllUser(page),
+  });
+
+  return {
+    ...query,
+    data: query.data || {},
+  };
+};
+
+export const useEnableUser = () => {
+  const mutation = useMutation({
+    mutationFn: userService.enableUser,
+  });
+
+  return mutation;
+};
+export const useDisableUser = () => {
+  const mutation = useMutation({
+    mutationFn: userService.disableUser,
+  });
+
+  return mutation;
+};
