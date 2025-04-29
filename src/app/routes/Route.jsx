@@ -58,23 +58,23 @@ const router = createBrowserRouter(
               path: AbsoluteScreenPath.GarageDetail,
               element: <GarageDetailPage />,
             },
+          ],
+        },
+        {
+          element: (
+            <ProtectedRoute
+              role={["carowner", "admin"]}
+              directTo={AbsoluteScreenPath.Login}
+            />
+          ),
+          children: [
             {
-              element: (
-                <ProtectedRoute
-                  role={["carowner", "admin"]}
-                  directTo={AbsoluteScreenPath.Login}
-                />
-              ),
-              children: [
-                {
-                  path: AbsoluteScreenPath.ProfilePage,
-                  element: <ProfilePageV2 />,
-                },
-                {
-                  path: AbsoluteScreenPath.FavoriteGarages,
-                  element: <FavoriteGarages />,
-                },
-              ],
+              path: AbsoluteScreenPath.ProfilePage,
+              element: <ProfilePageV2 />,
+            },
+            {
+              path: AbsoluteScreenPath.FavoriteGarages,
+              element: <FavoriteGarages />,
             },
           ],
         },
