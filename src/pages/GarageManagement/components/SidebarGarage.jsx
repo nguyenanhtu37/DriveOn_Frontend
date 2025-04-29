@@ -12,6 +12,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
+  ArrowBigUpDash,
   CalendarDays,
   Crown,
   LayoutDashboard,
@@ -75,6 +76,12 @@ const navigationItems = [
         icon: <SettingsIcon className="h-4 w-4" />,
         title: "Garage Settings",
         link: "settings",
+        role: ["manager"],
+      },
+      {
+        icon: <ArrowBigUpDash className="h-4 w-4" />,
+        title: "Upgrade GaragePro",
+        link: "/garageProUpgrade",
         role: ["manager"],
       },
     ],
