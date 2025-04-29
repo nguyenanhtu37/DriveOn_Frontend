@@ -18,9 +18,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { PaymentDialog } from "./PaymentDialog";
+import { getUser } from "@/app/stores/view/user";
 
 export const GarageProUpgrade = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const user = getUser();
+  const handleOpen = () => {
+    if (user) {
+      setOpen(true);
+    } else {
+      window.location.href = "/login";
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,7 +103,7 @@ export const GarageProUpgrade = () => {
                   transition={{ delay: 0.3, duration: 0.5 }}
                   className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl"
                 >
-                  Upgrade to{" "}
+                  Upgrade to
                   <motion.span
                     initial={{ color: "#000" }}
                     animate={{ color: "#ef4444" }}
@@ -120,6 +132,7 @@ export const GarageProUpgrade = () => {
                 <Button
                   size="lg"
                   className="bg-red-500 hover:bg-red-600 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-red-200"
+                  onClick={handleOpen}
                 >
                   Upgrade Now <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -183,7 +196,7 @@ export const GarageProUpgrade = () => {
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <Card className="border-2 border-red-500 shadow-lg relative overflow-hidden">
+                <Card className="border-2 h-full border-red-500 shadow-lg relative overflow-hidden">
                   <motion.div
                     className="absolute -right-20 -top-20 w-40 h-40 bg-red-500 opacity-10 rounded-full"
                     animate={{ scale: [1, 1.2, 1] }}
@@ -209,10 +222,6 @@ export const GarageProUpgrade = () => {
                     <CardDescription>Best for professionals</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-baseline">
-                      <span className="text-3xl font-bold">100.000 VND</span>
-                      <span className="ml-1 text-muted-foreground">/month</span>
-                    </div>
                     <ul className="mt-6 space-y-2">
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />
@@ -232,6 +241,7 @@ export const GarageProUpgrade = () => {
                     <Button
                       className="w-full bg-red-500 hover:bg-red-600 transition-all duration-300 shadow-md hover:shadow-lg"
                       whileHover={{ scale: 1.05 }}
+                      onClick={handleOpen}
                     >
                       Upgrade Now
                     </Button>
@@ -365,6 +375,7 @@ export const GarageProUpgrade = () => {
                   <Button
                     size="lg"
                     className="bg-red-500 hover:bg-red-600 transition-all duration-300 shadow-lg hover:shadow-red-200"
+                    onClick={handleOpen}
                   >
                     Upgrade to Pro Today
                   </Button>
@@ -374,33 +385,7 @@ export const GarageProUpgrade = () => {
           </div>
         </section>
       </main>
-      {/* <footer className="border-t bg-white py-6 md:py-0">
-        <div className=" flex flex-col items-center justify-between gap-4 md:h-16 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            © 2025 GarageMaster. All rights reserved.
-          </p>
-          <div className="flex gap-4">
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              Terms
-            </Link>
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              Contact
-            </Link>
-          </div>
-        </div>
-      </footer> */}
+      <PaymentDialog open={open} setOpen={setOpen} />
     </div>
   );
 };

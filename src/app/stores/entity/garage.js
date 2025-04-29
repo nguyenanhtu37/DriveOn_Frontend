@@ -184,14 +184,14 @@ export const useGetRegisterGarageDetail = (id) => {
   };
 };
 
-export const useGetGarageExits = () => {
+export const useGetGarageExits = ({ page, keySearch }) => {
   const query = useQuery({
-    queryKey: ["garageExits"],
-    queryFn: garageService.viewGarageExits,
+    queryKey: ["garageExits", page, keySearch],
+    queryFn: () => garageService.viewGarageExits({ page, keySearch }),
   });
   return {
     ...query,
-    data: query.data ?? [],
+    data: query.data ?? {},
     meta: query.data?.meta ?? null,
   };
 };
@@ -259,6 +259,57 @@ export const useGetMyGarage = () => {
     queryKey: ["myGarage"],
     queryFn: garageService.getMyGarage,
   });
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};
+
+export const useGetRegisterGarageCarOwner = () => {
+  const query = useQuery({
+    queryKey: ["registerGarageCarOwner"],
+    queryFn: garageService.getRegisterGarageCarOwner,
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};
+
+export const useUpdateRegisterGarage = () => {
+  const mutation = useMutation({
+    mutationFn: async ({ id, garage }) =>
+      garageService.updateGarageRegister(id, garage),
+  });
+  return mutation;
+};
+
+export const useUpdateGarageInformation = () => {
+  const mutation = useMutation({
+    mutationFn: garageService.updateGarageInformation,
+  });
+
+  return mutation;
+};
+
+export const useGetDashboardOverview = (id) => {
+  const query = useQuery({
+    queryKey: ["dashboardOverview", id],
+    queryFn: () => garageService.getDashboardOverview(id),
+  });
+
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};
+
+export const useGetDashboardChart = (id) => {
+  const query = useQuery({
+    queryKey: ["dashboardChart", id],
+    queryFn: () => garageService.getDashboardCharts(id),
+  });
+
   return {
     ...query,
     data: query.data ?? {},

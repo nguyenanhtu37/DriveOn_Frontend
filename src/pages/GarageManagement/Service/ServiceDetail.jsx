@@ -4,9 +4,9 @@ import { Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { EditService } from "./EditService";
-import { set } from "date-fns";
 import { DeleteService } from "./DeleteService";
 import { formatToVND } from "@/lib/formatToVND";
+import { Card } from "@/components/ui/card";
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
@@ -21,7 +21,7 @@ const ServiceDetail = () => {
     return <EditService serviceDetail={serviceDetail} setIsEdit={setIsEdit} />;
 
   return (
-    <div className="relative px-1 ml-2 pb-3 flex-1 w-full  bg-white gap-y-2 h-full ">
+    <Card className="relative px-1 ml-2 pb-3 flex-1 w-full  bg-white gap-y-2 h-full  ">
       {/* Top */}
       <div className="px-3 py-2 mb-2 flex justify-between items-center">
         <h4 className="text-lg font-semibold">{serviceDetail.data.name}</h4>
@@ -72,14 +72,10 @@ const ServiceDetail = () => {
             {serviceDetail.data.duration} minutes
           </span>
         </div>
-        <div className=" flex w-full justify-start items-start gap-x-2">
-          <span className=" w-[120px] text-md font-semibold">Waranty: </span>
-          <span className=" text-md">{serviceDetail.data.warranty}</span>
-        </div>
       </div>
       <hr className="my-5" />
       <DeleteService serviceId={serviceId} />
-    </div>
+    </Card>
   );
 };
 

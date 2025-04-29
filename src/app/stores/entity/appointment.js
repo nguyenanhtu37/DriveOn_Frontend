@@ -50,8 +50,7 @@ export const useDenyAppointment = () => {
 
 export const useCompleteAppointment = () => {
   const mutation = useMutation({
-    mutationFn: async (appointmentId) =>
-      appointmentService.completeAppointment(appointmentId),
+    mutationFn: appointmentService.completeAppointment,
   });
   return mutation;
 };
@@ -82,6 +81,38 @@ export const useCancelAppointment = () => {
   const mutation = useMutation({
     mutationFn: async (appointmentId) =>
       appointmentService.cancelAppointment(appointmentId),
+  });
+  return mutation;
+};
+
+export const useGetNextMaintenance = (garageId) => {
+  const query = useQuery({
+    queryKey: ["appointment", "next-maintenance", garageId],
+    queryFn: async () => appointmentService.getNextMaintenance(garageId),
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};
+
+export const useCreateAppointmentReminder = () => {
+  const mutation = useMutation({
+    mutationFn: appointmentService.createAppointmentReminder,
+  });
+  return mutation;
+};
+
+export const useIsCalledAppointment = () => {
+  const mutation = useMutation({
+    mutationFn: appointmentService.isCalledAppointment,
+  });
+  return mutation;
+};
+
+export const useCreateAppointmentByStaff = () => {
+  const mutation = useMutation({
+    mutationFn: appointmentService.createAppointmentByStaff,
   });
   return mutation;
 };

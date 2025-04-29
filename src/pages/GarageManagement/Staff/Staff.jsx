@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlignCenter, ArrowDownUp, Circle, Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import AddStaff from "./AddStaff";
 import {
   Tooltip,
@@ -65,20 +64,6 @@ export const Staff = () => {
               </DialogContent>
             </Dialog>
           </div>
-
-          <div className=" w-7 h-7 flex items-center cursor-pointer hover:opacity-75">
-            <ArrowDownUp size={20} />
-          </div>
-        </div>
-
-        <div className=" flex items-center gap-1 px-2 py-1 max-w-[260px] w-full rounded-xl bg-white ring-1 ring-black ">
-          <Search size={16} />
-          <input
-            type="text"
-            placeholder="Search garage"
-            className=" text-xs w-full h-full bg-transparent px-2 py-1 outline-none"
-            // onChange={handleSearchGarage}
-          />
         </div>
       </div>
       <Table className=" border border-gray-200 shadow-sm">
@@ -90,7 +75,6 @@ export const Staff = () => {
             <TableHead>Phone</TableHead>
             <TableHead>Password</TableHead>
             <TableHead className="text-center">Enabled/Disabled</TableHead>
-            <TableHead className="text-center">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -109,15 +93,6 @@ export const Staff = () => {
                   onCheckedChange={() => handleSwitch(staff._id, staff.status)}
                   className="data-[state=checked]:bg-green-300 data-[state=unchecked]:bg-input"
                 />
-              </TableCell>
-              <TableCell className="">
-                <Badge
-                  variant="secondary"
-                  className=" w-full p-1 flex justify-center items-center gap-1"
-                >
-                  Active
-                  <Circle size={16} className=" bg-green-200 rounded-full" />
-                </Badge>
               </TableCell>
             </TableRow>
           ))}

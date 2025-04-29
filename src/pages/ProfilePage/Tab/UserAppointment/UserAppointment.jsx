@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useGetAppointmentByUserId } from "@/app/stores/entity/appointment";
 import { GarageAppointmentCard } from "./GarageAppointmentCard";
+import { Loading } from "@/components/Loading";
 
 export const UserAppointment = () => {
   const appointmentData = useGetAppointmentByUserId();
@@ -33,6 +34,12 @@ export const UserAppointment = () => {
     .filter((app) => isPastAppointment(app.end) && app.status !== "Cancelled")
     .sort((a, b) => new Date(b.end) - new Date(a.end));
 
+  console.log(
+    "upcomingAppointments",
+    upcomingAppointments.map((app) => app.vehicle)
+  );
+
+  if (appointmentData.isLoading) return <Loading />;
   return (
     <TabsContent value="appointments" className="space-y-6 mt-6">
       <div>
@@ -87,7 +94,7 @@ export const UserAppointment = () => {
                 </TabsContent>
 
                 <TabsContent value="cancel" className="space-y-4">
-                  {pastAppointments.length === 0 ? (
+                  {cancelAppointments.length === 0 ? (
                     <div className="text-center py-6 text-muted-foreground">
                       You have no cancelled appointments.
                     </div>

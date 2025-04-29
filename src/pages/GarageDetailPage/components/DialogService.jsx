@@ -14,12 +14,12 @@ export const DialogService = () => {
           <ArrowRightIcon size={18} />
         </div>
       </DialogTrigger>
-      <DialogContent className=" w-full min-w-[378px] max-w-[880px] h-[800px] overflow-y-auto ">
-        <div className=" w-full flex flex-col items-start  gap-y-4">
+      <DialogContent className=" p-6 border-none w-full min-w-[378px] max-w-[880px] ">
+        <div className=" w-full flex flex-col items-start gap-y-4 max-h-[800px] overflow-y-auto">
           <span className=" text-lg font-semibold text-[#22222]">
             List services of garage
           </span>
-          <div className=" w-full flex flex-col gap-y-6">
+          <div className=" w-full flex flex-col gap-y-6 ">
             {service.data?.map((item, index) => (
               <ServiceItem
                 key={item._id}
@@ -28,7 +28,7 @@ export const DialogService = () => {
                 serviceName={item.name}
                 description={item.description}
                 price={item.price}
-                wrranty={item.warranty}
+                duration={item.duration}
               />
             ))}
           </div>

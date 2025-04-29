@@ -15,48 +15,17 @@ export const useGetService = (id) => {
 };
 
 export const useAddServiceGarage = () => {
-  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (service) =>
       serviceDetailService.addServiceGarage(service),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["serviceGarage"]);
-      toast({
-        title: "Create service successfully",
-        duration: 2000,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Create service failed",
-        duration: 2000,
-      });
-    },
   });
 
   return mutation;
 };
 export const useUpdateServiceGarage = () => {
-  const { garageId, serviceId } = useParams();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async ({ id, service }) =>
       serviceDetailService.updateServiceGarage(id, service),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["serviceGarage"]);
-      navigate(`/garageManagement/${garageId}/services/${serviceId}`);
-      toast({
-        title: "Update service successfully",
-        duration: 2000,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Update service failed",
-        duration: 2000,
-      });
-    },
   });
 
   return mutation;

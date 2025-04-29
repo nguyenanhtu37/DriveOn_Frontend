@@ -20,10 +20,13 @@ export const AppointmentScheduler = () => {
         title: appointment.service[0].name,
         start: new Date(appointment.start),
         end: new Date(appointment.end),
+        status: appointment.status,
       };
     });
     setAppointments(formattedAppointments);
   }, [appointmentData.data]);
+
+  console.log(appointments);
 
   return (
     <div className="h-screen p-4 bg-white">

@@ -1,4 +1,3 @@
-import { SlidersHorizontal } from "lucide-react";
 import ItemIcon from "@/components/ItemIcon";
 import { useGetService } from "@/app/stores/entity/service";
 import DialogFilter from "../DialogFilter/DialogFilter";
@@ -34,17 +33,6 @@ export default function Filter() {
       {/* Nút Filter */}
       <div className="hidden md:flex items-center gap-x-2">
         <DialogFilter />
-      </div>
-      <div className="hidden md:flex items-center gap-x-2">
-        <div className="flex items-center gap-2 px-5 py-3 rounded-md border border-[#dddddd] bg-white hover:bg-[#1c1c1c]/10 hover:border-[#1c1c1c] transition-colors ease-in-out cursor-pointer duration-150  group">
-          <SlidersHorizontal
-            size={18}
-            className="text-gray-800 group-hover:text-black transition-all"
-          />
-          <span className="text-sm font-medium text-gray-800 group-hover:text-black">
-            NearBy
-          </span>
-        </div>
       </div>
     </div>
   );

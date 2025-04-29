@@ -9,7 +9,10 @@ export function VehicleImage({ image }) {
           View car picture
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[625px] " hiddenClose={true}>
+      <DialogContent
+        className="p-0 rounded-md overflow-hidden border-none"
+        hiddenClose={true}
+      >
         <img src={image} className=" w-full object-cover" />
       </DialogContent>
     </Dialog>

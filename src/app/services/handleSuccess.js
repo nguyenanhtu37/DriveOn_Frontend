@@ -1,32 +1,26 @@
 import { axios } from "@/lib/axios";
+import { setUser } from "../stores/view/user";
 
 const handleSuccess = async (credentialResponse) => {
-  try {
-    // Send the Google OAuth token to the backend for authentication
-    const result = await axios.post("auth/google", {
-      token: credentialResponse.credential,
-    });
+  const result = await axios.post("auth/google", {
+    token: credentialResponse.credential,
+  });
 
-    // Log the response data and full result for debugging
-    console.log("result.data: ", JSON.stringify(result.data));
-    console.log("result: ", result);
+  console.log("result: ", result);
+  setUser(result.user);
+  localStorage.setItem("token", result.token);
 
-    // Check if the login was successful
-    if (result.status === 200) {
-      alert("Login successful!");
-      // Store the token in localStorage (if provided by backend)
-      if (result.data.token) {
-        localStorage.setItem("token", result.data.token);
-      }
-      // Redirect to homepage after successful login
-      window.location.href = "/";
-    } else {
-      alert(result.data.message || "Login failed");
-    }
-  } catch (error) {
-    // Handle errors and display the backend's error message if available
-    const data = error?.response?.data;
-    alert(data?.message || "Login failed");
+  let roles = result.user.roles;
+
+  // ✅ Điều hướng
+  if (roles.some((userRole) => userRole.roleName === "admin")) {
+    window.location.href("/admin");
+  }
+  if (roles.some((userRole) => userRole.roleName === "staff")) {
+    window.location.href(`/garageManagement/${result.user.garageList[0]._id}`);
+  } else {
+    console.log("➡️ Redirecting to homepage...");
+    window.location.href("/");
   }
 };
 

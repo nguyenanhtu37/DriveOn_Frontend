@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "@/hooks/use-toast";
-import { vehicleSchema } from "@/schema";
+import { vehicleSchema } from "@/schema/vehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Car, X } from "lucide-react";
@@ -86,7 +86,25 @@ export const CreateVehicle = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-3 text-sm">
             <h2 className="text-base font-semibold">Add New Vehicle</h2>
-
+            <FormField
+              control={form.control}
+              name="carBrand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Car Brand</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={brandList}
+                      isMultiple={false}
+                      primaryColor="red"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="carName"
@@ -108,7 +126,7 @@ export const CreateVehicle = () => {
                 <FormItem>
                   <FormLabel>Car Plate</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Car Plate" {...field} />
+                    <Input placeholder="Enter Car Plate (Examples: 30A-12345)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -143,25 +161,7 @@ export const CreateVehicle = () => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="carBrand"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Car Brand</FormLabel>
-                  <FormControl>
-                    <Select
-                      value={field.value}
-                      onChange={field.onChange}
-                      options={brandList}
-                      isMultiple={false}
-                      primaryColor="red"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            
 
             <Card>
               <CardContent className="p-4 space-y-2">

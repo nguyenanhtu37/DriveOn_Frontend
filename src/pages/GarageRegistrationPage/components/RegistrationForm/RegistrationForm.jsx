@@ -24,6 +24,7 @@ import Select from "react-tailwindcss-select";
 import { useGetGeocode } from "@/app/stores/entity/distance-matrix";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
+import { useTabStore } from "@/app/stores/view/tab";
 
 const days = [
   { value: "Sunday", label: "☀️ Sunday" },
@@ -41,6 +42,7 @@ export default function RegistrationForm() {
   const getLocation = useGetGeocode();
   const [submitting, setSubmitting] = useState(false);
   const { files, progressList, handleFileChange, handleUpload } = useUpload();
+  const { setTab } = useTabStore();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -57,6 +59,7 @@ export default function RegistrationForm() {
   });
 
   const onSubmit = async (data) => {
+    console.log("🔥 Debug form data:", data);
     setSubmitting(true);
     let uploadedUrls = [];
     if (files.length > 0) {
@@ -95,14 +98,15 @@ export default function RegistrationForm() {
       email: data.email,
       interiorImages: uploadedUrls,
       location: location,
-      address: address,
+      address: data.address,
     };
 
     register.mutate(newGarage, {
       onSuccess: () => {
         setTimeout(() => {
           form.reset();
-          navigate("/");
+          setTab("register-garage");
+          navigate("/profile");
         }, 2500);
       },
       onError: () => {

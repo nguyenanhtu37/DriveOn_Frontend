@@ -25,20 +25,25 @@ export const GarageManagementScreenPath = {
   Appointment: "appointments",
   AppointmentScheduler: "appointmentScheduler",
   AppointmentDetail: "appointments/:appointmentId",
+  Feedback: "feedback",
   Services: "services",
   Settings: "settings",
   Staff: "staff",
   StaffDetail: "staff/:id",
   Service: "services/",
   ServiceDetail: ":serviceId",
+  CountDownPro: "countdown",
   CreateService: "createService",
 };
 
 export const AdminScreenPath = {
-  BrandList: "/adminDashboard/brandList",
-  AdminDashBoard: "/adminDashboard/",
+  BrandList: "brandList",
+  Admin: "/admin/",
   ViewRegisterGarage: "viewRegisterGarage",
   ViewRegisterGarageDetail: "viewRegisterGarage/:id",
   ViewExitsGarage: "viewExitsGarage",
   viewServiceSystem: "viewServiceSystem",
+  UserManagement: "userManagement",
+  Dashboard: "dashboard",
+  TransactionHistory: "transactionHistory",
 };

@@ -8,6 +8,7 @@ import {
   resetPassword,
 } from "../../app/services/reset-password";
 import { setUser } from "@/app/stores/view/user";
+import { requestPermissionAndGetToken } from "../../../firebase-messaging.js";
 
 const roleData = [
   { _id: "67895c212e7333f925e9c0e9", roleName: "admin" },
@@ -29,46 +30,80 @@ export const useAuth = () => {
     setIsLoggedIn(!!token);
   }, []);
 
+  // const handleLogin = async (credentials) => {
+  //   setIsLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await login(credentials); // gọi service login
+  //     setUser(response.user);
+  //     localStorage.setItem("token", response.token);
+
+  //     // DEBUG: In ra roles từ backend
+  //     console.log("🚀 Raw roles from response:", response.roles);
+
+  //     let roles = response.user.roles;
+
+  //     setUserRoles(roles);
+  //     setIsLoggedIn(true);
+
+  //     // ✅ Điều hướng
+  //     if (roles.some((userRole) => userRole.roleName === "admin")) {
+  //       navigate("/adminDashboard");
+  //     }
+  //     if (roles.some((userRole) => userRole.roleName === "staff")) {
+  //       navigate(`/garageManagement/${response.user.garageList[0]._id}`);
+  //     } else {
+  //       console.log("➡️ Redirecting to homepage...");
+  //       navigate("/");
+  //     }
+  //   } catch (err) {
+  //     const errorMessage =
+  //       err.message ||
+  //       "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
+  //     setError(errorMessage);
+  //     throw new Error(errorMessage);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   const handleLogin = async (credentials) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await login(credentials); // gọi service login
+      let deviceToken = null;
+      try {
+        deviceToken = await requestPermissionAndGetToken();
+        console.log("Device token: ", deviceToken);
+      } catch (error) {
+        console.error("Failed to get device token: ", error);
+      }
+
+      // const response = await login(credentials); // gọi service login
+      const response = await login({ ...credentials, deviceToken }); // gọi service login
       setUser(response.user);
       localStorage.setItem("token", response.token);
-  
+
       // DEBUG: In ra roles từ backend
-      console.log("🚀 Raw roles from response:", response.roles);
-  
-      let roles = response.roles;
-  
-      // Map ObjectId sang roleName nếu cần
-      if (
-        roles.length &&
-        typeof roles[0] === "string" &&
-        roles[0].match(/^[0-9a-fA-F]{24}$/)
-      ) {
-        roles = roles.map((id) =>
-          roleData.find((r) => r._id === id)?.roleName || "unknown"
-        );
-      }
-  
-      console.log("🧠 Mapped roles:", roles); // In ra sau khi mapping
-  
+      // console.log("🚀 Raw roles from response:", response.roles);
+
+      let roles = response.user.roles;
+
       setUserRoles(roles);
       setIsLoggedIn(true);
-  
+
       // ✅ Điều hướng
-      if (roles.includes("admin")) {
-        console.log("✅ Redirecting to admin dashboard...");
-        navigate("/adminDashboard");
-      } else {
-        console.log("➡️ Redirecting to homepage...");
-        navigate("/");
+      if (roles.some((userRole) => userRole.roleName === "admin")) {
+        return navigate("/admin");
       }
+      if (roles.some((userRole) => userRole.roleName === "staff")) {
+        return navigate(`/garageManagement/${response.user.garageList[0]._id}`);
+      }
+      console.log("➡️ Redirecting to homepage...");
+      return navigate("/");
     } catch (err) {
       const errorMessage =
-        err.message || "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
+        err.message ||
+        "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -103,7 +138,9 @@ export const useAuth = () => {
         ...credentials,
         roles: ["carowner"],
       });
-      setSuccess(response.message || "Vui lòng kiểm tra email để xác minh tài khoản.");
+      setSuccess(
+        response.message || "Vui lòng kiểm tra email để xác minh tài khoản."
+      );
       navigate("/login");
     } catch (err) {
       const errorMessage = err.message || "Đăng ký thất bại. Vui lòng thử lại.";
@@ -123,7 +160,8 @@ export const useAuth = () => {
       await requestPasswordReset(email);
       setSuccess("Password reset email has been sent.");
     } catch (err) {
-      const errorMessage = err.message || "Không thể gửi email đặt lại mật khẩu.";
+      const errorMessage =
+        err.message || "Không thể gửi email đặt lại mật khẩu.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
