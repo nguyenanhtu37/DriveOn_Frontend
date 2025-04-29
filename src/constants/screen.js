@@ -45,4 +45,5 @@ export const AdminScreenPath = {
   viewServiceSystem: "viewServiceSystem",
   UserManagement: "userManagement",
   Dashboard: "dashboard",
+  TransactionHistory: "transactionHistory",
 };

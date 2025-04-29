@@ -42,6 +42,7 @@ import { UserManagement } from "@/pages/LayoutAdmin/UserManagement/UserManagemen
 import LayoutAdmin from "@/pages/LayoutAdmin/LayoutAdmin";
 import { Dashboard } from "@/pages/LayoutAdmin/Dashboard/Dashboard";
 import ScrollToTop from "@/components/ScrollToTop";
+import { TransactionHistory } from "@/pages/LayoutAdmin/Transaction/TransactionHistory";
 
 const router = createBrowserRouter(
   [
@@ -57,6 +58,24 @@ const router = createBrowserRouter(
               path: AbsoluteScreenPath.GarageDetail,
               element: <GarageDetailPage />,
             },
+            {
+              element: (
+                <ProtectedRoute
+                  role={["carowner", "admin"]}
+                  directTo={AbsoluteScreenPath.Login}
+                />
+              ),
+              children: [
+                {
+                  path: AbsoluteScreenPath.ProfilePage,
+                  element: <ProfilePageV2 />,
+                },
+                {
+                  path: AbsoluteScreenPath.FavoriteGarages,
+                  element: <FavoriteGarages />,
+                },
+              ],
+            },
           ],
         },
         { path: AbsoluteScreenPath.Login, element: <Login /> },
@@ -66,24 +85,6 @@ const router = createBrowserRouter(
         },
         { path: AbsoluteScreenPath.SignUp, element: <SignUp /> },
         { path: AbsoluteScreenPath.NewPassword, element: <NewPassword /> },
-        {
-          element: (
-            <ProtectedRoute
-              role={["carowner", "admin"]}
-              directTo={AbsoluteScreenPath.Login}
-            />
-          ),
-          children: [
-            {
-              path: AbsoluteScreenPath.ProfilePage,
-              element: <ProfilePageV2 />,
-            },
-            {
-              path: AbsoluteScreenPath.FavoriteGarages,
-              element: <FavoriteGarages />,
-            },
-          ],
-        },
         { path: AbsoluteScreenPath.VehicleList, element: <VehicleListPage /> },
         {
           path: AbsoluteScreenPath.GarageProUpgrade,
@@ -155,6 +156,10 @@ const router = createBrowserRouter(
                 {
                   path: AdminScreenPath.UserManagement,
                   element: <UserManagement />,
+                },
+                {
+                  path: AdminScreenPath.TransactionHistory,
+                  element: <TransactionHistory />,
                 },
               ],
             },
