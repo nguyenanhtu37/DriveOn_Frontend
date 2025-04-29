@@ -1,8 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { useGetMyGarage } from "@/app/stores/entity/garage";
 import { MapPin, Star } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -56,13 +52,13 @@ export const GarageItem = ({ id, name, address, image, rating, isPro }) => (
   </Link>
 );
 
-const DialogMyGarage = ({ open, onOpenChange }) => {
+const DialogMyGarage = ({ ...props }) => {
   const myGarage = useGetMyGarage();
 
   if (myGarage.isLoading) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog {...props}>
       <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto px-3">
         <DialogTitle>My garages</DialogTitle>
         <div className="w-full flex flex-col gap-y-5 mt-2">
@@ -80,7 +76,7 @@ const DialogMyGarage = ({ open, onOpenChange }) => {
             ))
           ) : (
             <div className="text-center text-gray-500 py-8">
-              You don't have any garages yet.
+              You don&apos;t have any garages yet.
             </div>
           )}
         </div>

@@ -19,7 +19,6 @@ import { userLogout } from "@/app/stores/view/user";
 import { useNavigate } from "react-router-dom";
 import { RegisterGarage } from "./Tab/RegisterGarage/RegisterGarage";
 import { MyGarage } from "./Tab/MyGarage/MyGarage";
-import NavbarMobile from "@/components/NavbarMobile"; // Import NavbarMobile
 
 export const ProfilePageV2 = () => {
   const profile = useGetProfile();
@@ -198,7 +197,6 @@ export const ProfilePageV2 = () => {
         </div>
       </div>
       {/* Mobile Navbar */}
-      <NavbarMobile />
     </div>
   );
 };

@@ -2,7 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/app/stores/view/user";
 import { useGeolocation } from "@/common/hooks/useGeolocation";
 import { fetchRescueGarages } from "@/app/services/emergency";
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+} from "react-leaflet";
 import "@/pages/HomePage/GarageMap/leaflet.css";
 import L from "leaflet";
 import Loader from "@/components/Emergency/Loader";
@@ -53,7 +59,11 @@ const RescueGarages = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (Array.isArray(location) && location.length === 2 && location.every(coord => !isNaN(coord))) {
+      if (
+        Array.isArray(location) &&
+        location.length === 2 &&
+        location.every((coord) => !isNaN(coord))
+      ) {
         const [latitude, longitude] = location;
         try {
           setIsLoading(true);
@@ -73,7 +83,7 @@ const RescueGarages = () => {
 
           // Only keep garages with valid coordinates
           const validGarages = data.filter(
-            garage =>
+            (garage) =>
               garage &&
               typeof garage === "object" &&
               garage._id &&
@@ -115,7 +125,9 @@ const RescueGarages = () => {
   if (!location && !isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500 text-lg font-semibold">Waiting for location access...</p>
+        <p className="text-gray-500 text-lg font-semibold">
+          Waiting for location access...
+        </p>
       </div>
     );
   }
@@ -147,7 +159,6 @@ const RescueGarages = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
-      <NavbarMobile />
       <div className="flex-1 flex flex-col md:flex-row gap-4 md:gap-8 px-0 md:px-10 mt-2 md:mt-4">
         {/* Map Section */}
         <div className="w-full md:w-1/2 sticky top-20 z-10 h-[300px] xs:h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)]">
@@ -186,10 +197,19 @@ const RescueGarages = () => {
                     // Show direction when clicking marker
                     const route = await fetchRoute(
                       [lat, lng],
-                      [garage.location.coordinates[1], garage.location.coordinates[0]]
+                      [
+                        garage.location.coordinates[1],
+                        garage.location.coordinates[0],
+                      ]
                     );
                     setDirectionCoords(
-                      route || [[lat, lng], [garage.location.coordinates[1], garage.location.coordinates[0]]]
+                      route || [
+                        [lat, lng],
+                        [
+                          garage.location.coordinates[1],
+                          garage.location.coordinates[0],
+                        ],
+                      ]
                     );
                   },
                 }}
@@ -242,7 +262,7 @@ const RescueGarages = () => {
             )}
           </MapContainer>
         </div>
-  
+
         {/* Garage List Section */}
         <div className="w-full md:w-1/2 flex flex-col">
           <div className="overflow-y-auto h-[320px] xs:h-[350px] md:h-[500px] lg:h-[calc(100vh-140px)] px-2 md:px-0">
@@ -272,7 +292,10 @@ const RescueGarages = () => {
                         [garageLocation[1], garageLocation[0]]
                       );
                       setDirectionCoords(
-                        route || [[lat, lng], [garageLocation[1], garageLocation[0]]]
+                        route || [
+                          [lat, lng],
+                          [garageLocation[1], garageLocation[0]],
+                        ]
                       );
                     }}
                   />

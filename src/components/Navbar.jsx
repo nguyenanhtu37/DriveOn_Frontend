@@ -1,26 +1,20 @@
 import { AlignJustify, Globe } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Link, NavLink } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/common/hooks/useAuth";
-import { useEffect, useState } from "react";
 import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
 import { AbsoluteScreenPath } from "../constants/screen";
 import { useUserStore } from "@/app/stores/view/user";
+import { Button } from "./ui/button";
+import { useState } from "react";
 
 function Navbar() {
-  const { handleLogout, isLoading, error, isLoggedIn, userRoles } = useAuth();
-  const [logoutError, setLogoutError] = useState(null);
+  const { handleLogout, isLoading, isLoggedIn } = useAuth();
   const { user } = useUserStore();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   // Handle logout error display
-  useEffect(() => {
-    if (error) {
-      setLogoutError(error);
-      const timer = setTimeout(() => setLogoutError(null), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
 
   const onLogout = async () => {
     await handleLogout(); // This resets isLoggedIn and navigates to /login
@@ -120,7 +114,7 @@ function Navbar() {
                   align="end"
                   sideOffset={12}
                 >
-                  <div className="grid gap-4 bg-white">
+                  <div className="grid gap-1s bg-white">
                     <Link
                       to={AbsoluteScreenPath.ProfilePage}
                       className="text-sm w-full px-4 py-[11px] text-[#222222] hover:bg-[#f7f6f6] ease-in-out font-roboto cursor-pointer"
@@ -138,10 +132,18 @@ function Navbar() {
                       onClick={onLogout}
                       disabled={isLoading}
                     >
-                      {isLoading ? "Đang đăng xuất..." : "Logout"}
+                      {isLoading ? "Logging out..." : "Logout"}
                     </button>
                     <div className="text-sm w-full h-[1px] bg-[#DDDDDD]" />
-                    <DialogMyGarage />
+
+                    <Button
+                      className="text-sm w-full rounded-none px-4 py-[11px] text-red-400 hover:bg-[#f7f6f6] hover:text-red-500 ease-in-out font-roboto cursor-pointer"
+                      variant="ghost"
+                      onClick={() => setIsOpen(!isOpen)}
+                    >
+                      My Garages
+                    </Button>
+                    <DialogMyGarage open={isOpen} onOpenChange={setIsOpen} />
                   </div>
                 </PopoverContent>
               </Popover>
@@ -150,11 +152,11 @@ function Navbar() {
         </div>
       </div>
 
-      {logoutError && (
+      {/* {logoutError && (
         <div className="absolute top-20 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md z-50">
           <p className="text-sm">{logoutError}</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
