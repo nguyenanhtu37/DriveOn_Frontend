@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Filter, Plus, Search } from "lucide-react";
-import { useState } from "react";
 import { ReminderCard } from "../../components/ReminderCard";
 import {
   Card,
@@ -29,7 +28,7 @@ const Reminder = () => {
   );
 
   return (
-    <div className=" mx-auto p-6">
+    <div className=" mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold">Reminders</h1>

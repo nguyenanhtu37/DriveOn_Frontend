@@ -7,6 +7,7 @@ import "./leaflet.css";
 
 import PopupGarage from "@/components/PopupGarage";
 import { getLocation } from "@/app/stores/view/user";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const locationDanang = [16.047079, 108.20623];
 
@@ -31,6 +32,7 @@ const GarageMap = () => {
   const [lat, lng] = location || locationDanang;
   return (
     <div className="relative w-full h-[calc(100vh-168px)] overflow-hidden z-0">
+      <ScrollToTop />
       <MapContainer
         ref={mapRef}
         center={[lat, lng]}
