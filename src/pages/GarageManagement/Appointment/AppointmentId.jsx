@@ -209,7 +209,7 @@ const AppointmentId = () => {
   if (isLoading) return <Loading />;
   if (isError) return <Navigate to="/notFound" />;
   return (
-    <div className=" flex flex-col justify-start mx-auto px-8 py-6 max-w-7xl">
+    <div className=" flex flex-col justify-start  p-6 ">
       <div className="flex w-full justify-start items-center">
         <Button variant="secondary" className="mb-6" onClick={handleBack}>
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -402,93 +402,101 @@ const AppointmentId = () => {
 
               {status !== "Completed" && (
                 <div className="flex gap-3 mt-6">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className="bg-blue-600 hover:bg-blue-700">
-                        <CheckCheck className="h-4 w-4 mr-2" />
-                        Completed
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto px-3">
-                      <DialogTitle>Do you want to update the time?</DialogTitle>
-                      <form>
-                        <div className="w-full flex flex-col gap-y-5 mt-2">
-                          <div className="flex flex-col gap-y-2">
-                            <label className="text-sm font-semibold text-[#222222]">
-                              Update End Time
-                            </label>
-                            <Controller
-                              name="updatedEndTime"
-                              control={control}
-                              render={({ field }) => (
-                                <Input
-                                  id=""
-                                  type="datetime-local"
-                                  value={
-                                    field.value
-                                      ? format(
-                                          new Date(field.value),
-                                          "yyyy-MM-dd'T'HH:mm"
-                                        )
-                                      : ""
-                                  }
-                                  onChange={(e) =>
-                                    field.onChange(e.target.value || null)
-                                  }
-                                  min={new Date(appointment.end)
-                                    .toISOString()
-                                    .slice(0, 16)}
-                                />
-                              )}
-                            />
+                  {status === "Accepted" && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="bg-blue-600 hover:bg-blue-700">
+                          <CheckCheck className="h-4 w-4 mr-2" />
+                          Completed
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto px-3">
+                        <DialogTitle>
+                          Do you want to update the time?
+                        </DialogTitle>
+                        <form>
+                          <div className="w-full flex flex-col gap-y-5 mt-2">
+                            <div className="flex flex-col gap-y-2">
+                              <label className="text-sm font-semibold text-[#222222]">
+                                Update End Time
+                              </label>
+                              <Controller
+                                name="updatedEndTime"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    id=""
+                                    type="datetime-local"
+                                    value={
+                                      field.value
+                                        ? format(
+                                            new Date(field.value),
+                                            "yyyy-MM-dd'T'HH:mm"
+                                          )
+                                        : ""
+                                    }
+                                    onChange={(e) =>
+                                      field.onChange(e.target.value || null)
+                                    }
+                                    min={new Date(appointment.end)
+                                      .toISOString()
+                                      .slice(0, 16)}
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div className="flex flex-col gap-y-2">
+                              <label className="text-sm font-semibold text-[#222222]">
+                                Next Maintenance
+                              </label>
+                              <Controller
+                                name="nextMaintenance"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    id=""
+                                    type="datetime-local"
+                                    value={field.value ?? ""}
+                                    onChange={(e) =>
+                                      field.onChange(e.target.value || null)
+                                    }
+                                    min={new Date(appointment.end)
+                                      .toISOString()
+                                      .slice(0, 16)}
+                                  />
+                                )}
+                              />
+                            </div>
+                            <div className="flex items-center justify-end"></div>
+                            <Button
+                              type="submit"
+                              className="bg-red-400 hover:bg-red-500"
+                              onClick={handleComplete}
+                            >
+                              <Check className="h-4 w-4 mr-2" />
+                              Completed
+                            </Button>
                           </div>
-                          <div className="flex flex-col gap-y-2">
-                            <label className="text-sm font-semibold text-[#222222]">
-                              Next Maintenance
-                            </label>
-                            <Controller
-                              name="nextMaintenance"
-                              control={control}
-                              render={({ field }) => (
-                                <Input
-                                  id=""
-                                  type="datetime-local"
-                                  value={field.value ?? ""}
-                                  onChange={(e) =>
-                                    field.onChange(e.target.value || null)
-                                  }
-                                  min={new Date(appointment.end)
-                                    .toISOString()
-                                    .slice(0, 16)}
-                                />
-                              )}
-                            />
-                          </div>
-                          <div className="flex items-center justify-end"></div>
-                          <Button
-                            type="submit"
-                            className="bg-red-400 hover:bg-red-500"
-                            onClick={handleComplete}
-                          >
-                            <Check className="h-4 w-4 mr-2" />
-                            Completed
-                          </Button>
-                        </div>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                  )}
 
-                  <Button
-                    className="bg-green-600 hover:bg-green-700"
-                    onClick={handleConfirm}
-                  >
-                    <Check className="h-4 w-4 mr-2" />
-                    Accepted
-                  </Button>
-                  <Button variant="outline" onClick={handleReject}>
-                    <X className="h-4 w-4 mr-2" />
-                    Rejected
-                  </Button>
+                  {status === "Pending" && (
+                    <>
+                      <Button
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={handleConfirm}
+                      >
+                        <Check className="h-4 w-4 mr-2" />
+                        Accepted
+                      </Button>
+                      <Button variant="outline" onClick={handleReject}>
+                        <X className="h-4 w-4 mr-2" />
+                        Rejected
+                      </Button>
+                    </>
+                  )}
                 </div>
               )}
             </CardContent>

@@ -1,13 +1,4 @@
-import {
-  AlertCircle,
-  Calendar,
-  Car,
-  Check,
-  Clock,
-  MoreHorizontal,
-  Settings,
-  X,
-} from "lucide-react";
+import { AlertCircle, Car, Check, Settings, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,21 +10,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { format } from "date-fns";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import {
-  useCompleteAppointment,
-  useConfirmAppointment,
-  useDenyAppointment,
-} from "@/app/stores/entity/appointment";
-import { toast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
+// import {
+//   useCompleteAppointment,
+//   useConfirmAppointment,
+//   useDenyAppointment,
+// } from "@/app/stores/entity/appointment";
 import { useNavigate, useParams } from "react-router-dom";
 
 const CardAppointment = ({
@@ -49,65 +31,65 @@ const CardAppointment = ({
 }) => {
   const { garageId } = useParams();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const confirmAppointmentMutation = useConfirmAppointment();
-  const denyAppointmentMutation = useDenyAppointment();
-  const completeAppointmentMutation = useCompleteAppointment();
-  const handleConfirm = () => {
-    confirmAppointmentMutation.mutate(id, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["appointment", "garage", garageId]);
-        toast({
-          title: "Success",
-          description: "Appointment confirmed successfully",
-        });
-      },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response.data.error,
-          variant: "destructive",
-        });
-      },
-    });
-  };
-  const handleReject = () => {
-    denyAppointmentMutation.mutate(id, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["appointment", "garage", garageId]);
-        toast({
-          title: "Success",
-          description: "Appointment rejected successfully",
-        });
-      },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response.data.error,
-          variant: "destructive",
-        });
-      },
-    });
-  };
+  // const queryClient = useQueryClient();
+  // const confirmAppointmentMutation = useConfirmAppointment();
+  // const denyAppointmentMutation = useDenyAppointment();
+  // const completeAppointmentMutation = useCompleteAppointment();
+  // const handleConfirm = () => {
+  //   confirmAppointmentMutation.mutate(id, {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["appointment", "garage", garageId]);
+  //       toast({
+  //         title: "Success",
+  //         description: "Appointment confirmed successfully",
+  //       });
+  //     },
+  //     onError: (error) => {
+  //       toast({
+  //         title: "Error",
+  //         description: error.response.data.error,
+  //         variant: "destructive",
+  //       });
+  //     },
+  //   });
+  // };
+  // const handleReject = () => {
+  //   denyAppointmentMutation.mutate(id, {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["appointment", "garage", garageId]);
+  //       toast({
+  //         title: "Success",
+  //         description: "Appointment rejected successfully",
+  //       });
+  //     },
+  //     onError: (error) => {
+  //       toast({
+  //         title: "Error",
+  //         description: error.response.data.error,
+  //         variant: "destructive",
+  //       });
+  //     },
+  //   });
+  // };
 
-  const handleComplete = () => {
-    completeAppointmentMutation.mutate(id, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["appointment", "garage", garageId]);
-        toast({
-          title: "Success",
-          description: "Appointment completed successfully",
-        });
-      },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response.data.error,
-          variant: "destructive",
-        });
-      },
-    });
-  };
+  // const handleComplete = () => {
+  //   completeAppointmentMutation.mutate(id, {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["appointment", "garage", garageId]);
+  //       toast({
+  //         title: "Success",
+  //         description: "Appointment completed successfully",
+  //       });
+  //     },
+  //     onError: (error) => {
+  //       toast({
+  //         title: "Error",
+  //         description: error.response.data.error,
+  //         variant: "destructive",
+  //       });
+  //     },
+  //   });
+  // };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -198,7 +180,7 @@ const CardAppointment = ({
         >
           View Details
         </Button>
-        {status !== "Completed" && (
+        {/* {status !== "Completed" && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm">
@@ -229,7 +211,7 @@ const CardAppointment = ({
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
+        )} */}
       </CardFooter>
     </Card>
   );

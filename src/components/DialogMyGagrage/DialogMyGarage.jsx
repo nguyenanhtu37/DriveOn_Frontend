@@ -9,7 +9,7 @@ export const GarageItem = ({ id, name, address, image, rating, isPro }) => (
     <div className="relative w-full p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] border border-gray-100 dark:border-gray-700 overflow-hidden">
       <div className="flex items-start gap-4">
         {/* Image with gradient overlay */}
-        <div className="relative min-w-[80px] h-[80px] rounded-lg overflow-hidden">
+        <div className="relative w-[120px] h-[80px] rounded-lg overflow-hidden">
           <img
             src={image || "/placeholder.svg"}
             alt={`${name} interior`}

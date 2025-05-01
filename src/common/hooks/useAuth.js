@@ -10,13 +10,6 @@ import {
 import { setUser } from "@/app/stores/view/user";
 import { requestPermissionAndGetToken } from "../../../firebase-messaging.js";
 
-const roleData = [
-  { _id: "67895c212e7333f925e9c0e9", roleName: "admin" },
-  { _id: "67895c322e7333f925e9c0ed", roleName: "manager" },
-  { _id: "67895c3e2e7333f925e9c0ef", roleName: "carowner" },
-  { _id: "67b60df8c465fe4f943b98cc", roleName: "staff" },
-];
-
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,42 +23,6 @@ export const useAuth = () => {
     setIsLoggedIn(!!token);
   }, []);
 
-  // const handleLogin = async (credentials) => {
-  //   setIsLoading(true);
-  //   setError(null);
-  //   try {
-  //     const response = await login(credentials); // gọi service login
-  //     setUser(response.user);
-  //     localStorage.setItem("token", response.token);
-
-  //     // DEBUG: In ra roles từ backend
-  //     console.log("🚀 Raw roles from response:", response.roles);
-
-  //     let roles = response.user.roles;
-
-  //     setUserRoles(roles);
-  //     setIsLoggedIn(true);
-
-  //     // ✅ Điều hướng
-  //     if (roles.some((userRole) => userRole.roleName === "admin")) {
-  //       navigate("/adminDashboard");
-  //     }
-  //     if (roles.some((userRole) => userRole.roleName === "staff")) {
-  //       navigate(`/garageManagement/${response.user.garageList[0]._id}`);
-  //     } else {
-  //       console.log("➡️ Redirecting to homepage...");
-  //       navigate("/");
-  //     }
-  //   } catch (err) {
-  //     const errorMessage =
-  //       err.message ||
-  //       "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
-  //     setError(errorMessage);
-  //     throw new Error(errorMessage);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
   const handleLogin = async (credentials) => {
     setIsLoading(true);
     setError(null);

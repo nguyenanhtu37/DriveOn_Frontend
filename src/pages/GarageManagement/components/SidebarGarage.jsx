@@ -14,7 +14,9 @@ import {
 import {
   ArrowBigUpDash,
   CalendarDays,
+  Clock,
   Crown,
+  Home,
   LayoutDashboard,
   LogOut,
   SettingsIcon,
@@ -22,11 +24,17 @@ import {
   Users,
   Wrench,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { SidebarItem } from "@/pages/LayoutAdmin/components/SidebarItem";
 import { useAuth } from "@/common/hooks/useAuth";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const navigationItems = [
   {
@@ -78,12 +86,6 @@ const navigationItems = [
         link: "settings",
         role: ["manager"],
       },
-      {
-        icon: <ArrowBigUpDash className="h-4 w-4" />,
-        title: "Upgrade GaragePro",
-        link: "/garageProUpgrade",
-        role: ["manager"],
-      },
     ],
   },
 ];
@@ -96,11 +98,23 @@ export const SidebarGarage = () => {
 
   return (
     <Sidebar className="border-r">
-      <SidebarHeader className=" px-4 py-5 flex items-center ">
+      <SidebarHeader className=" px-4 py-5 flex items-start ">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-rose-100">
-            <Wrench className="h-4 w-4 text-rose-600" />
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/"
+                  className="flex h-8 w-8 items-center justify-center rounded-md bg-rose-100"
+                >
+                  <Home className="h-4 w-4 text-rose-600" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent align="start">
+                <p>Back to Home Page</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <div className="flex flex-col">
             <span className="font-medium text-sm leading-none">Drive On</span>
             <span className="text-xs text-muted-foreground leading-relaxed">
@@ -149,6 +163,24 @@ export const SidebarGarage = () => {
                       role={item.role}
                     />
                   ))}
+                  {group.group == "Settings" &&
+                    (garage.data.tag == "pro" ? (
+                      <SidebarItem
+                        key="Expired Date"
+                        icon={<Clock className="h-4 w-4" />}
+                        title="Expired Date"
+                        link="expiredDate"
+                        role={["manager", "staff"]}
+                      />
+                    ) : (
+                      <SidebarItem
+                        key="Upgrade GaragePro"
+                        icon={<ArrowBigUpDash className="h-4 w-4" />}
+                        title="Upgrade GaragePro"
+                        link="/garageProUpgrade"
+                        role={["manager"]}
+                      />
+                    ))}
                 </SidebarMenu>
               </SidebarGroupContent>
               {index < navigationItems.length - 1 && (

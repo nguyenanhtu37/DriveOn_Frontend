@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../../components/Header";
 import NavbarMobile from "@/components/NavbarMobile";
 import { useGeolocation } from "../hooks/useGeolocation";
+import { Footer } from "@/components/Footer/Footer";
 
 function MainLayout() {
   useGeolocation();
@@ -10,6 +11,7 @@ function MainLayout() {
       <Header />
       <Outlet />
       <NavbarMobile />
+      <Footer />
     </div>
   );
 }
