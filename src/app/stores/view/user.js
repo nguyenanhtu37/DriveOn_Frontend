@@ -23,4 +23,9 @@ export const getLocation = () => useUserStore.getState().location;
 
 export const getUser = () => useUserStore.getState().user;
 
-export const userLogout = () => useUserStore.getState().logout();
+export const userLogout = () => {
+  useUserStore.getState().logout();
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("location");
+};

@@ -17,6 +17,7 @@ const LoginWithGoogleButton = () => {
           title: "Login successful",
           description: "You have successfully logged in with Google.",
           status: "success",
+          duration: 2000,
         });
         let roles = data.user.roles;
         if (roles.some((userRole) => userRole.roleName === "admin")) {

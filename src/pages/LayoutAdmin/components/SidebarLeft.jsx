@@ -9,6 +9,7 @@ import {
   Settings,
   LayoutDashboard,
   Wallet,
+  Home,
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import {
@@ -25,6 +26,13 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/common/hooks/useAuth";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Link } from "react-router-dom";
 
 const navigationItems = [
   {
@@ -102,11 +110,23 @@ export const SidebarLeft = () => {
 
   return (
     <Sidebar className="border-r">
-      <SidebarHeader className="px-4 py-5 flex items-center">
+      <SidebarHeader className="px-4 py-5 flex items-start">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-rose-100">
-            <ServerCog className="h-4 w-4 text-rose-600" />
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/"
+                  className="flex h-8 w-8 items-center justify-center rounded-md bg-rose-100"
+                >
+                  <Home className="h-4 w-4 text-rose-600" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent align="start">
+                <p>Back to Home Page</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <div className="flex flex-col">
             <span className="font-medium text-sm leading-none">Drive On</span>
             <span className="text-xs text-muted-foreground leading-relaxed">
