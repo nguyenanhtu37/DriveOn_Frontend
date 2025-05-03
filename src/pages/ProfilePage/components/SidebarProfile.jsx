@@ -15,7 +15,6 @@ import {
 import { useTabStore } from "@/app/stores/view/tab";
 import { userLogout } from "@/app/stores/view/user";
 import { useNavigate } from "react-router-dom";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const menuItems = [
   { id: "vehicles", label: "Vehicles", icon: Car },
@@ -33,13 +32,8 @@ export const SidebarProfile = () => {
   };
   const { tab, setTab } = useTabStore();
 
-  const isMobile = useIsMobile();
-  if (!isMobile) return null;
   return (
-    <Sidebar
-      side="right"
-      className="fixed top-0 right-0 z-50 w-[300px] h-full bg-white shadow-lg"
-    >
+    <Sidebar side="right">
       <SidebarHeader className="flex items-center justify-between px-2">
         <h2 className="text-lg font-semibold">DriveOn</h2>
       </SidebarHeader>

@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 
 export const MyGarage = () => {
-  const myGarages = useGetMyGarage();
+  const myGarages = useGetMyGarage(true);
   if (myGarages.isLoading) {
     return null;
   }

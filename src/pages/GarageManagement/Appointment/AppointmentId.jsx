@@ -113,6 +113,7 @@ const AppointmentId = () => {
         toast({
           title: "Success",
           description: "Appointment confirmed successfully",
+          duration: 2000,
         });
       },
       onError: (error) => {
@@ -120,6 +121,7 @@ const AppointmentId = () => {
           title: "Error",
           description: error.response.data.error,
           variant: "destructive",
+          duration: 2000,
         });
       },
     });
@@ -131,6 +133,7 @@ const AppointmentId = () => {
         toast({
           title: "Success",
           description: "Appointment rejected successfully",
+          duration: 2000,
         });
       },
       onError: (error) => {
@@ -138,27 +141,32 @@ const AppointmentId = () => {
           title: "Error",
           description: error.response.data.error,
           variant: "destructive",
+          duration: 2000,
         });
       },
     });
   };
 
   useEffect(() => {
-    setStatus(appointmentData.status);
-    reset({
-      updatedEndTime: appointmentData.end,
-    });
+    if (appointmentData && appointmentData.status) {
+      setStatus(appointmentData.status);
+      reset({
+        updatedEndTime: appointmentData.end || "",
+      });
+    }
   }, [appointmentData, reset]);
 
   const handleComplete = handleSubmit(async (data) => {
+    const payload = {
+      updatedEndTime: new Date(data.updatedEndTime).toISOString(),
+    };
+    if (data.nextMaintenance) {
+      payload.nextMaintenance = new Date(data.nextMaintenance).toISOString();
+    }
     completeAppointmentMutation.mutate(
       {
         appointmentId,
-        data: {
-          ...data,
-          updatedEndTime: new Date(data.updatedEndTime).toISOString(),
-          nextMaintenance: new Date(data.nextMaintenance).toISOString(),
-        },
+        data: payload,
       },
       {
         onSuccess: () => {
@@ -166,6 +174,7 @@ const AppointmentId = () => {
           toast({
             title: "Success",
             description: "Appointment completed successfully",
+            duration: 2000,
           });
         },
         onError: (error) => {
@@ -173,6 +182,7 @@ const AppointmentId = () => {
             title: "Error",
             description: error.response.data.error,
             variant: "destructive",
+            duration: 2000,
           });
         },
       }
@@ -425,7 +435,6 @@ const AppointmentId = () => {
                                 control={control}
                                 render={({ field }) => (
                                   <Input
-                                    id=""
                                     type="datetime-local"
                                     value={
                                       field.value
@@ -454,7 +463,6 @@ const AppointmentId = () => {
                                 control={control}
                                 render={({ field }) => (
                                   <Input
-                                    id=""
                                     type="datetime-local"
                                     value={field.value ?? ""}
                                     onChange={(e) =>

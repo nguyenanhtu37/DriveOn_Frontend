@@ -24,7 +24,6 @@ import {
 } from "../ui/select";
 import { useFilterStore } from "@/app/stores/view/filter";
 import { Input } from "../ui/input";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Slider } from "../ui/slider";
 
@@ -88,7 +87,10 @@ const DialogFilter = () => {
           "https://open.oapi.vn/location/provinces?size=63"
         );
         const data = await res.json();
-        setProvinces(data.data || []);
+        const sortedProvinces = data.data.sort((a, b) =>
+          a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+        );
+        setProvinces(sortedProvinces || []);
       } catch (error) {
         console.error("Error fetching provinces:", error);
       }
@@ -296,7 +298,7 @@ const DialogFilter = () => {
 
             <div className="px-6 py-7 w-full flex-col gap-y-6 border-b border-[#1c1c1c]/50">
               <div className=" flex justify-between items-center mb-4">
-                <div className=" flex flex-col items-start gap-y-2">
+                <div className=" flex flex-col items-start gap-y-4">
                   <Label className="text-lg">Select Location </Label>
                   <DialogDescription className=" flex items-center gap-x-2">
                     Select the location where you want to make an appointment
@@ -305,7 +307,7 @@ const DialogFilter = () => {
               </div>
 
               <Tabs defaultValue="address">
-                <TabsList className="mb-4">
+                <TabsList className="mb-6">
                   <TabsTrigger value="address">Search by area</TabsTrigger>
                   <TabsTrigger value="currentLocation">
                     Search around current location

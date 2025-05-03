@@ -48,7 +48,7 @@ const GarageMap = () => {
           <Marker position={[lat, lng]} icon={userIcon}>
             <Popup>
               <div className="text-center text-sm font-semibold text-gray-700 px-2 py-4">
-                Vị trí của bạn
+                Your location
               </div>
             </Popup>
           </Marker>
