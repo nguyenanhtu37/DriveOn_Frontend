@@ -3,13 +3,16 @@ import { useParams } from "react-router-dom";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import { useIsMobile } from "@/hooks/use-mobile";
 const Service = () => {
   const { garageId } = useParams();
+  const isMobile = useIsMobile();
+  const perView = isMobile ? 1.5 : 4;
   const serviceGarage = useGetService(garageId);
   if (serviceGarage.isLoading) return;
   return (
     <Swiper
-      slidesPerView={2.5}
+      slidesPerView={perView}
       spaceBetween={15}
       className="mySwiper w-full"
       modules={[Autoplay]}

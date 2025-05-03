@@ -24,3 +24,14 @@ export const getServiceDetailById = async (id) => {
   const response = await axios.get(`service-detail/${id}`);
   return response.data;
 };
+
+export const getServiceDetailByKeyword = async ({ keyword, location }) => {
+  const response = await axios.get(`service-detail/searchService`, {
+    params: {
+      keyword,
+      lat: location?.[0],
+      lon: location?.[1],
+    },
+  });
+  return response.data;
+};

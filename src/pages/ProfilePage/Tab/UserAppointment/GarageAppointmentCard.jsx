@@ -31,8 +31,15 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { twMerge } from "tailwind-merge";
+import { useNavigate } from "react-router-dom";
 
 export const GarageAppointmentCard = ({ appointment }) => {
+  const navigate = useNavigate();
+
+  const handleBookAgain = () => {
+    navigate(`/garageDetail/${appointment.garage._id}`);
+  };
+
   const cancelAppointment = useCancelAppointment();
   const queryClient = useQueryClient();
   const handleCancel = () => {
@@ -229,34 +236,39 @@ export const GarageAppointmentCard = ({ appointment }) => {
       </CardContent>
 
       <CardFooter className="flex justify-between bg-muted/30 pt-4">
-        {appointment.status === "Pending" && (
-          <div className="space-x-2">
-            <Dialog>
-              <DialogTrigger>
-                <Button variant="destructive">Cancel</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogTitle>Cancel Appointment</DialogTitle>
-                <DialogDescription>
-                  Are you sure you want to cancel this appointment?
-                </DialogDescription>
-                <div className="flex justify-end space-x-2 mt-4">
-                  <Button variant="outline" onClick={() => handleCancel()}>
-                    Yes, Cancel
-                  </Button>
-                  <DialogTrigger>
-                    <Button variant="ghost">No, Keep</Button>
-                  </DialogTrigger>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        )}
+        {appointment.status === "Pending" ||
+          (appointment.status === "Accepted" && (
+            <div className="space-x-2">
+              <Dialog>
+                <DialogTrigger>
+                  <Button variant="destructive">Cancel</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogTitle>Cancel Appointment</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to cancel this appointment?
+                  </DialogDescription>
+                  <div className="flex justify-end space-x-2 mt-4">
+                    <Button variant="outline" onClick={() => handleCancel()}>
+                      Yes, Cancel
+                    </Button>
+                    <DialogTrigger>
+                      <Button variant="ghost">No, Keep</Button>
+                    </DialogTrigger>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          ))}
 
         {appointment.status === "Confirmed" && <Button>Check In</Button>}
 
-        {appointment.status !== "Pending" && (
-          <Button variant="outline">Book again</Button>
+        {(appointment.status === "Completed" ||
+          appointment.status === "Cancel" ||
+          appointment.status === "Rejected") && (
+          <Button variant="outline" onClick={handleBookAgain}>
+            Book again
+          </Button>
         )}
       </CardFooter>
     </Card>

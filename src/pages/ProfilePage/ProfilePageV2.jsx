@@ -21,11 +21,17 @@ import { RegisterGarage } from "./Tab/RegisterGarage/RegisterGarage";
 import { MyGarage } from "./Tab/MyGarage/MyGarage";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SidebarProfile } from "./components/SidebarProfile";
+import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const ProfilePageV2 = () => {
   const profile = useGetProfile();
   const { files, handleFileChange, handleUpload } = useUpload();
   const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+
+  const isMobile = useIsMobile();
 
   const { tab, setTab } = useTabStore();
 
@@ -63,9 +69,15 @@ export const ProfilePageV2 = () => {
     }
   };
 
+  useEffect(() => {
+    if (!isMobile) {
+      setOpen(false);
+    }
+  }, [isMobile]);
+
   if (profile.isLoading) return <Loading />;
   return (
-    <SidebarProvider>
+    <SidebarProvider open={open} onOpenChange={setOpen}>
       <div className=" bg-white w-full">
         <div className="mx-auto py-8 pt-4 px-4">
           <Button

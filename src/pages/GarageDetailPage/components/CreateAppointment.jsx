@@ -252,9 +252,15 @@ export const CreateAppointment = () => {
                   <div className="grid grid-cols-[100px_1fr] gap-2">
                     <span className="font-medium">Duration:</span>
                     <span>
-                      {service?.data?.find(
-                        (s) => s._id === control._formValues.service[0].value
-                      )?.duration || "N/A"}{" "}
+                      {control._formValues.service.reduce(
+                        (total, serviceItem) => {
+                          const foundService = service?.data?.find(
+                            (s) => s._id === serviceItem.value
+                          );
+                          return total + (foundService?.duration || 0);
+                        },
+                        0
+                      ) || "N/A"}{" "}
                       minutes
                     </span>
                   </div>

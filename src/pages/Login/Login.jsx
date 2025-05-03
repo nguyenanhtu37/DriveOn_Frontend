@@ -1,27 +1,24 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowLeft } from "lucide-react"
-import { loginSchema } from "../../schema/loginSchema"
-import { useAuth } from "../../common/hooks/useAuth"
-
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft } from "lucide-react";
+import { loginSchema } from "../../schema/loginSchema";
+import { useAuth } from "../../common/hooks/useAuth";
 
 import FooterSection from "../../components/login/FooterSection";
 
-
-import LoginWithGoogleButton from "../../components/login/LoginWithGoogleButton"
-import InputField from "../../components/ui/InputField"
-import RememberMeSection from "../../components/login/RememberMeSection"
-import SubmitButton from "../../components/login/SubmitButton"
+import LoginWithGoogleButton from "../../components/login/LoginWithGoogleButton";
+import InputField from "../../components/ui/InputField";
+import RememberMeSection from "../../components/login/RememberMeSection";
+import SubmitButton from "../../components/login/SubmitButton";
 
 export default function LoginPage() {
-  const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const { handleLogin, error: authError } = useAuth()
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const { handleLogin, error: authError } = useAuth();
 
   const {
     register,
@@ -29,26 +26,26 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   const onSubmit = async (data) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await handleLogin(data)
+      await handleLogin(data);
     } catch (error) {
-      console.error("Login error:", error.message)
+      console.error("Login error:", error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleRegisterClick = () => {
-    navigate("/signup")
-  }
+    navigate("/signup");
+  };
 
   const handleBackToHome = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 md:p-8 font-archivo">
@@ -84,11 +81,17 @@ export default function LoginPage() {
               <div className="w-full border-t border-gray"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-body">or continue with email</span>
+              <span className="px-2 bg-white text-body">
+                or continue with email
+              </span>
             </div>
           </div>
 
-          {authError && <p className="text-destructive text-sm mb-4 p-3 bg-destructive/10 rounded-md">{authError}</p>}
+          {authError && (
+            <p className="text-destructive text-sm mb-4 p-3 bg-destructive/10 rounded-md">
+              {authError}
+            </p>
+          )}
 
           <InputField
             label="Email"
@@ -108,11 +111,13 @@ export default function LoginPage() {
 
           <RememberMeSection />
 
-          <SubmitButton disabled={loading}>{loading ? "Logging in..." : "Login"}</SubmitButton>
+          <SubmitButton disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </SubmitButton>
         </form>
 
         <FooterSection onRegisterClick={handleRegisterClick} />
       </div>
     </div>
-  )
+  );
 }

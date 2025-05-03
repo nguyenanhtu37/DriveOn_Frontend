@@ -52,13 +52,13 @@ export const GarageItem = ({ id, name, address, image, rating, isPro }) => (
   </Link>
 );
 
-const DialogMyGarage = ({ ...props }) => {
-  const myGarage = useGetMyGarage();
+const DialogMyGarage = ({ open, ...props }) => {
+  const myGarage = useGetMyGarage({ open });
 
   if (myGarage.isLoading) return null;
 
   return (
-    <Dialog {...props}>
+    <Dialog open={open} {...props}>
       <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto px-3">
         <DialogTitle>My garages</DialogTitle>
         <div className="w-full flex flex-col gap-y-5 mt-2">

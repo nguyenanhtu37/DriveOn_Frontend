@@ -16,6 +16,7 @@ import { DialogService } from "./components/DialogService";
 import { CreateAppointment } from "./components/CreateAppointment";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import FeedbackV2 from "./components/FeedbackV2";
+import { LocationMap } from "./components/LocationMap";
 
 const GarageDetailPage = () => {
   const { garageId } = useParams();
@@ -68,7 +69,7 @@ const GarageDetailPage = () => {
                     </span>
                   </div>
                 </div>
-                <span className="text-sm text-gray-600 line-clamp-1 mt-1">
+                <span className="text-sm text-gray-600 line-clamp-2 mt-1">
                   {garageDetail.data.description}
                 </span>
               </div>
@@ -171,26 +172,22 @@ const GarageDetailPage = () => {
                 <div className="text-xl font-bold text-gray-800">
                   Description
                 </div>
-                <div className="text-md text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-lg">
+                <div className="text-md text-gray-600 leading-relaxed bg-gray-50 ">
                   {garageDetail.data.description}
                 </div>
               </div>
 
               <div className="w-full h-px bg-gray-200 my-2"></div>
 
-              {/* Services */}
-              <div className="w-full py-8 flex flex-col gap-y-4 z-0">
-                <div className="text-xl font-bold text-gray-800 flex w-full justify-between items-center">
-                  Services
-                  <DialogService />
+              {/* Description */}
+              <div className="w-full pt-6 pb-8 flex flex-col gap-y-3">
+                <div className="text-xl font-bold text-gray-800">Location</div>
+                <div className=" h-[300px] rounded-xl overflow-hidden shadow-sm">
+                  <LocationMap garage={garageDetail.data} />
                 </div>
-                <Service />
               </div>
 
               <div className="w-full h-px bg-gray-200 my-2"></div>
-
-              {/* Feedback Section */}
-              {/* <Feedback garageId={garageId} currentUserId={currentUserId} /> */}
             </div>
 
             {/* Appointment Sticky Section */}
@@ -201,10 +198,20 @@ const GarageDetailPage = () => {
             </div>
           </div>
           <div className=" w-full h-px shadow-sm"></div>
+          {/* Services */}
+          <div className="w-full py-8 flex flex-col gap-y-4 z-0">
+            <div className="text-xl font-bold text-gray-800 flex w-full justify-between items-center">
+              Services
+              <DialogService />
+            </div>
+            <Service />
+          </div>
+
+          <div className="w-full h-px bg-gray-200 my-2"></div>
           <FeedbackV2 />
         </div>
       </div>
-      <div className="sticky w-fit left-4 bottom-20 lg:hidden z-50">
+      <div className="sticky w-fit left-4 bottom-20 lg:hidden z-40">
         <Dialog>
           <DialogTrigger asChild>
             <button className="w-fit py-4 px-4 bg-red-500 text-white rounded-full shadow-xl hover:bg-red-600 transition-colors duration-200 ease-in-out flex items-center justify-center">
