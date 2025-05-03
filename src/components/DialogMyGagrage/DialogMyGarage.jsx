@@ -2,6 +2,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogTrigger
 } from "../ui/dialog";
 import { useGetMyGarage } from "@/app/stores/entity/garage";
 import { MapPin, Star } from "lucide-react";
@@ -63,9 +64,16 @@ const DialogMyGarage = ({ open, onOpenChange }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto px-3">
-        <DialogTitle>My garages</DialogTitle>
-        <div className="w-full flex flex-col gap-y-5 mt-2">
+      <DialogTrigger asChild>
+        <div className="text-sm w-full px-3 py-2 text-[#222222] ease-in-out hover:bg-[#f7f6f6] font-roboto cursor-pointer">
+          Garage
+        </div>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto px-6 py-4">
+        <DialogTitle className="text-lg font-bold text-gray-900">
+          My Garages
+        </DialogTitle>
+        <div className="w-full flex flex-col gap-y-5 mt-4">
           {myGarage.data && myGarage.data.length > 0 ? (
             myGarage.data.map((item) => (
               <GarageItem
