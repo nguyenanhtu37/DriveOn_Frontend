@@ -65,7 +65,7 @@ export const getRegisterGarageCarOwner = async () => {
 };
 
 export const updateGarageRegister = async (id, data) => {
-  const response = await axios.put(`garages/${id}`, data);
+  const response = await axios.put(`garage/garages/${id}`, data);
   return response.data;
 };
 

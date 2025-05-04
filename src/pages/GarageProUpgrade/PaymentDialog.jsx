@@ -21,7 +21,7 @@ export const PaymentDialog = ({ open, setOpen }) => {
   const [selectedPlan, setSelectedPlan] = useState({});
   const [paymentMethod, setPaymentMethod] = useState("bank");
 
-  const garages = useGetMyGarage();
+  const garages = useGetMyGarage(true);
 
   const subscriptionPlans = useGetSubscription();
 

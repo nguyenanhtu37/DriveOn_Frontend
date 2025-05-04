@@ -10,6 +10,7 @@ import {
   Edit,
   Save,
   X,
+  Check,
 } from "lucide-react";
 import {
   Card,
@@ -64,8 +65,16 @@ export const Garage = ({ garageData }) => {
       {
         onSuccess: () => {
           toast({
-            title: "Cập nhật thành công",
-            description: "Thông tin garage đã được cập nhật",
+            title: "Garage updated successfully",
+            description: "Garage information has been updated",
+            duration: 2000,
+          });
+        },
+        onError: () => {
+          toast({
+            variant: "destructive",
+            title: "Garage update failed",
+            description: "Failed to update garage information",
             duration: 2000,
           });
         },
@@ -77,6 +86,51 @@ export const Garage = ({ garageData }) => {
   const handleCancel = () => {
     setFormData({ ...garage });
     setIsEditing(false);
+  };
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "rejected":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-red-50 text-red-600 border-red-200"
+          >
+            <X className="mr-1 h-3 w-3" />
+            Rejected
+          </Badge>
+        );
+      case "disabled":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-gray-50 text-gray-600 border-gray-200"
+          >
+            <X className="mr-1 h-3 w-3" />
+            Disabled
+          </Badge>
+        );
+      case "pending":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-amber-50 text-amber-600 border-amber-200"
+          >
+            <Clock className="mr-1 h-3 w-3" />
+            Pending
+          </Badge>
+        );
+      default:
+        return (
+          <Badge
+            variant="outline"
+            className="bg-green-50 text-green-600 border-green-200"
+          >
+            <Check className="mr-1 h-3 w-3" />
+            {status}
+          </Badge>
+        );
+    }
   };
 
   const weekdays = [
@@ -127,14 +181,7 @@ export const Garage = ({ garageData }) => {
           <div className="flex gap-2">
             {!isEditing ? (
               <>
-                {garage.status.map((status) => (
-                  <Badge
-                    key={status}
-                    variant={status === "approved" ? "success" : "default"}
-                  >
-                    {status}
-                  </Badge>
-                ))}
+                {getStatusBadge(garage.status)}
                 <Badge variant="outline">{garage.tag}</Badge>
                 <Button
                   variant="outline"
