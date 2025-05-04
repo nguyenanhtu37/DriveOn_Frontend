@@ -10,17 +10,55 @@ import {
 } from "lucide-react";
 import Service from "./components/Service";
 import { useGetGarageDetail } from "@/app/stores/entity/garage";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Loading } from "@/components/Loading";
 import { DialogService } from "./components/DialogService";
 import { CreateAppointment } from "./components/CreateAppointment";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import FeedbackV2 from "./components/FeedbackV2";
 import { LocationMap } from "./components/LocationMap";
+import { getLocation } from "@/app/stores/view/user";
+import { getDirectionStore } from "@/app/stores/view/direction";
+import { useGetDriving } from "@/app/stores/entity/driving";
+import { useTabStore } from "@/app/stores/view/tab";
 
 const GarageDetailPage = () => {
   const { garageId } = useParams();
   const garageDetail = useGetGarageDetail(garageId);
+  const navigate = useNavigate();
+  const { setGarageView } = useTabStore();
+  const location = getLocation();
+  const { setDirection } = getDirectionStore();
+  const getDriving = useGetDriving();
+  const handleGetDirection = (garageDestination) => {
+    const origin = {
+      lat: location[0],
+      lon: location[1],
+    };
+    const destination = {
+      lat: garageDestination[1],
+      lon: garageDestination[0],
+    };
+    getDriving.mutate(
+      {
+        origin,
+        destination,
+      },
+      {
+        onSuccess: (data) => {
+          const route = data.routes[0].geometry.coordinates.map((coord) => [
+            coord[1],
+            coord[0],
+          ]);
+
+          console.log(route, "route");
+          setDirection(route);
+          setGarageView("map");
+          navigate("/");
+        },
+      }
+    );
+  };
 
   if (garageDetail.isLoading) return <Loading />;
 
@@ -181,7 +219,21 @@ const GarageDetailPage = () => {
 
               {/* Description */}
               <div className="w-full pt-6 pb-8 flex flex-col gap-y-3">
-                <div className="text-xl font-bold text-gray-800">Location</div>
+                <div className="text-xl font-bold text-gray-800 flex justify-between items-end">
+                  <span>Location</span>
+                  {location && (
+                    <span
+                      className=" text-xs font-semibold cursor-pointer  hover:underline text-red-400 transition-all ease-in-out duration-200"
+                      onClick={() =>
+                        handleGetDirection(
+                          garageDetail.data.location.coordinates
+                        )
+                      }
+                    >
+                      Get Directions
+                    </span>
+                  )}
+                </div>
                 <div className=" h-[300px] rounded-xl overflow-hidden shadow-sm">
                   <LocationMap garage={garageDetail.data} />
                 </div>

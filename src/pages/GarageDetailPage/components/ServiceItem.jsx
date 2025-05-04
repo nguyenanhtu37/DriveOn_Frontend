@@ -53,7 +53,7 @@ export const ServiceItem = ({
           </div>
         </div>
       </div>
-      <div className="w-full h-px bg-[#525252]"></div>
+      <div className="w-full h-px bg-[#bbbbbb]"></div>
     </>
   );
 };
