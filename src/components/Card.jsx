@@ -24,7 +24,7 @@ import {
   useRemoveFromFavorites,
 } from "@/app/stores/entity/favoriteV2";
 import { toast } from "@/hooks/use-toast";
-import { openGoogleMap } from "@/lib/openGoogleMap";
+// import { openGoogleMap } from "@/lib/openGoogleMap";
 import { getLocation } from "@/app/stores/view/user";
 
 export function GarageCard({
@@ -37,7 +37,8 @@ export function GarageCard({
   imgs,
   isFavorited,
   tag,
-  location,
+  // location,
+  handleGetDirection,
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const myLocation = getLocation();
@@ -82,7 +83,7 @@ export function GarageCard({
 
   const handleDirectionClick = (e) => {
     e.stopPropagation();
-    openGoogleMap(location);
+    handleGetDirection();
   };
 
   useEffect(() => {
@@ -269,7 +270,7 @@ export function GarageCard({
               className="p-0 text-xs text-gray-500 hover:text-gray-700 mt-2"
               onClick={handleDirectionClick}
             >
-              See instructions
+              Get Directions
             </Button>
           )}
         </div>
