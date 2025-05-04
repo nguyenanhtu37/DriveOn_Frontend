@@ -3,7 +3,7 @@ import "swiper/css";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { getLocation } from "@/app/stores/view/user";
-import { openGoogleMap } from "@/lib/openGoogleMap";
+// import { openGoogleMap } from "@/lib/openGoogleMap";
 const PopupGarage = ({
   id,
   imgs,
@@ -11,14 +11,15 @@ const PopupGarage = ({
   garageName,
   openDays,
   phone,
-  location,
+  // location,
+  handleDirectionClick,
 }) => {
   const myLocation = getLocation();
 
-  const handleDirectionClick = (e) => {
-    e.stopPropagation();
-    openGoogleMap(location);
-  };
+  // const handleOpenGoogleMap = (e) => {
+  //   e.stopPropagation();
+  //   openGoogleMap(location);
+  // };
 
   return (
     <div className="rounded-lg w-[301px] rounded-t-[12px] overflow-hidden">
@@ -54,14 +55,21 @@ const PopupGarage = ({
         </div>
       </Link>
       {myLocation && (
-        <div className=" px-2 py-1">
+        <div className=" px-2 py-1 flex justify-between items-center">
           <Button
             variant="ghost"
             className="p-0 text-xs text-gray-500 hover:text-red-500"
             onClick={handleDirectionClick}
           >
-            See instructions
+            Get Directions
           </Button>
+          {/* <Button
+            variant="ghost"
+            className="p-0 text-xs text-gray-500 hover:text-red-500"
+            onClick={handleOpenGoogleMap}
+          >
+            Open in Google Maps
+          </Button> */}
         </div>
       )}
     </div>

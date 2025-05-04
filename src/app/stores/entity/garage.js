@@ -3,7 +3,7 @@ import { toast, useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFilterStore } from "@/app/stores/view/filter";
 import { useDebounce } from "react-haiku";
-import { getLocation, useUserStore } from "../view/user";
+import { getLocation } from "../view/user";
 import { useNavigate } from "react-router-dom";
 import { AdminScreenPath } from "@/constants/screen";
 
@@ -75,7 +75,7 @@ export const useGetGarages = () => {
         params.append("services", services);
       }
       if (
-        debouncedLocation.province?.name &&
+        debouncedLocation.province?.name ||
         debouncedLocation.district?.name
       ) {
         params.append("province", debouncedLocation.province.name);
@@ -254,12 +254,11 @@ export const useGetGarageDetail = (id) => {
   };
 };
 
-export const useGetMyGarage = () => {
-  const { user } = useUserStore();
+export const useGetMyGarage = ({ open }) => {
   const query = useQuery({
     queryKey: ["myGarage"],
     queryFn: garageService.getMyGarage,
-    enabled: !!user,
+    enabled: open,
   });
   return {
     ...query,

@@ -1,4 +1,4 @@
-import { AlignJustify, Globe } from "lucide-react";
+import { AlignJustify } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/common/hooks/useAuth";
@@ -8,21 +8,55 @@ import { useUserStore } from "@/app/stores/view/user";
 import { Button } from "./ui/button";
 import { useState } from "react";
 
+import { Badge } from "./ui/badge";
+import { SearchServicesByKeyword } from "./SearchServicesByKeyword/SearchServicesByKeyword";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import { SidebarTrigger } from "./ui/sidebar";
+
+const garageMessages = [
+  {
+    text: "🚗 Join our garage network — register today and grow your reach. 🚗",
+    bgColor: "bg-red-50 hover:bg-red-100",
+  },
+  {
+    text: "🔧 Expand your business — become a trusted garage in our network!",
+    bgColor: "bg-blue-50 hover:bg-blue-100",
+  },
+  {
+    text: "🚗 Get more customers, more visibility — join our garage network today.",
+    bgColor: "bg-green-50 hover:bg-green-100",
+  },
+  {
+    text: "🧰 Trusted by hundreds of garages — yours should be next!",
+    bgColor: "bg-yellow-50 hover:bg-yellow-100",
+  },
+  {
+    text: "🚀 Join now and drive your garage's success forward.",
+    bgColor: "bg-purple-50 hover:bg-purple-100",
+  },
+  {
+    text: "🔧 Ready to grow? Register your garage — it's fast and free!",
+    bgColor: "bg-pink-50 hover:bg-pink-100",
+  },
+];
 function Navbar() {
   const { handleLogout, isLoading, isLoggedIn } = useAuth();
   const { user } = useUserStore();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // Handle logout error display
-
   const onLogout = async () => {
-    await handleLogout(); // This resets isLoggedIn and navigates to /login
+    await handleLogout();
   };
 
   return (
     <div className="relative w-full flex flex-col items-center bg-white border-b border-[#DDDDDD]">
-      <div className="relative w-full h-20 px-4 md:px-10 flex justify-between items-center">
+      <div className="relative w-full h-16 xl:h-20 px-4 md:px-10 flex justify-between items-center transition-all duration-100 ease-in-out">
+        <div className="flex md:hidden absolute z-40 top-1/2 left-4 -translate-y-1/2 justify-start items-center">
+          <SidebarTrigger />
+        </div>
         {/* Left */}
         <div className="w-full md:w-1/2 lg:w-1/3 flex justify-center md:justify-start items-center z-30">
           <Link
@@ -38,49 +72,34 @@ function Navbar() {
         </div>
 
         {/* Center */}
-        {/* <div className="hidden md:block w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-          <div
-            className={cn(
-              "flex justify-center items-center gap-x-3 transition-all duration-300 ease-in-out"
-            )}
-          >
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `text-md font-medium cursor-pointer flex items-center justify-center px-4 p-2 rounded-full hover:bg-[#f4f4f4] transition-colors duration-100 ease-in-out ${
-                  isActive ? "text-black bg-[#dedede]" : "text-[#222222]"
-                }`
-              }
+        <div className="hidden xl:flex w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] justify-center items-center">
+          <Link to={"/garageRegistration"} asChild>
+            <Swiper
+              autoplay={{
+                delay: 3000,
+              }}
+              loop={true}
+              modules={[Autoplay]}
+              direction={"vertical"}
+              className="w-full h-[50px] "
             >
-              Garage
-            </NavLink>
-            <NavLink
-              to="/emergency"
-              className={({ isActive }) =>
-                `text-md font-medium cursor-pointer flex items-center justify-center px-4 p-2 rounded-full hover:bg-[#f4f4f4] transition-colors duration-100 ease-in-out ${
-                  isActive ? "text-black" : "text-[#6A6A6A]"
-                }`
-              }
-            >
-              Emergency
-            </NavLink>
-          </div>
-        </div> */}
+              {garageMessages.map((item, index) => (
+                <SwiperSlide key={index}>
+                  <Badge
+                    className={`py-[9px] px-3 text-[#222222] text-md font-medium rounded-full hover:shadow-sm transition-all duration-100 ${item.bgColor}`}
+                  >
+                    {item.text}
+                  </Badge>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Link>
+        </div>
 
         {/* Right */}
         <div className="hidden w-1/2 lg:w-1/3 md:flex justify-end items-center z-30">
           <div className="flex items-center gap-2">
-            <div className="hidden xl:flex py-[9px] px-3 rounded-full bg-white items-center gap-2 cursor-pointer hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100">
-              <Link
-                to={"/garageRegistration"}
-                className="text-[#222222] text-sm font-bold"
-              >
-                Garage Register
-              </Link>
-            </div>
-            <div className="flex items-center p-3 rounded-full bg-white cursor-pointer hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100">
-              <Globe size={16} />
-            </div>
+            <SearchServicesByKeyword />
 
             {!isLoggedIn ? (
               <div className="flex items-center gap-2">
@@ -101,10 +120,12 @@ function Navbar() {
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="py-1 px-2 rounded-full ml-2 border border-[#DDDDDD] flex items-center justify-center gap-[12px] cursor-pointer shadow-sm hover:shadow-md transition-all ease-in-out duration-100">
-                    <AlignJustify size={16} />
+                    <div className="flex justify-center items-center">
+                      <AlignJustify size={16} />
+                    </div>
                     <img
                       className="w-[30px] aspect-square rounded-full object-cover"
-                      src={user.avatar ?? "/placeholder.svg"}
+                      src={user?.avatar ?? "/placeholder.svg"}
                       alt="User Avatar"
                     />
                   </div>
@@ -151,12 +172,6 @@ function Navbar() {
           </div>
         </div>
       </div>
-
-      {/* {logoutError && (
-        <div className="absolute top-20 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md shadow-md z-50">
-          <p className="text-sm">{logoutError}</p>
-        </div>
-      )} */}
     </div>
   );
 }

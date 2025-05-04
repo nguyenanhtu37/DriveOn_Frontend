@@ -1,25 +1,31 @@
-import { useCreateAppointmentByStaff } from "@/app/stores/entity/appointment";
+import {
+  useCreateAppointmentByStaff,
+  useIsCalledAppointment,
+} from "@/app/stores/entity/appointment";
 import { useGetService } from "@/app/stores/entity/service-detail";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { appointmentSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import Select from "react-tailwindcss-select";
 
-export const CreateAppointment = ({ appointment, ...props }) => {
+export const CreateAppointment = ({ appointment, open, setOpen }) => {
   const { garageId } = useParams();
   const service = useGetService(garageId);
   const createAppointment = useCreateAppointmentByStaff();
   const [showReview, setShowReview] = useState(false);
+  const queryClient = useQueryClient();
 
+  const mutation = useIsCalledAppointment();
   const serviceOptions = service?.data?.map(({ name, _id }) => ({
     label: name,
     value: _id,
@@ -62,6 +68,23 @@ export const CreateAppointment = ({ appointment, ...props }) => {
     setShowReview(false);
   };
 
+  const handleCallAppointment = () => {
+    mutation.mutate(appointment._id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["appointment", "garage", garageId]);
+        setOpen(false);
+      },
+      onError: (error) => {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: error.response?.data.error,
+          duration: 2000,
+        });
+      },
+    });
+  };
+
   const onSubmit = (data) => {
     const newAppointment = {
       garage: garageId,
@@ -75,6 +98,7 @@ export const CreateAppointment = ({ appointment, ...props }) => {
     createAppointment.mutate(newAppointment, {
       onSuccess: () => {
         toast({ title: "Create appointment successfully", duration: 2000 });
+        handleCallAppointment();
       },
       onError: (error) => {
         console.error("Create appointment error", error);
@@ -91,191 +115,184 @@ export const CreateAppointment = ({ appointment, ...props }) => {
   const renderFieldError = (error) => (
     <span className="text-red-500 text-sm">{error?.message}</span>
   );
+
   return (
-    <Dialog {...props}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 border-none rounded-xl">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Card className="w-full h-full">
-            <CardHeader>
-              <CardTitle>Create Appointment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="w-full flex flex-col gap-y-4 ">
-                {/* Date Field */}
-                <div className="flex flex-col gap-y-2">
-                  <label className="text-sm font-semibold text-[#222222]">
-                    Choose Date
-                  </label>
-                  <Controller
-                    name="date"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Input
-                          id="date"
-                          type="datetime-local"
-                          value={field.value ?? ""}
-                          onChange={(e) =>
-                            field.onChange(e.target.value || null)
-                          }
-                          disabled={showReview}
-                        />
-                        {renderFieldError(errors.date)}
-                      </>
-                    )}
-                  />
-                </div>
+          <CardHeader>
+            <CardTitle>Create Appointment</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="w-full flex flex-col gap-y-4 ">
+              {/* Date Field */}
+              <div className="flex flex-col gap-y-2">
+                <label className="text-sm font-semibold text-[#222222]">
+                  Choose Date
+                </label>
+                <Controller
+                  name="date"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Input
+                        id="date"
+                        type="datetime-local"
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value || null)}
+                        disabled={showReview}
+                      />
+                      {renderFieldError(errors.date)}
+                    </>
+                  )}
+                />
+              </div>
 
-                {/* Service Field */}
-                <div className="flex flex-col gap-y-2">
-                  <label className="text-sm font-semibold text-[#222222]">
-                    Choose Service
-                  </label>
-                  <Controller
-                    name="service"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Select
-                          value={field.value}
-                          onChange={field.onChange}
-                          options={serviceOptions}
-                          isMultiple
-                          primaryColor="red"
-                          isDisabled={showReview}
-                        />
-                        {renderFieldError(errors.service)}
-                      </>
-                    )}
-                  />
-                </div>
+              {/* Service Field */}
+              <div className="flex flex-col gap-y-2">
+                <label className="text-sm font-semibold text-[#222222]">
+                  Choose Service
+                </label>
+                <Controller
+                  name="service"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        value={field.value}
+                        onChange={field.onChange}
+                        options={serviceOptions}
+                        isMultiple
+                        primaryColor="red"
+                        isDisabled={showReview}
+                      />
+                      {renderFieldError(errors.service)}
+                    </>
+                  )}
+                />
+              </div>
 
-                {/* Vehicle Field */}
-                <div className="flex flex-col gap-y-2">
-                  <label className="text-sm font-semibold text-[#222222]">
-                    Choose Vehicle
-                  </label>
-                  <Controller
-                    name="vehicle"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Select
-                          value={field.value}
-                          onChange={field.onChange}
-                          options={[]}
-                          isMultiple={false}
-                          primaryColor="red"
-                          isDisabled={true}
-                        />
-                        {renderFieldError(errors.vehicle)}
-                      </>
-                    )}
-                  />
-                </div>
+              {/* Vehicle Field */}
+              <div className="flex flex-col gap-y-2">
+                <label className="text-sm font-semibold text-[#222222]">
+                  Choose Vehicle
+                </label>
+                <Controller
+                  name="vehicle"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Select
+                        value={field.value}
+                        onChange={field.onChange}
+                        options={[]}
+                        isMultiple={false}
+                        primaryColor="red"
+                        isDisabled={true}
+                      />
+                      {renderFieldError(errors.vehicle)}
+                    </>
+                  )}
+                />
+              </div>
 
-                {/* Note Field */}
-                <div className="flex flex-col gap-y-2">
-                  <label className="text-sm font-semibold text-[#222222]">
-                    Note for appointment
-                  </label>
-                  <Controller
-                    name="note"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Textarea
-                          className="px-4 py-2"
-                          value={field.value}
-                          onChange={field.onChange}
-                          disabled={showReview}
-                        />
-                        {renderFieldError(errors.note)}
-                      </>
-                    )}
-                  />
-                </div>
+              {/* Note Field */}
+              <div className="flex flex-col gap-y-2">
+                <label className="text-sm font-semibold text-[#222222]">
+                  Note for appointment
+                </label>
+                <Controller
+                  name="note"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Textarea
+                        className="px-4 py-2"
+                        value={field.value}
+                        onChange={field.onChange}
+                        disabled={showReview}
+                      />
+                      {renderFieldError(errors.note)}
+                    </>
+                  )}
+                />
+              </div>
 
-                {!showReview ? (
-                  <Button
-                    type="button"
-                    animation
-                    className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
-                    onClick={handleSubmit(handleReview)}
-                  >
-                    Review Appointment
-                  </Button>
-                ) : (
-                  <div className="flex flex-col gap-y-4">
-                    {/* Appointment Summary */}
-                    <div className="p-4 border rounded-lg bg-gray-50">
-                      <h3 className="font-semibold mb-2">
-                        Appointment Summary
-                      </h3>
-                      <div className="space-y-2 text-sm">
+              {!showReview ? (
+                <Button
+                  type="button"
+                  animation
+                  className="bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
+                  onClick={handleSubmit(handleReview)}
+                >
+                  Review Appointment
+                </Button>
+              ) : (
+                <div className="flex flex-col gap-y-4">
+                  {/* Appointment Summary */}
+                  <div className="p-4 border rounded-lg bg-gray-50">
+                    <h3 className="font-semibold mb-2">Appointment Summary</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="grid grid-cols-[100px_1fr] gap-2">
+                        <span className="font-medium">Date:</span>
+                        <span>
+                          {new Date(control._formValues.date).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-[100px_1fr] gap-2">
+                        <span className="font-medium">Services:</span>
+                        <span>
+                          {control._formValues.service
+                            .map((service) => service.label)
+                            .join(", ")}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-[100px_1fr] gap-2">
+                        <span className="font-medium">Vehicle:</span>
+                        <span>{control._formValues.vehicle.label}</span>
+                      </div>
+                      {control._formValues.note && (
                         <div className="grid grid-cols-[100px_1fr] gap-2">
-                          <span className="font-medium">Date:</span>
-                          <span>
-                            {new Date(
-                              control._formValues.date
-                            ).toLocaleString()}
-                          </span>
+                          <span className="font-medium">Note:</span>
+                          <span>{control._formValues.note}</span>
                         </div>
-                        <div className="grid grid-cols-[100px_1fr] gap-2">
-                          <span className="font-medium">Services:</span>
-                          <span>
-                            {control._formValues.service
-                              .map((service) => service.label)
-                              .join(", ")}
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-[100px_1fr] gap-2">
-                          <span className="font-medium">Vehicle:</span>
-                          <span>{control._formValues.vehicle.label}</span>
-                        </div>
-                        {control._formValues.note && (
-                          <div className="grid grid-cols-[100px_1fr] gap-2">
-                            <span className="font-medium">Note:</span>
-                            <span>{control._formValues.note}</span>
-                          </div>
-                        )}
-                        <div className="grid grid-cols-[100px_1fr] gap-2">
-                          <span className="font-medium">Duration:</span>
-                          <span>
-                            {service?.data?.find(
-                              (s) =>
-                                s._id === control._formValues.service[0].value
-                            )?.duration || "N/A"}{" "}
-                            minutes
-                          </span>
-                        </div>
+                      )}
+                      <div className="grid grid-cols-[100px_1fr] gap-2">
+                        <span className="font-medium">Duration:</span>
+                        <span>
+                          {service?.data?.find(
+                            (s) =>
+                              s._id === control._formValues.service[0].value
+                          )?.duration || "N/A"}{" "}
+                          minutes
+                        </span>
                       </div>
                     </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-x-3">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="flex-1"
-                        onClick={handleBackToEdit}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        type="submit"
-                        animation
-                        className="flex-1 bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
-                        disabled={createAppointment.isPending}
-                      >
-                        Confirm & Create
-                      </Button>
-                    </div>
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-x-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1"
+                      onClick={handleBackToEdit}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      type="submit"
+                      animation
+                      className="flex-1 bg-[#e61f4f] border-none hover:bg-[#e61f4f]/80 text-white"
+                      disabled={createAppointment.isPending}
+                    >
+                      Confirm & Create
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
         </form>
       </DialogContent>
     </Dialog>

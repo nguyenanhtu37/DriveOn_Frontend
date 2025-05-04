@@ -66,3 +66,10 @@ export const useGetServiceDetailById = (id) => {
     data: query.data ?? [],
   };
 };
+
+export const useGetServiceDetailByKeyword = () => {
+  const mutation = useMutation({
+    mutationFn: serviceDetailService.getServiceDetailByKeyword,
+  });
+  return mutation;
+};

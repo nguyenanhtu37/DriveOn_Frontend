@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarIcon, Download, Filter, Search, SortDesc } from "lucide-react";
+import { CalendarIcon, Filter, Search, SortDesc } from "lucide-react";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -69,10 +69,10 @@ export const TransactionHistory = () => {
                 View and manage your transaction history
               </CardDescription>
             </div>
-            <Button variant="outline" className="self-start">
+            {/* <Button variant="outline" className="self-start">
               <Download className="mr-2 h-4 w-4" />
               Export
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent>

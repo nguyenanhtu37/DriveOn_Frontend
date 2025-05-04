@@ -10,16 +10,55 @@ import {
 } from "lucide-react";
 import Service from "./components/Service";
 import { useGetGarageDetail } from "@/app/stores/entity/garage";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Loading } from "@/components/Loading";
 import { DialogService } from "./components/DialogService";
 import { CreateAppointment } from "./components/CreateAppointment";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import FeedbackV2 from "./components/FeedbackV2";
+import { LocationMap } from "./components/LocationMap";
+import { getLocation } from "@/app/stores/view/user";
+import { getDirectionStore } from "@/app/stores/view/direction";
+import { useGetDriving } from "@/app/stores/entity/driving";
+import { useTabStore } from "@/app/stores/view/tab";
 
 const GarageDetailPage = () => {
   const { garageId } = useParams();
   const garageDetail = useGetGarageDetail(garageId);
+  const navigate = useNavigate();
+  const { setGarageView } = useTabStore();
+  const location = getLocation();
+  const { setDirection } = getDirectionStore();
+  const getDriving = useGetDriving();
+  const handleGetDirection = (garageDestination) => {
+    const origin = {
+      lat: location[0],
+      lon: location[1],
+    };
+    const destination = {
+      lat: garageDestination[1],
+      lon: garageDestination[0],
+    };
+    getDriving.mutate(
+      {
+        origin,
+        destination,
+      },
+      {
+        onSuccess: (data) => {
+          const route = data.routes[0].geometry.coordinates.map((coord) => [
+            coord[1],
+            coord[0],
+          ]);
+
+          console.log(route, "route");
+          setDirection(route);
+          setGarageView("map");
+          navigate("/");
+        },
+      }
+    );
+  };
 
   if (garageDetail.isLoading) return <Loading />;
 
@@ -68,7 +107,7 @@ const GarageDetailPage = () => {
                     </span>
                   </div>
                 </div>
-                <span className="text-sm text-gray-600 line-clamp-1 mt-1">
+                <span className="text-sm text-gray-600 line-clamp-2 mt-1">
                   {garageDetail.data.description}
                 </span>
               </div>
@@ -171,26 +210,36 @@ const GarageDetailPage = () => {
                 <div className="text-xl font-bold text-gray-800">
                   Description
                 </div>
-                <div className="text-md text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-lg">
+                <div className="text-md text-gray-600 leading-relaxed bg-gray-50 ">
                   {garageDetail.data.description}
                 </div>
               </div>
 
               <div className="w-full h-px bg-gray-200 my-2"></div>
 
-              {/* Services */}
-              <div className="w-full py-8 flex flex-col gap-y-4 z-0">
-                <div className="text-xl font-bold text-gray-800 flex w-full justify-between items-center">
-                  Services
-                  <DialogService />
+              {/* Description */}
+              <div className="w-full pt-6 pb-8 flex flex-col gap-y-3">
+                <div className="text-xl font-bold text-gray-800 flex justify-between items-end">
+                  <span>Location</span>
+                  {location && (
+                    <span
+                      className=" text-xs font-semibold cursor-pointer  hover:underline text-red-400 transition-all ease-in-out duration-200"
+                      onClick={() =>
+                        handleGetDirection(
+                          garageDetail.data.location.coordinates
+                        )
+                      }
+                    >
+                      Get Directions
+                    </span>
+                  )}
                 </div>
-                <Service />
+                <div className=" h-[300px] rounded-xl overflow-hidden shadow-sm">
+                  <LocationMap garage={garageDetail.data} />
+                </div>
               </div>
 
               <div className="w-full h-px bg-gray-200 my-2"></div>
-
-              {/* Feedback Section */}
-              {/* <Feedback garageId={garageId} currentUserId={currentUserId} /> */}
             </div>
 
             {/* Appointment Sticky Section */}
@@ -201,10 +250,20 @@ const GarageDetailPage = () => {
             </div>
           </div>
           <div className=" w-full h-px shadow-sm"></div>
+          {/* Services */}
+          <div className="w-full py-8 flex flex-col gap-y-4 z-0">
+            <div className="text-xl font-bold text-gray-800 flex w-full justify-between items-center">
+              Services
+              <DialogService />
+            </div>
+            <Service />
+          </div>
+
+          <div className="w-full h-px bg-gray-200 my-2"></div>
           <FeedbackV2 />
         </div>
       </div>
-      <div className="sticky w-fit left-4 bottom-20 lg:hidden z-50">
+      <div className="sticky w-fit left-4 bottom-20 lg:hidden z-40">
         <Dialog>
           <DialogTrigger asChild>
             <button className="w-fit py-4 px-4 bg-red-500 text-white rounded-full shadow-xl hover:bg-red-600 transition-colors duration-200 ease-in-out flex items-center justify-center">

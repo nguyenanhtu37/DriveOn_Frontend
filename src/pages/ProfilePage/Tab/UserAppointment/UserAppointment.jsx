@@ -37,9 +37,6 @@ export const UserAppointment = () => {
   const cancelAppointments = appointmentData.data
     .filter((app) => app.status === "Cancelled")
     .sort((a, b) => new Date(b.start) - new Date(a.start));
-  const pastAppointments = appointmentData.data
-    .filter((app) => isPastAppointment(app.end) && app.status !== "Cancelled")
-    .sort((a, b) => new Date(b.end) - new Date(a.end));
 
   if (appointmentData.isLoading) return <Loading />;
   return (
@@ -53,13 +50,11 @@ export const UserAppointment = () => {
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="upcoming">
-                <TabsList className="mb-4 grid grid-cols-2 md:grid-cols-4 gap-2 h-full">
+                <TabsList className="mb-4 grid grid-cols-2 md:grid-cols-3 gap-2 h-full">
                   <TabsTrigger value="upcoming">
                     Upcoming ({upcomingAppointments.length})
                   </TabsTrigger>
-                  <TabsTrigger value="past">
-                    Past ({pastAppointments.length})
-                  </TabsTrigger>
+
                   <TabsTrigger value="completed">
                     Completed ({completedAppointments.length})
                   </TabsTrigger>
@@ -75,21 +70,6 @@ export const UserAppointment = () => {
                     </div>
                   ) : (
                     upcomingAppointments.map((appointment) => (
-                      <GarageAppointmentCard
-                        key={appointment.id}
-                        appointment={appointment}
-                      />
-                    ))
-                  )}
-                </TabsContent>
-
-                <TabsContent value="past" className="space-y-4">
-                  {pastAppointments.length === 0 ? (
-                    <div className="text-center py-6 text-muted-foreground">
-                      You have no past appointments
-                    </div>
-                  ) : (
-                    pastAppointments.map((appointment) => (
                       <GarageAppointmentCard
                         key={appointment.id}
                         appointment={appointment}

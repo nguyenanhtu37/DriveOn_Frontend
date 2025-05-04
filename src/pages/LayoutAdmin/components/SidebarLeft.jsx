@@ -6,7 +6,7 @@ import {
   ServerCog,
   LogOut,
   User,
-  Settings,
+  // Settings,
   LayoutDashboard,
   Wallet,
   Home,
@@ -92,17 +92,17 @@ const navigationItems = [
       },
     ],
   },
-  {
-    group: "Settings",
-    items: [
-      {
-        icon: <Settings className="h-4 w-4" />,
-        title: "System Settings",
-        link: "settings",
-        role: ["admin"],
-      },
-    ],
-  },
+  // {
+  //   group: "Settings",
+  //   items: [
+  //     {
+  //       icon: <Settings className="h-4 w-4" />,
+  //       title: "System Settings",
+  //       link: "settings",
+  //       role: ["admin"],
+  //     },
+  //   ],
+  // },
 ];
 
 export const SidebarLeft = () => {
