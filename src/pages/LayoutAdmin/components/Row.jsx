@@ -40,8 +40,10 @@ export const Row = ({
   }
 
   return (
-    <TableRow onClick={onClick}>
-      <TableCell className="font-medium cursor-pointer">{index + 1}</TableCell>
+    <TableRow>
+      <TableCell className="font-medium cursor-pointer" onClick={onClick}>
+        {index + 1}
+      </TableCell>
       <TableCell>
         <div className=" flex items-center flex-wrap justify-start gap-1">
           <img

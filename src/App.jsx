@@ -7,6 +7,7 @@ import { ToastContainer, toast as reactToast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "./components/Modal";
 import CustomToast from "./components/CustomToast";
+import { Toaster } from "./components/ui/toaster";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,7 +38,11 @@ function App() {
         <CustomToast
           title={title}
           body={body}
-          details={{ name: "Nguyễn Văn A", vehicle: "Toyota Camry", location: "Hà Nội" }}
+          details={{
+            name: "Nguyễn Văn A",
+            vehicle: "Toyota Camry",
+            location: "Hà Nội",
+          }}
         />,
         {
           position: "top-right",
@@ -90,6 +95,7 @@ function App() {
         theme="colored"
         limit={3}
       />
+      <Toaster />
       {isModalOpen && (
         <Modal
           title={modalContent.title}

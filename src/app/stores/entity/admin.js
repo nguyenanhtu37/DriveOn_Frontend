@@ -22,3 +22,14 @@ export const useGetGarageStatusCountByMonth = () => {
     data: query.data ?? [],
   };
 };
+
+export const useGetServiceUsageCounts = () => {
+  const query = useQuery({
+    queryKey: ["serviceUsageCounts"],
+    queryFn: adminService.getServiceUsageCounts,
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};

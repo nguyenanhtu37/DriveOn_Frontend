@@ -150,7 +150,7 @@ export const ViewRegisterGarageDetail = () => {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => navigate("/admin/garages")}
+            onClick={() => navigate("/admin/viewRegisterGarage")}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>

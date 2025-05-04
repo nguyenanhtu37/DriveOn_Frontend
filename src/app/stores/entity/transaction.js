@@ -12,3 +12,15 @@ export const useGetTransactionForGarage = (garageId) => {
     data: query.data?.data,
   };
 };
+
+export const useGetTransactionForAdmin = (searchQuery) => {
+  const query = useQuery({
+    queryKey: ["transaction", searchQuery],
+    queryFn: () => transactionService.getTransactionForAdmin(searchQuery),
+  });
+
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

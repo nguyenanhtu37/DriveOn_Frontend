@@ -1,4 +1,3 @@
-"use client";
 import { format, parseISO } from "date-fns";
 import {
   Car,
@@ -16,16 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import { useCancelAppointment } from "@/app/stores/entity/appointment";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
@@ -36,6 +29,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { twMerge } from "tailwind-merge";
 
 export const GarageAppointmentCard = ({ appointment }) => {
   const cancelAppointment = useCancelAppointment();
@@ -60,7 +55,10 @@ export const GarageAppointmentCard = ({ appointment }) => {
   const endDate = parseISO(appointment.end);
   const formattedDate = format(startDate, "EEEE, MMMM d, yyyy");
   const startTime = format(startDate, "h:mm a");
-  const endTime = format(endDate, "h:mm a");
+  const endTime =
+    format(startDate, "yyyy-MM-dd") === format(endDate, "yyyy-MM-dd")
+      ? format(endDate, "h:mm a")
+      : `${format(endDate, "EEEE, MMMM d, yyyy h:mm a")}`;
 
   // Calculate total price
   const totalPrice = appointment.service.reduce(
@@ -77,18 +75,18 @@ export const GarageAppointmentCard = ({ appointment }) => {
   };
 
   // Get status badge variant
-  const getStatusVariant = (status) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "warning";
-      case "confirmed":
-        return "default";
-      case "completed":
-        return "success";
-      case "cancelled":
-        return "destructive";
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Accepted":
+        return "bg-green-500/10 text-green-500 border-green-500/20";
+      case "Pending":
+        return "bg-amber-500/10 text-amber-500 border-amber-500/20";
+      case "Cancelled":
+        return "bg-red-500/10 text-red-500 border-red-500/20";
+      case "Completed":
+        return "bg-blue-500/10 text-blue-500 border-blue-500/20";
       default:
-        return "secondary";
+        return "bg-gray-500/10 text-gray-500 border-gray-500/20";
     }
   };
 
@@ -105,7 +103,12 @@ export const GarageAppointmentCard = ({ appointment }) => {
               <span>{appointment.garage.address}</span>
             </div>
           </div>
-          <Badge variant={getStatusVariant(appointment.status)}>
+          <Badge
+            className={twMerge(
+              getStatusColor(appointment.status),
+              " pointer-events-none"
+            )}
+          >
             {appointment.status}
           </Badge>
         </div>
@@ -252,8 +255,8 @@ export const GarageAppointmentCard = ({ appointment }) => {
 
         {appointment.status === "Confirmed" && <Button>Check In</Button>}
 
-        {appointment.status === "Completed" && (
-          <Button variant="outline">Book Again</Button>
+        {appointment.status !== "Pending" && (
+          <Button variant="outline">Book again</Button>
         )}
       </CardFooter>
     </Card>

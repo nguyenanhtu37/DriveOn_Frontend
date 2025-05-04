@@ -34,6 +34,7 @@ export const GarageManagementScreenPath = {
   ServiceDetail: ":serviceId",
   CountDownPro: "countdown",
   CreateService: "createService",
+  ExpiredDate: "expiredDate",
 };
 
 export const AdminScreenPath = {
@@ -45,4 +46,5 @@ export const AdminScreenPath = {
   viewServiceSystem: "viewServiceSystem",
   UserManagement: "userManagement",
   Dashboard: "dashboard",
+  TransactionHistory: "transactionHistory",
 };

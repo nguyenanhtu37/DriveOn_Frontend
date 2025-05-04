@@ -95,6 +95,10 @@
   display: none;
 }
 
+.rbc-event {
+  background-color: #fff !important;
+}
+
 @layer base {
   * {
     @apply border-border;
