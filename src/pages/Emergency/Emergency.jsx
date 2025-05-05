@@ -13,7 +13,7 @@ import "@/pages/HomePage/GarageMap/leaflet.css";
 import L from "leaflet";
 import Loader from "@/components/Emergency/Loader";
 import GarageCard from "@/components/Emergency/GarageCard";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Emergency/Navbar";
 import osm from "@/constants/osm-provider";
 import PopupGarage from "@/components/PopupGarage";
 import NavbarMobile from "@/components/NavbarMobile";
