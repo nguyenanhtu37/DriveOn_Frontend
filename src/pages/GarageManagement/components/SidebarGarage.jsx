@@ -129,7 +129,7 @@ export const SidebarGarage = () => {
           <div className="mb-4 flex items-center gap-3 rounded-lg bg-gradient-to-r from-rose-50 to-rose-100 p-3">
             <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
               <AvatarImage
-                src={"/placeholder.svg?height=40&width=40"}
+                src={garage.data.interiorImages?.[0]}
                 alt={garage.data.name}
               />
               <AvatarFallback className="bg-rose-500 text-white">
@@ -139,9 +139,11 @@ export const SidebarGarage = () => {
             <div className="flex flex-col">
               <span className="font-medium text-sm">{garage.data.name}</span>
               <div className="flex items-center gap-1">
-                <Crown className="h-3 w-3 text-amber-500" />
                 {garage.data.tag === "pro" && (
-                  <span className="text-xs text-rose-600">Pro</span>
+                  <>
+                    <Crown className="h-3 w-3 text-amber-500" />
+                    <span className="text-xs text-rose-600">Pro</span>
+                  </>
                 )}
               </div>
             </div>
