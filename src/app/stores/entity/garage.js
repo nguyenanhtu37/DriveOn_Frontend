@@ -4,8 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFilterStore } from "@/app/stores/view/filter";
 import { useDebounce } from "react-haiku";
 import { getLocation } from "../view/user";
-import { useNavigate } from "react-router-dom";
-import { AdminScreenPath } from "@/constants/screen";
 
 export const useRegisterGarage = () => {
   const { toast } = useToast();
@@ -127,46 +125,15 @@ export const useGetRegisterGarages = () => {
   };
 };
 export const useApproveGarage = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.approveGarage(garageId),
-    onSuccess: () => {
-      navigate(AdminScreenPath.ViewRegisterGarage);
-      queryClient.invalidateQueries(["garage"]);
-      toast({
-        title: "Garage approved successfully",
-        duration: 2000,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Garage approved failed",
-        duration: 2000,
-      });
-    },
   });
 
   return mutation;
 };
 export const useRejectGarage = () => {
-  const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.rejectGarage(garageId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["garage"]);
-      toast({
-        title: "Garage rejected successfully",
-        duration: 2000,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Garage rejected failed",
-        duration: 2000,
-      });
-    },
   });
 
   return mutation;
