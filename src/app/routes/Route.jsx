@@ -58,6 +58,10 @@ const router = createBrowserRouter(
               path: AbsoluteScreenPath.GarageDetail,
               element: <GarageDetailPage />,
             },
+            {
+              path: AbsoluteScreenPath.Emergency,
+              element: <EmergencyGarageScreen />,
+            },
           ],
         },
         {
@@ -90,10 +94,7 @@ const router = createBrowserRouter(
           path: AbsoluteScreenPath.GarageProUpgrade,
           element: <GarageProUpgrade />,
         },
-        {
-          path: AbsoluteScreenPath.Emergency,
-          element: <EmergencyGarageScreen />,
-        },
+        
         {
           path: AbsoluteScreenPath.VehicleDetail,
           element: <VehicleDetailsPage />,
