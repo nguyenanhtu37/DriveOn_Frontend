@@ -32,9 +32,10 @@ export const Row = ({
       onSuccess: () => {
         toast({
           title: "Garage approved successfully",
-          description: `${garage.name} has been approved and is now active.`,
+          description: "Garage has been approved.",
+          duration: 2000,
         });
-        navigate("admin/viewExitsGarage");
+        navigate("/admin/viewExitsGarage");
       },
       onError: (error) => {
         toast({
@@ -50,10 +51,10 @@ export const Row = ({
       onSuccess: () => {
         toast({
           title: "Garage rejected",
-          description: `${garage.name} has been rejected.`,
+          description: "Garage has been rejected.",
           duration: 2000,
         });
-        navigate("admin/viewExitsGarage");
+        navigate("/admin/viewExitsGarage");
       },
       onError: (error) => {
         toast({
