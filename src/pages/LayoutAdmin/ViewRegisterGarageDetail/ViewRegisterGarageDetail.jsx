@@ -62,9 +62,9 @@ export const ViewRegisterGarageDetail = () => {
       onSuccess: () => {
         toast({
           title: "Garage approved successfully",
-          description: `${garage.name} has been approved and is now active.`,
+          description: "Garage has been approved and is now active.",
         });
-        navigate("admin/viewExitsGarage");
+        navigate("/admin/viewExitsGarage");
       },
       onError: (error) => {
         toast({
@@ -81,10 +81,10 @@ export const ViewRegisterGarageDetail = () => {
       onSuccess: () => {
         toast({
           title: "Garage rejected",
-          description: `${garage.name} has been rejected.`,
+          description: "Garage has been rejected.",
         });
         setIsRejectDialogOpen(false);
-        navigate("admin/viewExitsGarage");
+        navigate("/admin/viewExitsGarage");
       },
       onError: (error) => {
         toast({
@@ -459,8 +459,12 @@ export const ViewRegisterGarageDetail = () => {
                         >
                           Cancel
                         </Button>
-                        disabled={approveGarage.isPending}
-                        <Button variant="destructive" onClick={handleReject}>
+
+                        <Button
+                          variant="destructive"
+                          onClick={handleReject}
+                          disabled={approveGarage.isPending}
+                        >
                           Reject
                         </Button>
                       </DialogFooter>
