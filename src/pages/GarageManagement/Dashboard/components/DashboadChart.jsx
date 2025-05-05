@@ -20,6 +20,7 @@ import {
   Pie,
   PieChart,
   XAxis,
+  YAxis,
 } from "recharts";
 import { useGetDashboardChart } from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
@@ -116,6 +117,8 @@ function AppointmentChart() {
           margin={{
             left: 12,
             right: 12,
+            top: 20, // Add sufficient top margin to prevent clipping
+            bottom: 10,
           }}
         >
           <CartesianGrid vertical={false} />
@@ -125,6 +128,16 @@ function AppointmentChart() {
             axisLine={false}
             tickMargin={8}
             tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value}
+            width={30}
+            // Add domain configuration to control scaling
+            domain={["auto", "auto"]} // or use [0, 'dataMax + 10%'] for specific padding
+            allowDataOverflow={false} // Prevent data from overflowing the chart area
           />
           <ChartTooltip
             cursor={false}

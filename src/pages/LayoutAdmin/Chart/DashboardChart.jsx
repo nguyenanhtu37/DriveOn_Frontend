@@ -63,7 +63,6 @@ export const DashboardChart = () => {
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="garages">Garages</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
-              <TabsTrigger value="feedback">Appointments</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
