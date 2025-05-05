@@ -4,12 +4,25 @@ import { useLoginWithGoogle } from "@/app/stores/entity/google";
 import { setUser } from "@/app/stores/view/user";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { requestPermissionAndGetToken } from "../../../firebase-messaging";
 
 const LoginWithGoogleButton = () => {
   const navigate = useNavigate();
   const mutation = useLoginWithGoogle();
-  const handleSuccess = (credentialResponse) => {
-    mutation.mutate(credentialResponse, {
+
+  const handleSuccess = async (credentialResponse) => {
+    let deviceToken = null;
+
+    try {
+      deviceToken = await requestPermissionAndGetToken();
+      console.log("Device token: ", deviceToken);
+    } catch (error) {
+      console.error("Failed to get device token: ", error);
+    }
+
+    mutation.mutate(
+      {...credentialResponse, deviceToken}, 
+      {
       onSuccess: (data) => {
         setUser(data.user);
         localStorage.setItem("token", data.token);
