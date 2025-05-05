@@ -1,13 +1,14 @@
 import { axios } from "/src/lib/axios.js";
-
 export const signup = async (credentials) => {
   try {
-    console.log("Sending signup request with data:", credentials);
+    console.log("Sending signup request with data:", { ...credentials, password: "[REDACTED]" });
     const response = await axios.post("/auth/signup", credentials);
     console.log("Signup response:", response.data);
+
     if (!response.data?.message) {
-      throw new Error("Invalid response from server: Expected a message");
+      throw new Error("Invalid server response. Please try again later.");
     }
+
     return response.data; // { message: "Verification email sent" }
   } catch (error) {
     console.error("Signup request failed:", {
@@ -15,9 +16,21 @@ export const signup = async (credentials) => {
       response: error.response?.data,
       status: error.response?.status,
     });
-    if (error.response?.status === 500) {
-      throw new Error("Email đã tồn tại. Vui lòng sử dụng email khác.");
+
+    const messageFromBackend = error.response?.data?.error || error.message;
+
+    // 🔥 Kiểm tra nội dung chuỗi thay vì status
+    if (messageFromBackend.includes("Email already exists")) {
+      throw new Error("Email already exists");
     }
-    throw new Error(error.response?.data?.error || "Đăng ký thất bại. Vui lòng thử lại.");
+
+    // Xử lý lỗi nhập liệu nếu có
+    const fieldErrors = error.response?.data?.errors;
+    if (fieldErrors) {
+      const firstError = Object.values(fieldErrors)[0];
+      throw new Error(firstError);
+    }
+
+    throw new Error(messageFromBackend || "Signup failed. Please try again.");
   }
 };

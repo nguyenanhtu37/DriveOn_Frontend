@@ -311,6 +311,7 @@ const RescueGarages = () => {
           </div>
         </div>
       </div>
+      <NavbarMobile />
     </div>
   );
 };
