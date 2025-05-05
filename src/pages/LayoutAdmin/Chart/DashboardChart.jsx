@@ -60,7 +60,7 @@ export const DashboardChart = () => {
             className="w-[450px]"
             onValueChange={setActiveTab}
           >
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="garages">Garages</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
             </TabsList>
