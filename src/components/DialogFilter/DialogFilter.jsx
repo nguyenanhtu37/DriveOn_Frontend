@@ -375,14 +375,16 @@ const DialogFilter = () => {
           </div>
         </div>
         <div className=" flex justify-end pt-4 pb-4 rounded-t-md bg-white w-full shadow-[0_-4px_10px_-2px_rgba(0,0,0,0.1)]">
-          <Button
-            variant="ghost"
-            className="mr-2 hover:text-red-400"
-            type="submit"
-            onClick={() => clearFilter()}
-          >
-            Reset Filter
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              variant="ghost"
+              className="mr-2 hover:text-red-400"
+              type="submit"
+              onClick={() => clearFilter()}
+            >
+              Reset Filter
+            </Button>
+          </DialogTrigger>
           <DialogTrigger asChild>
             <Button className="mr-2" type="submit">
               Cancel

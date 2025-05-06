@@ -24,6 +24,7 @@ import {
   CartesianGrid,
   Cell,
   XAxis,
+  YAxis,
 } from "recharts";
 
 const chartConfig = {
@@ -115,6 +116,15 @@ function GarageChart() {
             axisLine={false}
             tickMargin={8}
             tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
           />
           <ChartTooltip
             cursor={false}
