@@ -3,8 +3,13 @@ import FavoriteGarageCard from "./FavouriteCard";
 import { Loader2, Heart } from "lucide-react";
 import { useUserStore } from "@/app/stores/view/user";
 import NavbarMobile from "@/components/NavbarMobile";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "@/components/Navbar";
 
 const FavoriteGarages = () => {
+  const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const userId = user?._id;
 
@@ -22,14 +27,18 @@ const FavoriteGarages = () => {
     : [];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col pb-20 md:pb-0">
-      <NavbarMobile />
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+   
       <div className="flex-1 w-full max-w-7xl mx-auto py-8 px-2 sm:px-6 lg:px-8">
+        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
+          <ArrowLeft className="mr-2" />
+          Back
+        </Button>
         <div className="mb-8">
           <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 tracking-tight text-center">
             Your Favorite Garages
           </h2>
-        </div>  
+        </div>
         {loading && (
           <div className="flex flex-col items-center justify-center h-64 bg-white rounded-lg shadow-sm">
             <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
@@ -81,6 +90,7 @@ const FavoriteGarages = () => {
           </div>
         )}
       </div>
+      <NavbarMobile />
     </div>
   );
 };
