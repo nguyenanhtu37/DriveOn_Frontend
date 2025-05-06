@@ -1,5 +1,5 @@
 import {
-  useDeleteFeedback,
+  // useDeleteFeedback,
   useGetFeedbackForGarage,
 } from "@/app/stores/entity/feedbackV2";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,7 +15,7 @@ import {
   Filter,
   ChevronDown,
   ChevronUp,
-  X,
+  // X,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
@@ -70,14 +70,14 @@ export const Feedback = () => {
     }).format(date);
   };
 
-  const deleteFeedback = useDeleteFeedback();
-  const handleDeleteFeedback = (feedbackId) => {
-    deleteFeedback.mutate(feedbackId, {
-      onSuccess: () => {
-        feedbacks.refetch();
-      },
-    });
-  };
+  // const deleteFeedback = useDeleteFeedback();
+  // const handleDeleteFeedback = (feedbackId) => {
+  //   deleteFeedback.mutate(feedbackId, {
+  //     onSuccess: () => {
+  //       feedbacks.refetch();
+  //     },
+  //   });
+  // };
 
   return (
     <div className="h-full bg-gradient-to-b from-white to-gray-50 rounded-lg">
@@ -282,7 +282,7 @@ export const Feedback = () => {
                               {feedback.text}
                             </p>
 
-                            <div className="flex items-center justify-end mt-3">
+                            {/* <div className="flex items-center justify-end mt-3">
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -294,7 +294,7 @@ export const Feedback = () => {
                                 <X className="w-4 h-4 mr-1" />
                                 <span className="text-xs">Delete</span>
                               </Button>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -312,7 +312,7 @@ export const Feedback = () => {
                 className="px-6"
                 onClick={() => setShowAllFeedbacks(true)}
               >
-                Hiển thị tất cả {filteredFeedbacks.length} đánh giá
+                Show all {filteredFeedbacks.length} reviews
                 <ChevronDown className="ml-2 w-4 h-4" />
               </Button>
             </div>
@@ -325,7 +325,7 @@ export const Feedback = () => {
                 className="px-6"
                 onClick={() => setShowAllFeedbacks(false)}
               >
-                Thu gọn
+                Collapse
                 <ChevronUp className="ml-2 w-4 h-4" />
               </Button>
             </div>

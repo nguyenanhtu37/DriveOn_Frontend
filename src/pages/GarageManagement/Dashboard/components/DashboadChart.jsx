@@ -135,9 +135,8 @@ function AppointmentChart() {
             tickMargin={8}
             tickFormatter={(value) => value}
             width={30}
-            // Add domain configuration to control scaling
-            domain={["auto", "auto"]} // or use [0, 'dataMax + 10%'] for specific padding
-            allowDataOverflow={false} // Prevent data from overflowing the chart area
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
           />
           <ChartTooltip
             cursor={false}

@@ -1,4 +1,7 @@
-import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
+import {
+  useDeleteFeedback,
+  useGetFeedbackForGarage,
+} from "@/app/stores/entity/feedbackV2";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,12 +9,22 @@ import { MessageSquare, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddFeedback } from "./AddFeedback";
 import { format } from "date-fns";
+import { useUserStore } from "@/app/stores/view/user";
 
 const FeedbackV2 = () => {
   const { garageId } = useParams();
   const feedbacks = useGetFeedbackForGarage(garageId);
-
+  const { user } = useUserStore();
   const [showAllFeedbacks, setShowAllFeedbacks] = useState(false);
+
+  const deleteFeedback = useDeleteFeedback();
+  const handleDeleteFeedback = (feedbackId) => {
+    deleteFeedback.mutate(feedbackId, {
+      onSuccess: () => {
+        feedbacks.refetch();
+      },
+    });
+  };
 
   const displayedFeedbacks = showAllFeedbacks
     ? feedbacks.data
@@ -72,6 +85,17 @@ const FeedbackV2 = () => {
                   </div>
                 </div>
                 <p className="text-gray-700">{feedback.text}</p>
+                <div className=" w-full flex justify-end items-center gap-x-2">
+                  {feedback.user._id === user?._id && (
+                    <Button
+                      variant="ghost"
+                      className="text-sm text-red-400 hover:text-red-500 hover:underline"
+                      onClick={() => handleDeleteFeedback(feedback._id)}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

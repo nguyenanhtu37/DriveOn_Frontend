@@ -161,6 +161,7 @@ const Feedback = ({ garageId, currentUserId }) => {
                 </div>
               </div>
               <p className="text-[#6a6a6a] mt-2">{feedback.text}</p>
+
               {token &&
                 feedback.user &&
                 String(feedback.user.id) === String(currentUserId) && (

@@ -69,20 +69,26 @@ export const CreateAppointment = ({ appointment, open, setOpen }) => {
   };
 
   const handleCallAppointment = () => {
-    mutation.mutate(appointment._id, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["appointment", "garage", garageId]);
-        setOpen(false);
+    mutation.mutate(
+      {
+        appointmentId: appointment._id,
+        isUserAgreed: true,
       },
-      onError: (error) => {
-        toast({
-          variant: "destructive",
-          title: "Something went wrong",
-          description: error.response?.data.error,
-          duration: 2000,
-        });
-      },
-    });
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["appointment", "garage", garageId]);
+          setOpen(false);
+        },
+        onError: (error) => {
+          toast({
+            variant: "destructive",
+            title: "Something went wrong",
+            description: error.response?.data.error,
+            duration: 2000,
+          });
+        },
+      }
+    );
   };
 
   const onSubmit = (data) => {
