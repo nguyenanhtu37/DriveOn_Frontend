@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import {  useState, useRef } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { useUserStore } from "@/app/stores/view/user";
 import { useGeolocation } from "@/common/hooks/useGeolocation";
@@ -14,7 +14,6 @@ import "@/pages/HomePage/GarageMap/leaflet.css";
 import L from "leaflet";
 import Loader from "@/components/Emergency/Loader";
 import GarageCard from "@/components/Emergency/GarageCard";
-import Navbar from "@/components/Emergency/Navbar";
 import osm from "@/constants/osm-provider";
 import PopupGarage from "@/components/PopupGarage";
 // import { useGetEmergency } from "@/app/stores/entity/emergency";
@@ -49,7 +48,7 @@ async function fetchRoute(from, to) {
 
 const RescueGarages = () => {
   const { location } = useUserStore();
-  const [geoError, setGeoError] = useState(null);
+  const [geoError] = useState(null);
   const [directionCoords, setDirectionCoords] = useState(null);
   const [selectedGarage, setSelectedGarage] = useState(null);
   const mapRef = useRef(null);
@@ -64,7 +63,7 @@ const RescueGarages = () => {
     data: garages = [],
     isLoading,
     error,
-    refetch,
+
   } = useQuery({
     queryKey: ['rescue-garages', location],
     queryFn: async () => {
