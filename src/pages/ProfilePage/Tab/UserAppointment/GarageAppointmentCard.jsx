@@ -154,7 +154,7 @@ export const GarageAppointmentCard = ({ appointment }) => {
           </div>
         </div>
 
-        Customer Information
+        {/* Customer Information */}
         {/* <div className="flex items-start gap-3"> */}
           {/* <div className="bg-primary/10 p-2 rounded-full"> */}
             {/* <User className="h-5 w-5 text-primary" /> */}
