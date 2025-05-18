@@ -37,7 +37,6 @@ export function GarageCard({
   imgs,
   isFavorited,
   tag,
-  // location,
   handleGetDirection,
 }) {
   const [isFavorite, setIsFavorite] = useState(false);

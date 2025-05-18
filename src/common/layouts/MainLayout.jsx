@@ -24,7 +24,7 @@ function MainLayout() {
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
       <SidebarHome />
-      <div className="min-h-screen min-w-[378px] bg-white max-w-[1920px] mx-auto ">
+      <div className="min-h-screen bg-white min-w-[378px] max-w-[1920px] mx-auto ">
         <Header />
         <Outlet />
         <NavbarMobile />
