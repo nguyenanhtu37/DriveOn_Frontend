@@ -78,7 +78,7 @@ export const CarPro = ({
   };
 
   return (
-    <div className="w-full p-4 rounded-xl flex flex-col gap-y-3 justify-between   shadow-sm group relative hover:shadow-lg transition-all ease-in-out duration-200 cursor-pointer">
+    <div className="w-full h-full p-4 rounded-xl flex flex-col gap-y-3 justify-between   shadow-sm group relative hover:shadow-lg transition-all ease-in-out duration-200 cursor-pointer">
       <div className="flex flex-col gap-y-3">
         <div className="absolute top-0 left-0  z-30">
           <Badge className="bg-red-500 text-white flex items-center gap-1 px-3 py-1 rounded-sm shadow">

@@ -21,6 +21,7 @@ import { getLocation } from "@/app/stores/view/user";
 import { getDirectionStore } from "@/app/stores/view/direction";
 import { useGetDriving } from "@/app/stores/entity/driving";
 import { useTabStore } from "@/app/stores/view/tab";
+import ServiceDetail from "./components/ServiceDetail";
 
 const GarageDetailPage = () => {
   const { garageId } = useParams();
@@ -255,6 +256,7 @@ const GarageDetailPage = () => {
             <div className="text-xl font-bold text-gray-800 flex w-full justify-between items-center">
               Services
               <DialogService />
+              <ServiceDetail />
             </div>
             <Service />
           </div>

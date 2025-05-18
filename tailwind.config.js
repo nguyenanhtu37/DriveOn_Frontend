@@ -72,6 +72,9 @@ export default {
         archivo: ["Archivo", "sans-serif"],
         roboto: ["Roboto", "sans-serif"],
       },
+      boxShadow: {
+        card: "0px 0px 8px 0px #0000001F",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

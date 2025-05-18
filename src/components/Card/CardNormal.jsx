@@ -78,7 +78,7 @@ export const CardNormal = ({
   };
 
   return (
-    <div className="relative w-full p-3 rounded-lg flex flex-col gap-y-3 justify-between bg-white group border border-gray-200 shadow-sm hover:shadow-md transition-all ease-in-out duration-200 cursor-pointer">
+    <div className="relative w-full h-full p-3 rounded-lg flex flex-col gap-y-3 justify-between bg-white group border border-gray-200 shadow-sm hover:shadow-md transition-all ease-in-out duration-200 cursor-pointer">
       <div className=" flex flex-col gap-y-3">
         <div className="w-full aspect-[1.2] rounded-lg overflow-hidden relative">
           <div className="absolute top-2 right-2 z-20">

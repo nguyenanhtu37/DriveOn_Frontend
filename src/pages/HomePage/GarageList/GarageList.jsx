@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Loading } from "@/components/Loading";
 
 import { Card } from "@/components/Card/Card";
+import { BlurFade } from "@/components/magicui/blur-fade";
 
 export default function GarageList() {
   const garages = useGetGarages();
@@ -14,8 +15,15 @@ export default function GarageList() {
         <Loading />
       ) : garages.data.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
-          {garages.data.map((garage) => (
-            <Card key={garage._id} garage={garage} />
+          {garages.data.map((garage, idx) => (
+            <BlurFade
+              key={garage._id}
+              delay={0.25 + idx * 0.05}
+              className="h-full"
+              inView
+            >
+              <Card key={garage._id} garage={garage} />
+            </BlurFade>
           ))}
         </div>
       ) : (
