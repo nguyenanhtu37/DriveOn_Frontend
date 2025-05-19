@@ -4,7 +4,7 @@ import {
   Calendar,
   Clock,
   MapPin,
-  User,
+  // User,
   FileText,
   Tag,
 } from "lucide-react";
@@ -155,20 +155,20 @@ export const GarageAppointmentCard = ({ appointment }) => {
         </div>
 
         {/* Customer Information */}
-        <div className="flex items-start gap-3">
-          <div className="bg-primary/10 p-2 rounded-full">
-            <User className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h3 className="font-medium">Customer</h3>
-            <p className="text-sm text-muted-foreground">
-              {appointment.user.name}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {appointment.user.email}
-            </p>
-          </div>
-        </div>
+        {/* <div className="flex items-start gap-3"> */}
+          {/* <div className="bg-primary/10 p-2 rounded-full"> */}
+            {/* <User className="h-5 w-5 text-primary" /> */}
+          {/* </div> */}
+          {/* <div> */}
+            {/* <h3 className="font-medium">Customer</h3> */}
+            {/* <p className="text-sm text-muted-foreground"> */}
+              {/* {appointment.user.name} */}
+            {/* </p> */}
+            {/* <p className="text-sm text-muted-foreground"> */}
+              {/* {appointment.user.email} */}
+            {/* </p> */}
+          {/* </div> */}
+        {/* </div> */}
 
         <Separator />
 
