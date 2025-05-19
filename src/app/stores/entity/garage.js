@@ -44,7 +44,6 @@ export const useGetGarages = () => {
   } = useFilterStore();
 
   const debouncedServiceSystem = useDebounce(serviceSystem, 500);
-  const debouncedLocation = useDebounce(location, 500);
   const debouncedRating = useDebounce(rating, 500);
   const debouncedTagPro = useDebounce(tagPro, 500);
   const debouncedDistance = useDebounce(distance, 500);
@@ -60,7 +59,7 @@ export const useGetGarages = () => {
     queryKey: [
       "garage",
       services,
-      debouncedLocation,
+      location,
       debouncedCloseTime,
       debouncedOpenTime,
       debouncedRating,
@@ -72,12 +71,11 @@ export const useGetGarages = () => {
       if (services) {
         params.append("services", services);
       }
-      if (
-        debouncedLocation.province?.name ||
-        debouncedLocation.district?.name
-      ) {
-        params.append("province", debouncedLocation.province.name);
-        params.append("district", debouncedLocation.district.name);
+      if (location?.province) {
+        params.append("province", location?.province.name);
+      }
+      if (location?.district) {
+        params.append("district", location?.district.name);
       }
       if (debouncedRating) {
         params.append("rating", debouncedRating);
@@ -229,7 +227,7 @@ export const useGetMyGarage = ({ open }) => {
   });
   return {
     ...query,
-    data: query.data ?? {},
+    data: query.data ?? [],
   };
 };
 

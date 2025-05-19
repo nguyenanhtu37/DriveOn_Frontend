@@ -125,7 +125,7 @@ export const ProfilePageV2 = () => {
                       </div>
                       <div className="flex items-center gap-1">
                         <Car className="h-4 w-4" />
-                        <span>{profile.data.vehicles.length} Vehicles</span>
+                        <span>{profile.data.vehicles?.length} Vehicles</span>
                       </div>
                     </div>
                   </div>

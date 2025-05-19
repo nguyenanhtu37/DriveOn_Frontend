@@ -1,82 +1,26 @@
-import { useGetMyFavorites } from "@/app/stores/entity/favoriteV2";
 import { useGetGarages } from "@/app/stores/entity/garage";
-import { GarageCard } from "@/components/Card";
 import { Car, Dot } from "lucide-react";
 import { motion } from "framer-motion";
 import { Loading } from "@/components/Loading";
-import { getDirectionStore } from "@/app/stores/view/direction";
-import { useGetDriving } from "@/app/stores/entity/driving";
-import { getLocation } from "@/app/stores/view/user";
-import { useTabStore } from "@/app/stores/view/tab";
+
+import { Card } from "@/components/Card/Card";
 
 export default function GarageList() {
-  const myFavorites = useGetMyFavorites();
   const garages = useGetGarages();
-  const location = getLocation();
-  const { setDirection } = getDirectionStore();
-  const getDriving = useGetDriving();
-  const { setGarageView } = useTabStore();
-
-  const handleGetDirection = (garageDestination) => {
-    const origin = {
-      lat: location[0],
-      lon: location[1],
-    };
-    const destination = {
-      lat: garageDestination[1],
-      lon: garageDestination[0],
-    };
-    getDriving.mutate(
-      {
-        origin,
-        destination,
-      },
-      {
-        onSuccess: (data) => {
-          const route = data.routes[0].geometry.coordinates.map((coord) => [
-            coord[1],
-            coord[0],
-          ]);
-
-          console.log(route, "route");
-          setDirection(route);
-          setGarageView("map");
-        },
-      }
-    );
-  };
 
   return (
     <div className=" px-4 md:px-10 mt-4 animate-fade animate-once animate-ease-in-out mb-12">
       {garages.isLoading ? (
         <Loading />
       ) : garages.data.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
           {garages.data.map((garage) => (
-            <GarageCard
-              key={garage._id}
-              id={garage._id}
-              garageName={garage.name}
-              rating={garage.ratingAverage}
-              address={garage.address}
-              imgs={garage.interiorImages}
-              openTime={garage.openTime}
-              closeTime={garage.closeTime}
-              isFavorited={myFavorites.data.some(
-                (favorite) => favorite._id === garage._id
-              )}
-              tag={garage.tag}
-              location={garage.location.coordinates}
-              handleGetDirection={() =>
-                handleGetDirection(garage.location.coordinates)
-              }
-            />
+            <Card key={garage._id} garage={garage} />
           ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center h-[70vh] bg-gray-50 rounded-lg shadow-sm">
           <div style={{ position: "relative", padding: "20px" }}>
-            {/* Các Dot */}
             <div
               style={{
                 display: "flex",
