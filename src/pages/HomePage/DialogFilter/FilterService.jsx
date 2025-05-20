@@ -46,18 +46,21 @@ export const FilterService = () => {
   };
 
   return (
-    <div className="px-6 py-7 w-full flex-col gap-y-6">
+    <div className="px-6 py-4 w-full flex-col gap-y-6">
       <div className=" flex justify-between items-center mb-4">
         <div className=" flex flex-col items-start gap-y-2">
           <Label className="text-lg">Service Type</Label>
-          <DialogDescription className=" flex items-center gap-x-2">
+          <DialogDescription className="flex items-center justify-between gap-x-2">
             <span className="text-md font-semibold">
               Choose the service you want
+            </span>
+            <span className="text-sm text-[#848485]">
+              {serviceSystem.length} selected
             </span>
           </DialogDescription>
         </div>
       </div>
-      <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+      <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {service.data.slice(0, getItemsToShow()).map((service, idx) => (
           <BlurFade key={service._id} delay={0.25 + idx * 0.025} inView>
             <ServiceItem

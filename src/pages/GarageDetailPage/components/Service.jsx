@@ -21,10 +21,6 @@ const Service = () => {
       slidesPerView={perView}
       spaceBetween={15}
       className="mySwiper w-full"
-      modules={[Autoplay]}
-      autoplay={{
-        delay: 1500,
-      }}
     >
       {serviceGarage.data.map((service) => (
         <SwiperSlide key={service._id} onClick={() => handleClick(service)}>

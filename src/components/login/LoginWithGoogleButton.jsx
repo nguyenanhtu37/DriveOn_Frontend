@@ -1,7 +1,7 @@
 import { GoogleLogin } from "@react-oauth/google";
 import handleError from "../../app/services/handleError";
 import { useLoginWithGoogle } from "@/app/stores/entity/google";
-import { setUser } from "@/app/stores/view/user";
+import { connectSocket, setUser } from "@/app/stores/view/user";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { requestPermissionAndGetToken } from "../../../firebase-messaging";
@@ -21,33 +21,35 @@ const LoginWithGoogleButton = () => {
     }
 
     mutation.mutate(
-      {...credentialResponse, deviceToken}, 
+      { ...credentialResponse, deviceToken },
       {
-      onSuccess: (data) => {
-        setUser(data.user);
-        localStorage.setItem("token", data.token);
-        toast({
-          title: "Login successful",
-          description: "You have successfully logged in with Google.",
-          status: "success",
-          duration: 2000,
-        });
-        let roles = data.user.roles;
-        if (roles.some((userRole) => userRole.roleName === "admin")) {
-          navigate("/admin");
-        }
-        if (roles.some((userRole) => userRole.roleName === "staff")) {
-          navigate(`/garageManagement/${data.user.garageList[0]._id}`);
-        } else {
-          console.log("➡️ Redirecting to homepage...");
-          navigate("/");
-        }
-      },
-      onError: (error) => {
-        console.error("Login failed:", error);
-        alert("Login failed. Please try again.");
-      },
-    });
+        onSuccess: (data) => {
+          setUser(data.user);
+          connectSocket();
+          localStorage.setItem("token", data.token);
+          toast({
+            title: "Login successful",
+            description: "You have successfully logged in with Google.",
+            status: "success",
+            duration: 2000,
+          });
+          let roles = data.user.roles;
+          if (roles.some((userRole) => userRole.roleName === "admin")) {
+            navigate("/admin");
+          }
+          if (roles.some((userRole) => userRole.roleName === "staff")) {
+            navigate(`/garageManagement/${data.user.garageList[0]._id}`);
+          } else {
+            console.log("➡️ Redirecting to homepage...");
+            navigate("/");
+          }
+        },
+        onError: (error) => {
+          console.error("Login failed:", error);
+          alert("Login failed. Please try again.");
+        },
+      }
+    );
   };
 
   return (

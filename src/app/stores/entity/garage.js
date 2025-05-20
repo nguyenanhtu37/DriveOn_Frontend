@@ -106,7 +106,7 @@ export const useGetGarages = () => {
 
   return {
     ...query,
-    data: query.data?.data ?? [],
+    data: query.data?.data ?? {},
     meta: query.data?.meta ?? null,
   };
 };

@@ -7,15 +7,16 @@ import { Card } from "@/components/Card/Card";
 import { BlurFade } from "@/components/magicui/blur-fade";
 
 export default function GarageList() {
-  const garages = useGetGarages();
+  const response = useGetGarages();
+  const garages = response.data.garages;
 
   return (
     <div className=" px-4 md:px-10 mt-4 animate-fade animate-once animate-ease-in-out mb-12">
-      {garages.isLoading ? (
+      {response.isLoading ? (
         <Loading />
-      ) : garages.data.length > 0 ? (
+      ) : garages.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
-          {garages.data.map((garage, idx) => (
+          {garages.map((garage, idx) => (
             <BlurFade
               key={garage._id}
               delay={0.25 + idx * 0.05}
