@@ -1,4 +1,3 @@
-import { useViewGarageList } from "@/app/stores/entity/garage";
 import osm from "@/constants/osm-provider";
 import React, { useEffect } from "react";
 import {
@@ -15,7 +14,6 @@ import PopupGarage from "@/components/PopupGarage";
 import { getLocation } from "@/app/stores/view/user";
 import ScrollToTop from "@/components/ScrollToTop";
 import { useGetDriving } from "@/app/stores/entity/driving";
-import { useDirectionStore } from "@/app/stores/view/direction";
 import { X } from "lucide-react";
 
 const locationDanang = [16.047079, 108.20623];
@@ -33,22 +31,10 @@ const userIcon = L.icon({
   iconAnchor: [20, 40],
   popupAnchor: [0, -35],
 });
-const GarageMap = () => {
+const SearchMap = ({ garages, direction, setDirection, clearDirection }) => {
   const mapRef = React.useRef(null);
-  const viewGarageList = useViewGarageList();
-  const listGaragePro = viewGarageList.data?.garagePros ?? [];
-  const listGarageFavorite = viewGarageList.data?.topFavorites ?? [];
-  const listTopRated = viewGarageList.data?.topRated ?? [];
-  const listTopBooked = viewGarageList.data?.mostBooked ?? [];
 
-  const garages = [
-    ...listGaragePro,
-    ...listGarageFavorite,
-    ...listTopRated,
-    ...listTopBooked,
-  ];
   const location = getLocation();
-  const { direction, setDirection, clearDirection } = useDirectionStore();
   const getDriving = useGetDriving();
   const handleDirectionClick = (garage) => {
     const origin = {
@@ -173,4 +159,4 @@ const GarageMap = () => {
   );
 };
 
-export default GarageMap;
+export default SearchMap;

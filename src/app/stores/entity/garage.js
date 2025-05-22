@@ -281,3 +281,14 @@ export const useGetDashboardChart = (id) => {
     data: query.data ?? {},
   };
 };
+
+export const useViewGarageList = () => {
+  const query = useQuery({
+    queryKey: ["garageList"],
+    queryFn: garageService.viewGarageList,
+  });
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

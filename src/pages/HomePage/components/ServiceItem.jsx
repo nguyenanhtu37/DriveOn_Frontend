@@ -9,7 +9,7 @@ export const ServiceItem = ({ service, isActive = false, ...props }) => {
       )}
       {...props}
     >
-      <div className=" size-20 overflow-hidden rounded-full">
+      <div className=" size-12 overflow-hidden rounded-full">
         <img
           src={service.image}
           alt={service.name}
@@ -17,8 +17,8 @@ export const ServiceItem = ({ service, isActive = false, ...props }) => {
         />
       </div>
       <div className="flex-1 flex flex-col gap-y-2">
-        <p className=" text-black text-md font-semibold">{service.name}</p>
-        <p className=" text-sm text-[#666666] line-clamp-2">
+        <p className=" text-black text-sm font-semibold">{service.name}</p>
+        <p className=" text-xs text-[#666666] line-clamp-2">
           {service.description}
         </p>
       </div>

@@ -1,49 +1,55 @@
-"use client";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import { Navigation, Pagination } from "swiper/modules";
-import { useRef } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Circle,
-  Heart,
-  Star,
-  NavigationIcon,
-  Map,
-  Phone,
-} from "lucide-react";
+import { Heart, Map } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
 import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 import { getDirectionStore } from "@/app/stores/view/direction";
 import { useGetDriving } from "@/app/stores/entity/driving";
 import { getLocation } from "@/app/stores/view/user";
 import { useTabStore } from "@/app/stores/view/tab";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  useGetMyFavorites,
+  useAddToFavorites,
+  useRemoveFromFavorites,
+} from "@/app/stores/entity/favoriteV2";
+import { toast } from "@/hooks/use-toast";
 
-export const CardNormal = ({
-  garage,
-  isFavorited,
-  handleFavoriteToggle,
-  handleNavigate,
-}) => {
+export const CardNormal = ({ garage }) => {
   const {
+    _id,
     name,
     address,
     interiorImages,
     ratingAverage,
     openTime,
     closeTime,
-    phone,
+    tag,
     location: garageLocation,
   } = garage;
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+
+  // Navigation and directions functionality
+  const navigate = useNavigate();
   const userLocation = getLocation();
   const { setDirection } = getDirectionStore();
   const getDriving = useGetDriving();
   const { setGarageView } = useTabStore();
+
+  // Favorites functionality
+  const myFavorites = useGetMyFavorites();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const addFavorite = useAddToFavorites();
+  const removeFavorite = useRemoveFromFavorites();
+
+  // Check if garage is in favorites
+  useEffect(() => {
+    const isFavorited = myFavorites.data?.some(
+      (favorite) => favorite._id === _id
+    );
+    setIsFavorite(!!isFavorited);
+  }, [myFavorites.data, _id]);
 
   const handleGetDirection = (e) => {
     e.stopPropagation();
@@ -77,127 +83,105 @@ export const CardNormal = ({
     );
   };
 
+  const handleFavoriteToggle = (e) => {
+    e.stopPropagation();
+
+    setIsFavorite((prev) => !prev);
+
+    if (isFavorite) {
+      removeFavorite.mutate(_id, {
+        onSuccess: () => {
+          toast({
+            title: "Removed from favorites",
+            description: "This garage has been removed from your favorites.",
+            variant: "default",
+            duration: 1000,
+          });
+        },
+        onError: (error) => {
+          console.error("Error removing from favorites:", error);
+        },
+      });
+    } else {
+      addFavorite.mutate(_id, {
+        onSuccess: () => {
+          toast({
+            title: "Add to favorites",
+            description: "This garage has been added to your favorites.",
+            variant: "default",
+            duration: 1000,
+          });
+        },
+        onError: (error) => {
+          console.error("Error adding to favorites:", error);
+        },
+      });
+    }
+  };
+
+  const handleNavigate = () => {
+    navigate(`/garageDetail/${_id}`);
+  };
+
   return (
-    <div className="relative w-full h-full p-3 rounded-lg flex flex-col gap-y-3 justify-between bg-white group border border-gray-200 shadow-sm hover:shadow-md transition-all ease-in-out duration-200 cursor-pointer">
-      <div className=" flex flex-col gap-y-3">
-        <div className="w-full aspect-[1.2] rounded-lg overflow-hidden relative">
-          <div className="absolute top-2 right-2 z-20">
-            <button
-              className="bg-white/70 p-1 rounded-full"
-              onClick={handleFavoriteToggle}
-            >
-              <Heart
-                size={18}
-                className={twMerge(
-                  isFavorited
-                    ? "fill-red-500 text-red-500"
-                    : "fill-transparent text-white"
-                )}
-              />
-            </button>
-          </div>
-          <div
-            ref={prevRef}
-            className="opacity-0 group-hover:opacity-100 absolute top-1/2 left-2 -translate-y-1/2 z-20 rounded-full p-1.5 bg-white/80 flex items-center justify-center cursor-pointer transition-all ease-in-out duration-200 bg-white"
-          >
-            <ChevronLeft size={12} />
-          </div>
-
-          <div
-            ref={nextRef}
-            className="opacity-0 group-hover:opacity-100 absolute top-1/2 right-2 -translate-y-1/2 z-20 rounded-full p-1.5 bg-white/80 flex items-center justify-center cursor-pointer transition-all ease-in-out duration-200 bg-white"
-          >
-            <ChevronRight size={12} />
-          </div>
-
-          <Swiper
-            className="w-full h-full"
-            onBeforeInit={(swiper) => {
-              swiper.params.navigation.prevEl = prevRef.current;
-              swiper.params.navigation.nextEl = nextRef.current;
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            pagination={{
-              clickable: true,
-              renderBullet: (index, className) => {
-                return `<span class="${className} custom-bullet mx-[2px]"></span>`;
-              },
-            }}
-            modules={[Navigation, Pagination]}
-          >
-            {interiorImages.map((img, index) => (
-              <SwiperSlide key={index}>
-                <img
-                  src={img || "/placeholder.svg"}
-                  className="w-full h-full object-cover"
-                  alt="Garage image"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <Badge className="absolute bottom-2 right-2 bg-white/80 z-20 hover:bg-white flex gap-1 items-center justify-center px-1.5 py-0.5">
-            <Star size={14} className="fill-yellow-300 text-yellow-300" />
-            <span className="text-xs text-gray-700">
-              {ratingAverage.toFixed(1)}
-            </span>
-          </Badge>
-        </div>
-
-        <div className="flex flex-col gap-y-2" onClick={handleNavigate}>
-          <div className="text-black text-lg font-bold flex items-center gap-2">
-            {name}
-          </div>
-          <div className="text-body text-sm font-normal flex items-start gap-1">
-            <Map size={16} />
-            <span>{address}</span>
-          </div>
-          <div className="text-body text-sm font-normal flex items-center gap-1">
-            <Phone
-              size={16}
-              className="text-white font-semibold fill-red-500"
-            />
-            <span>{phone}</span>
-          </div>
-          <div className="flex justify-start items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Circle size={10} className="fill-green-400 text-white" />
-              <div className="text-body text-sm font-semibold">{openTime}</div>
-            </div>
-            <div className="w-1 h-[2px] bg-black"></div>
-            <div className="flex items-center gap-1">
-              <Circle size={10} className="fill-red-500 text-white" />
-              <div className="text-body text-sm font-semibold">{closeTime}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {userLocation && garageLocation && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="mt-1 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-50 flex items-center gap-1 border-gray-200"
-          onClick={handleGetDirection}
-        >
-          <NavigationIcon size={12} />
-          Get Directions
-        </Button>
+    <Card
+      className={twMerge(
+        "border-none shadow-none w-full ",
+        "hover:shadow-lg transition-all duration-200 cursor-pointer"
       )}
+      onClick={handleNavigate}
+    >
+      <CardContent className="p-0 min-h-[340px] relative flex flex-col ">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-3 right-3 z-10 text-white hover:text-white bg-transparent hover:bg-transparent"
+          onClick={handleFavoriteToggle}
+        >
+          <Heart
+            className={cn(
+              "h-6 w-6",
+              isFavorite
+                ? "fill-rose-500 stroke-rose-500"
+                : "fill-transparent stroke-white"
+            )}
+          />
+        </Button>
 
-      {/* Bullet Custom CSS */}
-      <style>{`
-        .swiper-pagination-bullet {
-          width: 6px;
-          height: 6px;
-          background: #cbd5e1; /* gray-300 */
-          opacity: 1;
-          transition: all 0.3s ease;
-        }
-        .swiper-pagination-bullet-active {
-          background: #94a3b8; /* gray-400 */
-        }
-      `}</style>
-    </div>
+        {tag === "pro" && (
+          <Badge className="absolute top-0 left-0 z-10 bg-red-500">
+            Garage Pro
+          </Badge>
+        )}
+        <div className="relative">
+          <Link href="#">
+            <img
+              src={interiorImages[0] || "/placeholder.svg"}
+              alt={name}
+              className="rounded-xl w-full h-[200px] object-cover aspect-square"
+            />
+          </Link>
+        </div>
+        <div className="p-2 flex-1 flex flex-col justify-between ">
+          <div className="">
+            <h3 className="text-lg font-semibold">{name}</h3>
+            <p className="text-sm text-gray-500 line-clamp-2">{address}</p>
+          </div>
+          <div className="flex items-center justify-between mt-1">
+            <div className="flex items-center gap-x-2">
+              <Badge variant="outline" className="text-xs">
+                {openTime} - {closeTime}
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                {ratingAverage} <span className="text-yellow-500 ml-2">★</span>
+              </Badge>
+            </div>
+            <Button variant="outline" size="icon" onClick={handleGetDirection}>
+              <Map size={16} />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

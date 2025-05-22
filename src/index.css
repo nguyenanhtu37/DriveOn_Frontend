@@ -99,6 +99,11 @@
   background-color: #fff !important;
 }
 
+[data-radix-popper-content-wrapper] > div:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 @layer base {
   * {
     @apply border-border;

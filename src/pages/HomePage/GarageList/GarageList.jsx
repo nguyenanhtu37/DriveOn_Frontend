@@ -1,74 +1,30 @@
-import { useGetGarages } from "@/app/stores/entity/garage";
-import { Car, Dot } from "lucide-react";
-import { motion } from "framer-motion";
-import { Loading } from "@/components/Loading";
+import { useViewGarageList } from "@/app/stores/entity/garage";
 
-import { Card } from "@/components/Card/Card";
-import { BlurFade } from "@/components/magicui/blur-fade";
+import "swiper/css";
+
+import ViewGarage from "./ViewGarage";
+import CardSkeleton from "@/components/CardSkeleton";
 
 export default function GarageList() {
-  const response = useGetGarages();
-  const garages = response.data.garages;
-
+  const viewGarageList = useViewGarageList();
+  const listGaragePro = viewGarageList.data?.garagePros;
+  const listGarageFavorite = viewGarageList.data?.topFavorites;
+  const listTopRated = viewGarageList.data?.topRated;
+  const listTopBooked = viewGarageList.data?.mostBooked;
+  if (viewGarageList.isLoading)
+    return (
+      <div className=" md:px-6 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-[15px] gap-y-4">
+        {Array.from({ length: 20 }).map((_, index) => (
+          <CardSkeleton key={index} />
+        ))}
+      </div>
+    );
   return (
-    <div className=" px-4 md:px-10 mt-4 animate-fade animate-once animate-ease-in-out mb-12">
-      {response.isLoading ? (
-        <Loading />
-      ) : garages.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
-          {garages.map((garage, idx) => (
-            <BlurFade
-              key={garage._id}
-              delay={0.25 + idx * 0.05}
-              className="h-full"
-              inView
-            >
-              <Card key={garage._id} garage={garage} />
-            </BlurFade>
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center h-[70vh] bg-gray-50 rounded-lg shadow-sm">
-          <div style={{ position: "relative", padding: "20px" }}>
-            <div
-              style={{
-                display: "flex",
-                position: "relative",
-                zIndex: 1,
-              }}
-            >
-              {Array.from({ length: 10 }).map((_, index) => (
-                <Dot key={index} size={20} className="text-gray-300" />
-              ))}
-            </div>
-
-            <motion.div
-              initial={{ x: 0 }}
-              animate={{ x: "100%" }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              style={{
-                position: "absolute",
-                width: "80%",
-                top: -5,
-                left: 0,
-                zIndex: 2,
-              }}
-            >
-              <Car size={32} />
-            </motion.div>
-          </div>
-          <h1 className="text-2xl font-semibold text-gray-500">
-            No garages found
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Check back later for new listings
-          </p>
-        </div>
-      )}
+    <div className="w-full flex flex-col gap-y-4 px-4 md:px-6 py-8">
+      <ViewGarage title={"Professional Garage List"} garages={listGaragePro} />
+      <ViewGarage title={"Top-rated Garages"} garages={listTopRated} />
+      <ViewGarage title={"Top-favorite Garages"} garages={listGarageFavorite} />
+      <ViewGarage title={"Top-booked Garages"} garages={listTopBooked} />
     </div>
   );
 }

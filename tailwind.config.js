@@ -68,6 +68,9 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      backgroundColor: {
+        "box-hover": "#f4f4f4",
+      },
       fontFamily: {
         archivo: ["Archivo", "sans-serif"],
         roboto: ["Roboto", "sans-serif"],

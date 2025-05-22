@@ -4,7 +4,6 @@ import {
   useRemoveFromFavorites,
 } from "@/app/stores/entity/favoriteV2";
 import { CardNormal } from "./CardNormal";
-import { CarPro } from "./CarPro";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
@@ -24,8 +23,7 @@ export const Card = ({ garage }) => {
     setIsFavorite(isFavorited);
   }, [isFavorited]);
 
-  const handleFavoriteToggle = (e) => {
-    e.stopPropagation();
+  const handleFavoriteToggle = () => {
     setIsFavorite((prev) => !prev);
 
     if (isFavorite) {
@@ -70,8 +68,5 @@ export const Card = ({ garage }) => {
     handleNavigate: handleNavigate,
   };
 
-  if (garage.tag === "pro") {
-    return <CarPro {...commonProps} />;
-  }
   return <CardNormal {...commonProps} />;
 };
