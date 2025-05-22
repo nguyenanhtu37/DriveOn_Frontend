@@ -18,7 +18,9 @@ function HomePage() {
           <GarageList />
         </TabsContent>
         <TabsContent className="mt-0" value="map">
-          <GarageMap />
+          <div className="w-full h-screen">
+            <GarageMap />
+          </div>
         </TabsContent>
       </Tabs>
       {/* New Emergency Button - Right Bottom Corner */}

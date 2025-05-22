@@ -44,6 +44,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { TransactionHistory } from "@/pages/LayoutAdmin/Transaction/TransactionHistory";
 import ExpiredDate from "@/pages/ExpiredDate/ExpiredDate";
 import LandingPage from "@/pages/LandingPage/LandingPage";
+import SearchPage from "@/pages/SearchPage/SearchPage";
 
 const router = createBrowserRouter(
   [
@@ -65,6 +66,10 @@ const router = createBrowserRouter(
               element: <EmergencyGarageScreen />,
             },
           ],
+        },
+        {
+          path: AbsoluteScreenPath.Search,
+          element: <SearchPage />,
         },
         {
           element: (

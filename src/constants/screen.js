@@ -17,6 +17,7 @@ export const AbsoluteScreenPath = {
   GarageProUpgrade: "/garageProUpgrade",
   AppointmentDetail: "/appointment-detail",
   Emergency: "/emergency",
+  Search: "/search",
 };
 
 export const GarageManagementScreenPath = {

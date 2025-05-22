@@ -106,7 +106,7 @@ export const useGetGarages = () => {
 
   return {
     ...query,
-    data: query.data?.data ?? [],
+    data: query.data?.data ?? {},
     meta: query.data?.meta ?? null,
   };
 };
@@ -276,6 +276,17 @@ export const useGetDashboardChart = (id) => {
     queryFn: () => garageService.getDashboardCharts(id),
   });
 
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};
+
+export const useViewGarageList = () => {
+  const query = useQuery({
+    queryKey: ["garageList"],
+    queryFn: garageService.viewGarageList,
+  });
   return {
     ...query,
     data: query.data ?? {},

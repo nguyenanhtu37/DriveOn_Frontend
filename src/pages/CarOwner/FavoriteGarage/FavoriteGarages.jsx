@@ -6,29 +6,25 @@ import NavbarMobile from "@/components/NavbarMobile";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/common/layouts/components/Navbar";
 
 const FavoriteGarages = () => {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const userId = user?._id;
 
-  const { favorites, loading, error, removeFromFavorites } = useFavorites(userId);
+  const { favorites, loading, error, removeFromFavorites } =
+    useFavorites(userId);
 
   // Đảm bảo dữ liệu garage hợp lệ, tránh lỗi khi thiếu trường
   const safeFavorites = Array.isArray(favorites)
     ? favorites.filter(
-      (garage) =>
-        garage &&
-        garage._id &&
-        garage.name &&
-        garage.address
-    )
+        (garage) => garage && garage._id && garage.name && garage.address
+      )
     : [];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-   
       <div className="flex-1 w-full max-w-7xl mx-auto py-8 px-2 sm:px-6 lg:px-8">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
           <ArrowLeft className="mr-2" />
@@ -79,7 +75,11 @@ const FavoriteGarages = () => {
                     garageName={garage.name}
                     address={garage.address}
                     phone={garage.phone}
-                    imgs={Array.isArray(garage.interiorImages) ? garage.interiorImages : []}
+                    imgs={
+                      Array.isArray(garage.interiorImages)
+                        ? garage.interiorImages
+                        : []
+                    }
                     rating={garage.ratingAverage || garage.rating || 0}
                     isFavorited={true}
                     onRemove={() => removeFromFavorites(garage._id)}

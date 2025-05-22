@@ -1,19 +1,25 @@
-import { AlignJustify } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { AlignJustify, Home, SearchIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../../components/ui/popover";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/common/hooks/useAuth";
-import { DialogMyGarage } from "./DialogMyGagrage/DialogMyGarage";
-import { AbsoluteScreenPath } from "../constants/screen";
+import { DialogMyGarage } from "../../../components/DialogMyGagrage/DialogMyGarage";
+import { AbsoluteScreenPath } from "../../../constants/screen";
 import { useUserStore } from "@/app/stores/view/user";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
 import { useState } from "react";
 
-import { Badge } from "./ui/badge";
-import { SearchServicesByKeyword } from "./SearchServicesByKeyword/SearchServicesByKeyword";
+import { Badge } from "../../../components/ui/badge";
+import { SearchServicesByKeyword } from "../../../components/SearchServicesByKeyword/SearchServicesByKeyword";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { SidebarTrigger } from "./ui/sidebar";
+import { SidebarTrigger } from "../../../components/ui/sidebar";
+import { Input } from "../../../components/ui/input";
+import NavItem from "./NavItem";
 
 const garageMessages = [
   {
@@ -52,10 +58,10 @@ function Navbar() {
   };
 
   return (
-    <div className="relative w-full flex flex-col items-center bg-white border-b border-[#DDDDDD]">
+    <div className="relative w-full flex flex-col items-center  ">
       <div className="relative w-full h-16 xl:h-20 px-4 md:px-10 flex justify-between items-center transition-all duration-100 ease-in-out">
         <div className="flex md:hidden absolute z-40 top-1/2 left-4 -translate-y-1/2 justify-start items-center">
-          <SidebarTrigger />
+          {/* <SidebarTrigger /> */}
         </div>
         {/* Left */}
         <div className="w-full md:w-1/2 lg:w-1/3 flex justify-center md:justify-start items-center z-30">
@@ -72,8 +78,8 @@ function Navbar() {
         </div>
 
         {/* Center */}
-        <div className="hidden xl:flex w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] justify-center items-center">
-          <Link to={"/garageRegistration"} asChild>
+        <div className="hidden xl:flex gap-x-4 w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] justify-center items-center">
+          {/* <Link to={"/garageRegistration"} asChild>
             <Swiper
               autoplay={{
                 delay: 3000,
@@ -93,13 +99,21 @@ function Navbar() {
                 </SwiperSlide>
               ))}
             </Swiper>
-          </Link>
+          </Link> */}
+          <NavItem to="/">
+            <Home size={16} className="text-inherit" />
+            Home
+          </NavItem>
+          <NavItem to="/search">
+            <SearchIcon size={16} className="text-inherit" />
+            Search
+          </NavItem>
         </div>
 
         {/* Right */}
         <div className="hidden w-1/2 lg:w-1/3 md:flex justify-end items-center z-30">
           <div className="flex items-center gap-2">
-            <SearchServicesByKeyword />
+            {/* <SearchServicesByKeyword /> */}
 
             {!isLoggedIn ? (
               <div className="flex items-center gap-2">

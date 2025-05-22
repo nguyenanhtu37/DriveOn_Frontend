@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageSquare, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AddFeedback } from "./AddFeedback";
+// import { AddFeedback } from "./AddFeedback";
 import { format } from "date-fns";
 import { useUserStore } from "@/app/stores/view/user";
 
@@ -33,7 +33,7 @@ const FeedbackV2 = () => {
     <div className="w-full  py-8 ">
       <div className="w-full flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold ">Customer Reviews</h2>
-        <AddFeedback />
+        {/* <AddFeedback /> */}
       </div>
 
       <div className="flex items-center mb-6">
