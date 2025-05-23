@@ -24,19 +24,19 @@ export const useSearchWithFilter = ({
   page,
   limit,
 }) => {
+  const queryKey = [
+    "searchWithFilter",
+    keyword,
+    location,
+    service,
+    province,
+    time,
+    page,
+    limit,
+  ];
+
   const query = useQuery({
-    queryKey: isFetched
-      ? [
-          "searchWithFilter",
-          keyword,
-          location,
-          service,
-          province,
-          time,
-          page,
-          limit,
-        ]
-      : [],
+    queryKey,
     queryFn: () =>
       searchService.searchWithFilter({
         keyword,
@@ -47,6 +47,9 @@ export const useSearchWithFilter = ({
         page,
         limit,
       }),
+    enabled: isFetched,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return {

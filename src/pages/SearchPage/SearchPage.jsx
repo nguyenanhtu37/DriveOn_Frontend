@@ -18,6 +18,8 @@ const SearchPage = () => {
   useGeolocation();
 
   const [open, setOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [direction, setDirection] = useState([]);
 
   const {
     keyword,
@@ -31,16 +33,6 @@ const SearchPage = () => {
 
   const isMobile = useIsMobile();
 
-  const [direction, setDirection] = useState([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const [garages, setGarages] = useState([]);
-
-  const handleClearDirection = () => {
-    setDirection([]);
-  };
-
   const searchData = useSearchWithFilter({
     keyword,
     location,
@@ -52,6 +44,12 @@ const SearchPage = () => {
     page: currentPage,
   });
 
+  const garages = searchData.data.results;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [keyword, location, service, province, time]);
+
   useEffect(() => {
     setIsFetched(true);
   }, []);
@@ -59,7 +57,6 @@ const SearchPage = () => {
   useEffect(() => {
     if (searchData.isSuccess) {
       setIsFetched(false);
-      setGarages(searchData.data.results);
     }
   }, [searchData.data.results, searchData.isSuccess, setIsFetched]);
 
@@ -73,36 +70,48 @@ const SearchPage = () => {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
+  const handleClearDirection = () => {
+    setDirection([]);
+  };
+
+  const renderContent = () => {
+    if (searchData.isLoading) {
+      return Array.from({ length: 9 }, (_, index) => (
+        <CardSkeleton key={index} />
+      ));
+    }
+
+    if (searchData.isSuccess && garages.length === 0) {
+      return (
+        <div className="col-span-full flex items-center justify-center h-40">
+          <p className="text-gray-500">Không tìm thấy kết quả phù hợp</p>
+        </div>
+      );
+    }
+
+    if (searchData.isSuccess) {
+      return garages.map((garage) => (
+        <BlurFade key={garage._id}>
+          <CardPro garage={garage} setDirection={setDirection} />
+        </BlurFade>
+      ));
+    }
+
+    return null;
+  };
+
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
       <SidebarHome />
       <div className="flex flex-col w-full min-w-[378px] max-w-[1920px] mx-auto bg-white">
         <Header />
 
-        {/* Main content area with fixed height calculation */}
+        {/* Main content area */}
         <div className="flex flex-col md:flex-row h-[85vh]">
-          {/* Results panel - scrollable */}
+          {/* Result panel */}
           <div className="w-full md:w-1/2 lg:w-3/5 overflow-y-auto p-4 md:p-6 flex flex-col gap-y-4 items-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {searchData.isLoading ? (
-                Array.from({ length: 9 }, (_, index) => (
-                  <CardSkeleton key={index} />
-                ))
-              ) : searchData.isSuccess && garages.length === 0 ? (
-                <div className="col-span-full flex items-center justify-center h-40">
-                  <p className="text-gray-500">No results found</p>
-                </div>
-              ) : (
-                garages.map((garage) => (
-                  <BlurFade key={garage._id}>
-                    <CardPro
-                      key={garage._id}
-                      garage={garage}
-                      setDirection={setDirection}
-                    />
-                  </BlurFade>
-                ))
-              )}
+              {renderContent()}
             </div>
 
             {searchData.isSuccess && garages.length > 0 && (
@@ -116,6 +125,8 @@ const SearchPage = () => {
               />
             )}
           </div>
+
+          {/* Map panel */}
           <div className="w-full md:w-1/2 lg:w-2/5 h-[50vh] md:h-full sticky top-0">
             <div className="h-full rounded-lg overflow-hidden">
               <SearchMap
@@ -128,7 +139,7 @@ const SearchPage = () => {
           </div>
         </div>
 
-        {/* Mobile navigation and footer */}
+        {/* Footer and mobile nav */}
         <NavbarMobile />
         <Footer />
       </div>
