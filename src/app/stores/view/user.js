@@ -2,12 +2,14 @@ import { io } from "socket.io-client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = import.meta.env.VITE_WEBSOCKET_URL;
 
 export const useUserStore = create(
   persist(
     (set, get) => ({
       user: null,
+      garageId: null,
+      setGarageId: (garageId) => set({ garageId }),
       location: null,
       setLocation: (location) => set({ location }),
       setUser: (user) => set({ user }),
@@ -26,8 +28,12 @@ export const setUser = (user) => {
   useUserStore.getState().setUser(user);
 };
 
+export const setGarageId = (garageId) => {
+  useUserStore.getState().setGarageId(garageId);
+};
+
 export const connectSocket = () => {
-  const { user, socket } = useUserStore.getState();
+  const { user, socket, garageId } = useUserStore.getState();
 
   // Debug logging
   console.log("Attempting to connect socket:", {
@@ -41,7 +47,7 @@ export const connectSocket = () => {
 
   try {
     const newSocket = io(BASE_URL, {
-      query: { userId: user._id },
+      query: { userId: user._id, garageId: garageId },
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
@@ -86,4 +92,14 @@ export const userLogout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("location");
   disconnectSocket();
+};
+
+export const checkAuth = () => {
+  const user = getUser();
+
+  if (user) {
+    connectSocket();
+  }
+
+  return true;
 };

@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { ResultItem } from "./ResultItem";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { useClickOutside, useDebounce } from "react-haiku";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,9 +62,7 @@ export default function Header() {
                       <ResultItem
                         key={index}
                         item={item}
-                        onClick={() => {
-                          setKeyword(item.name);
-                        }}
+                        setIsOpen={setIsOpen}
                       />
                     ))
                   ) : (

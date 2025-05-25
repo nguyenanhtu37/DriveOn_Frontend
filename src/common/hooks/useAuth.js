@@ -7,7 +7,12 @@ import {
   requestPasswordReset,
   resetPassword,
 } from "../../app/services/reset-password";
-import { connectSocket, setUser, userLogout } from "@/app/stores/view/user";
+import {
+  connectSocket,
+  setGarageId,
+  setUser,
+  userLogout,
+} from "@/app/stores/view/user";
 import { requestPermissionAndGetToken } from "../../../firebase-messaging.js";
 
 export const useAuth = () => {
@@ -36,6 +41,9 @@ export const useAuth = () => {
 
       const response = await login({ ...credentials, deviceToken }); // gọi service login
       setUser(response.user);
+      if (response.garageId) {
+        setGarageId(response.garageId);
+      }
       connectSocket();
 
       localStorage.setItem("token", response.token);
@@ -49,9 +57,9 @@ export const useAuth = () => {
         return navigate("/admin");
       }
       if (roles.some((userRole) => userRole.roleName === "staff")) {
-        return navigate(`/garageManagement/${response.user.garageList[0]._id}`);
+        return navigate(`/garageManagement/${response.garageId}`);
       }
-      console.log("➡️ Redirecting to homepage...");
+
       return navigate("/");
     } catch (err) {
       const errorMessage =

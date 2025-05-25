@@ -36,7 +36,7 @@ export const login = async (credentials) => {
       },
     });
 
-    const { token, user, roles } = response.data;
+    const { token, user, roles, garageId } = response.data;
 
     // Validate response
     if (!token) {
@@ -51,6 +51,7 @@ export const login = async (credentials) => {
       token,
       user,
       roles: roles || ["carowner"], // Default to "carowner" if no roles provided
+      garageId,
     };
   } catch (error) {
     const errorMessage =

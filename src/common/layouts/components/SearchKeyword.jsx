@@ -14,6 +14,12 @@ const SearchKeyword = ({ ...props }) => {
     navigate("/search");
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleClick();
+    }
+  };
+
   return (
     <div
       className="w-full bg-white p-2 rounded-full outline outline-1 -outline-offset-1 outline-[#f4f4f4] shadow-md
@@ -23,6 +29,7 @@ const SearchKeyword = ({ ...props }) => {
         type="text"
         placeholder="Search for services, garages, address,..."
         className="w-full h-10 bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none"
+        onKeyDown={handleKeyDown}
         {...props}
       />
       <Button
