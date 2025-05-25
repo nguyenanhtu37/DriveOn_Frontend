@@ -2,7 +2,6 @@ import { useGetService } from "@/app/stores/entity/service-detail";
 import { useParams } from "react-router-dom";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSetDialogId } from "@/app/stores/view/dialog";
 const Service = () => {

@@ -10,8 +10,11 @@ const addFeedback = async (data) => {
   return response.data;
 };
 
-const updateFeedback = async (data) => {
-  const response = await axios.put(`/feedback/${data._id}`, data);
+const updateFeedback = async ({ appointmentId, data }) => {
+  const response = await axios.put(
+    `/feedback/appointment/${appointmentId}`,
+    data
+  );
   return response.data;
 };
 
@@ -20,4 +23,15 @@ const deleteFeedback = async (id) => {
   return response.data;
 };
 
-export { getFeedbackForGarage, addFeedback, updateFeedback, deleteFeedback };
+const getFeedbackByAppointmentId = async (appointmentId) => {
+  const response = await axios.get(`/feedback/appointment/${appointmentId}`);
+  return response.data;
+};
+
+export {
+  getFeedbackForGarage,
+  addFeedback,
+  updateFeedback,
+  deleteFeedback,
+  getFeedbackByAppointmentId,
+};

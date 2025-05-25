@@ -1,10 +1,19 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export const ResultItem = ({ item }) => {
+export const ResultItem = ({ item, setIsOpen }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    setIsOpen(false);
+    navigate(`/garageDetail/${item.garageId}`);
+  };
   return (
-    <Card className=" overflow-hidden cursor-pointer hover:bg-box-hover bg-white transition-shadow duration-200 rounded-none w-full">
+    <Card
+      className=" overflow-hidden cursor-pointer hover:bg-box-hover bg-white transition-shadow duration-200 rounded-none w-full"
+      onClick={handleClick}
+    >
       <CardContent className="p-0">
         <div className="flex items-center p-4">
           <div className="flex-shrink-0 mr-4">

@@ -33,3 +33,15 @@ export const useDeleteFeedback = () => {
   });
   return mutation;
 };
+
+export const useGetFeedbackByAppointmentId = (appointmentId) => {
+  const query = useQuery({
+    queryKey: ["feedback", "appointment", appointmentId],
+    queryFn: () => feedbackServiceV2.getFeedbackByAppointmentId(appointmentId),
+    enabled: !!appointmentId,
+  });
+  return {
+    ...query,
+    data: query.data || [],
+  };
+};

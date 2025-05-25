@@ -32,12 +32,24 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { twMerge } from "tailwind-merge";
 import { useNavigate } from "react-router-dom";
+import { useSetDialogId } from "@/app/stores/view/dialog";
+import Feedback from "./Feedback";
+import UpdateFeedback from "./UpdateFeedback";
 
 export const GarageAppointmentCard = ({ appointment }) => {
   const navigate = useNavigate();
 
   const handleBookAgain = () => {
     navigate(`/garageDetail/${appointment.garage._id}`);
+  };
+
+  const setDialogId = useSetDialogId();
+
+  const handleOpen = () => {
+    setDialogId({ id: "FeedbackAppointment", data: appointment._id });
+  };
+  const handleOpenUpdate = () => {
+    setDialogId({ id: "UpdateFeedbackAppointment", data: appointment._id });
   };
 
   const cancelAppointment = useCancelAppointment();
@@ -98,179 +110,176 @@ export const GarageAppointmentCard = ({ appointment }) => {
   };
 
   return (
-    <Card className="w-full  overflow-hidden">
-      <CardHeader className="bg-primary/5 pb-4">
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-xl font-bold">
-              {appointment.garage.name}
-            </CardTitle>
-            <div className="flex items-center text-sm text-muted-foreground mt-1">
-              <MapPin className="h-4 w-4 mr-1" />
-              <span>{appointment.garage.address}</span>
+    <>
+      <Card className="w-full  overflow-hidden">
+        <CardHeader className="bg-primary/5 pb-4">
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-xl font-bold">
+                {appointment.garage.name}
+              </CardTitle>
+              <div className="flex items-center text-sm text-muted-foreground mt-1">
+                <MapPin className="h-4 w-4 mr-1" />
+                <span>{appointment.garage.address}</span>
+              </div>
+            </div>
+            <Badge
+              className={twMerge(
+                getStatusColor(appointment.status),
+                " pointer-events-none"
+              )}
+            >
+              {appointment.status}
+            </Badge>
+          </div>
+        </CardHeader>
+
+        <CardContent className="pt-4 space-y-4">
+          {/* Date and Time */}
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+            <div className="flex items-center">
+              <Calendar className="h-5 w-5 mr-2 text-primary" />
+              <span className="font-medium">{formattedDate}</span>
+            </div>
+            <div className="flex items-center">
+              <Clock className="h-5 w-5 mr-2 text-primary" />
+              <span className="font-medium">
+                {startTime} - {endTime}
+              </span>
             </div>
           </div>
-          <Badge
-            className={twMerge(
-              getStatusColor(appointment.status),
-              " pointer-events-none"
-            )}
-          >
-            {appointment.status}
-          </Badge>
-        </div>
-      </CardHeader>
 
-      <CardContent className="pt-4 space-y-4">
-        {/* Date and Time */}
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-          <div className="flex items-center">
-            <Calendar className="h-5 w-5 mr-2 text-primary" />
-            <span className="font-medium">{formattedDate}</span>
+          <Separator />
+
+          {/* Vehicle Information */}
+          <div className="flex items-start gap-3">
+            <div className="bg-primary/10 p-2 rounded-full">
+              <Car className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-medium">Vehicle</h3>
+              <p className="text-sm text-muted-foreground">
+                {appointment.vehicle.carName}
+              </p>
+              <p className="text-sm font-medium">
+                {appointment.vehicle.carPlate}
+              </p>
+            </div>
           </div>
+
+          <Separator />
+
+          {/* Services */}
+          <div>
+            <h3 className="font-medium mb-2">Services</h3>
+            <div className="space-y-3">
+              {appointment.service.map((service) => (
+                <div
+                  key={service._id}
+                  className="flex justify-between items-center bg-accent/50 p-3 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    {service.images && service.images.length > 0 ? (
+                      <Avatar className="h-10 w-10 rounded-md">
+                        <AvatarImage
+                          src={service.images[0]}
+                          alt={service.name}
+                        />
+                        <AvatarFallback className="rounded-md">
+                          {service.name.substring(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <div className="h-10 w-10 bg-primary/20 rounded-md flex items-center justify-center">
+                        <span className="text-primary font-medium">
+                          {service.name.substring(0, 2)}
+                        </span>
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-medium">{service.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {service.duration} minutes
+                      </p>
+                    </div>
+                  </div>
+                  <p className="font-medium">{formatPrice(service.price)}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between items-center mt-3 font-medium">
+              <span>Total</span>
+              <span>{formatPrice(totalPrice)}</span>
+            </div>
+          </div>
+
+          {/* Note */}
+          {appointment.note && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+              <div className="flex items-start gap-2">
+                <FileText className="h-5 w-5 text-yellow-500 mt-0.5" />
+                <div>
+                  <h3 className="font-medium text-yellow-700">Note</h3>
+                  <p className="text-sm text-yellow-700">{appointment.note}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tag */}
           <div className="flex items-center">
-            <Clock className="h-5 w-5 mr-2 text-primary" />
-            <span className="font-medium">
-              {startTime} - {endTime}
+            <Tag className="h-4 w-4 mr-1 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
+              {appointment.tag}
             </span>
           </div>
-        </div>
+        </CardContent>
 
-        <Separator />
-
-        {/* Vehicle Information */}
-        <div className="flex items-start gap-3">
-          <div className="bg-primary/10 p-2 rounded-full">
-            <Car className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h3 className="font-medium">Vehicle</h3>
-            <p className="text-sm text-muted-foreground">
-              {appointment.vehicle.carName}
-            </p>
-            <p className="text-sm font-medium">
-              {appointment.vehicle.carPlate}
-            </p>
-          </div>
-        </div>
-
-        {/* Customer Information */}
-        {/* <div className="flex items-start gap-3"> */}
-          {/* <div className="bg-primary/10 p-2 rounded-full"> */}
-            {/* <User className="h-5 w-5 text-primary" /> */}
-          {/* </div> */}
-          {/* <div> */}
-            {/* <h3 className="font-medium">Customer</h3> */}
-            {/* <p className="text-sm text-muted-foreground"> */}
-              {/* {appointment.user.name} */}
-            {/* </p> */}
-            {/* <p className="text-sm text-muted-foreground"> */}
-              {/* {appointment.user.email} */}
-            {/* </p> */}
-          {/* </div> */}
-        {/* </div> */}
-
-        <Separator />
-
-        {/* Services */}
-        <div>
-          <h3 className="font-medium mb-2">Services</h3>
-          <div className="space-y-3">
-            {appointment.service.map((service) => (
-              <div
-                key={service._id}
-                className="flex justify-between items-center bg-accent/50 p-3 rounded-lg"
-              >
-                <div className="flex items-center gap-3">
-                  {service.images && service.images.length > 0 ? (
-                    <Avatar className="h-10 w-10 rounded-md">
-                      <AvatarImage src={service.images[0]} alt={service.name} />
-                      <AvatarFallback className="rounded-md">
-                        {service.name.substring(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : (
-                    <div className="h-10 w-10 bg-primary/20 rounded-md flex items-center justify-center">
-                      <span className="text-primary font-medium">
-                        {service.name.substring(0, 2)}
-                      </span>
-                    </div>
-                  )}
-                  <div>
-                    <p className="font-medium">{service.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {service.duration} minutes
-                    </p>
+        <CardFooter className="flex justify-between bg-muted/30 pt-4">
+          {(appointment.status === "Pending" ||
+            appointment.status === "Accepted") && (
+            <div className="space-x-2">
+              <Dialog>
+                <DialogTrigger>
+                  <Button variant="destructive">Cancel</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogTitle>Cancel Appointment</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to cancel this appointment?
+                  </DialogDescription>
+                  <div className="flex justify-end space-x-2 mt-4">
+                    <Button variant="outline" onClick={() => handleCancel()}>
+                      Yes, Cancel
+                    </Button>
+                    <DialogTrigger>
+                      <Button variant="ghost">No, Keep</Button>
+                    </DialogTrigger>
                   </div>
-                </div>
-                <p className="font-medium">{formatPrice(service.price)}</p>
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between items-center mt-3 font-medium">
-            <span>Total</span>
-            <span>{formatPrice(totalPrice)}</span>
-          </div>
-        </div>
-
-        {/* Note */}
-        {appointment.note && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-            <div className="flex items-start gap-2">
-              <FileText className="h-5 w-5 text-yellow-500 mt-0.5" />
-              <div>
-                <h3 className="font-medium text-yellow-700">Note</h3>
-                <p className="text-sm text-yellow-700">{appointment.note}</p>
-              </div>
+                </DialogContent>
+              </Dialog>
             </div>
-          </div>
-        )}
-
-        {/* Tag */}
-        <div className="flex items-center">
-          <Tag className="h-4 w-4 mr-1 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
-            {appointment.tag}
-          </span>
-        </div>
-      </CardContent>
-
-      <CardFooter className="flex justify-between bg-muted/30 pt-4">
-        {(appointment.status === "Pending" ||
-          appointment.status === "Accepted") && (
-          <div className="space-x-2">
-            <Dialog>
-              <DialogTrigger>
-                <Button variant="destructive">Cancel</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogTitle>Cancel Appointment</DialogTitle>
-                <DialogDescription>
-                  Are you sure you want to cancel this appointment?
-                </DialogDescription>
-                <div className="flex justify-end space-x-2 mt-4">
-                  <Button variant="outline" onClick={() => handleCancel()}>
-                    Yes, Cancel
-                  </Button>
-                  <DialogTrigger>
-                    <Button variant="ghost">No, Keep</Button>
-                  </DialogTrigger>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        )}
-
-        {appointment.status === "Confirmed" && <Button>Check In</Button>}
-
-        {(appointment.status === "Completed" ||
-          appointment.status === "Cancel" ||
-          appointment.status === "Rejected") && (
-          <Button variant="outline" onClick={handleBookAgain}>
-            Book again
-          </Button>
-        )}
-      </CardFooter>
-    </Card>
+          )}
+          {appointment.status === "Confirmed" && <Button>Check In</Button>}
+          {appointment.status === "Completed" && !appointment.isFeedbacked && (
+            <Button onClick={handleOpen}>FeedBack</Button>
+          )}{" "}
+          {appointment.status === "Completed" && appointment.isFeedbacked && (
+            <Button variant="ghost" onClick={handleOpenUpdate}>
+              Edit Feedback
+            </Button>
+          )}
+          {(appointment.status === "Completed" ||
+            appointment.status === "Cancel" ||
+            appointment.status === "Rejected") && (
+            <Button variant="outline" onClick={handleBookAgain}>
+              Book again
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+      <Feedback />
+      <UpdateFeedback />
+    </>
   );
 };

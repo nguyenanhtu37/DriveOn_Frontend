@@ -40,78 +40,80 @@ export const UserAppointment = () => {
 
   if (appointmentData.isLoading) return <Loading />;
   return (
-    <TabsContent value="appointments" className="space-y-6 mt-6">
-      <div>
-        <div className="md:col-span-2 space-y-6 ">
-          <Card className="min-h-[500px]">
-            <CardHeader>
-              <CardTitle>Your appointment</CardTitle>
-              <CardDescription>Manage all appointments</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="upcoming">
-                <TabsList className="mb-4 grid grid-cols-2 md:grid-cols-3 gap-2 h-full">
-                  <TabsTrigger value="upcoming">
-                    Upcoming ({upcomingAppointments.length})
-                  </TabsTrigger>
+    <>
+      <TabsContent value="appointments" className="space-y-6 mt-6">
+        <div>
+          <div className="md:col-span-2 space-y-6 ">
+            <Card className="min-h-[500px]">
+              <CardHeader>
+                <CardTitle>Your appointment</CardTitle>
+                <CardDescription>Manage all appointments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="upcoming">
+                  <TabsList className="mb-4 grid grid-cols-2 md:grid-cols-3 gap-2 h-full">
+                    <TabsTrigger value="upcoming">
+                      Upcoming ({upcomingAppointments.length})
+                    </TabsTrigger>
 
-                  <TabsTrigger value="completed">
-                    Completed ({completedAppointments.length})
-                  </TabsTrigger>
-                  <TabsTrigger value="cancel">
-                    Cancel ({cancelAppointments.length})
-                  </TabsTrigger>
-                </TabsList>
+                    <TabsTrigger value="completed">
+                      Completed ({completedAppointments.length})
+                    </TabsTrigger>
+                    <TabsTrigger value="cancel">
+                      Cancel ({cancelAppointments.length})
+                    </TabsTrigger>
+                  </TabsList>
 
-                <TabsContent value="upcoming" className=" space-y-4">
-                  {upcomingAppointments.length === 0 ? (
-                    <div className="text-center py-6 text-muted-foreground">
-                      You have no upcoming appointments
-                    </div>
-                  ) : (
-                    upcomingAppointments.map((appointment) => (
-                      <GarageAppointmentCard
-                        key={appointment.id}
-                        appointment={appointment}
-                      />
-                    ))
-                  )}
-                </TabsContent>
+                  <TabsContent value="upcoming" className=" space-y-4">
+                    {upcomingAppointments.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground">
+                        You have no upcoming appointments
+                      </div>
+                    ) : (
+                      upcomingAppointments.map((appointment) => (
+                        <GarageAppointmentCard
+                          key={appointment.id}
+                          appointment={appointment}
+                        />
+                      ))
+                    )}
+                  </TabsContent>
 
-                <TabsContent value="completed" className="space-y-4">
-                  {completedAppointments.length === 0 ? (
-                    <div className="text-center py-6 text-muted-foreground">
-                      You have no completed appointments.
-                    </div>
-                  ) : (
-                    completedAppointments.map((appointment) => (
-                      <GarageAppointmentCard
-                        key={appointment.id}
-                        appointment={appointment}
-                      />
-                    ))
-                  )}
-                </TabsContent>
+                  <TabsContent value="completed" className="space-y-4">
+                    {completedAppointments.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground">
+                        You have no completed appointments.
+                      </div>
+                    ) : (
+                      completedAppointments.map((appointment) => (
+                        <GarageAppointmentCard
+                          key={appointment.id}
+                          appointment={appointment}
+                        />
+                      ))
+                    )}
+                  </TabsContent>
 
-                <TabsContent value="cancel" className="space-y-4">
-                  {cancelAppointments.length === 0 ? (
-                    <div className="text-center py-6 text-muted-foreground">
-                      You have no cancelled appointments.
-                    </div>
-                  ) : (
-                    cancelAppointments.map((appointment) => (
-                      <GarageAppointmentCard
-                        key={appointment.id}
-                        appointment={appointment}
-                      />
-                    ))
-                  )}
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+                  <TabsContent value="cancel" className="space-y-4">
+                    {cancelAppointments.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground">
+                        You have no cancelled appointments.
+                      </div>
+                    ) : (
+                      cancelAppointments.map((appointment) => (
+                        <GarageAppointmentCard
+                          key={appointment.id}
+                          appointment={appointment}
+                        />
+                      ))
+                    )}
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
-    </TabsContent>
+      </TabsContent>
+    </>
   );
 };
