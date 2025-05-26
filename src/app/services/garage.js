@@ -88,3 +88,22 @@ export const viewGarageList = async () => {
   const response = await axios.get("garage/viewGarageList");
   return response.data;
 };
+
+export const fetchProGarages = async () => {
+  try {
+    const response = await axios.get('/garage/viewGarageList');
+    if (!response.data) {
+      throw new Error("No data received from server");
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching pro garages:", error);
+    if (error.response) {
+      throw new Error(error.response.data?.message || 'Failed to fetch pro garages');
+    } else if (error.request) {
+      throw new Error('No response from server. Please check your internet connection.');
+    } else {
+      throw new Error(error.message || 'An unexpected error occurred');
+    }
+  }
+};

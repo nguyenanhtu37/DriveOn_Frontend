@@ -45,6 +45,7 @@ import { TransactionHistory } from "@/pages/LayoutAdmin/Transaction/TransactionH
 import ExpiredDate from "@/pages/ExpiredDate/ExpiredDate";
 import LandingPage from "@/pages/LandingPage/LandingPage";
 import SearchPage from "@/pages/SearchPage/SearchPage";
+import GaragePro from "@/pages/GaragePro/GaragePro";
 
 const router = createBrowserRouter(
   [
@@ -64,6 +65,10 @@ const router = createBrowserRouter(
             {
               path: AbsoluteScreenPath.Emergency,
               element: <EmergencyGarageScreen />,
+            },
+            {
+              path: AbsoluteScreenPath.GaragePro,
+              element: <GaragePro />,
             },
           ],
         },

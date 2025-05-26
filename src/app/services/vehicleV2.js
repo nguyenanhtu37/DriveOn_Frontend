@@ -36,6 +36,8 @@ export const updateVehicle = async ({ vehicleId, updateData }) => {
 };
 
 export const deleteVehicle = async (vehicleId) => {
+  console.log('Deleting vehicle:', vehicleId); // Debug log
   const response = await axios.delete(`${API_URL}/${vehicleId}`);
+  console.log('Delete response:', response.data); // Debug log
   return response.data;
 };

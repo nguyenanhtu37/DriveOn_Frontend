@@ -1,7 +1,7 @@
 import GarageList from "@/pages/HomePage/GarageList/GarageList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
-
+import { AbsoluteScreenPath } from "@/constants/screen";
 import GarageMap from "./GarageMap/GarageMap";
 import { useTabStore } from "@/app/stores/view/tab";
 
@@ -25,7 +25,7 @@ function HomePage() {
       </Tabs>
       {/* New Emergency Button - Right Bottom Corner */}
       <Link
-        to="/emergency"
+        to={AbsoluteScreenPath.Emergency}
         className="fixed right-16 bottom-16 z-50 group hidden md:flex"
       >
         {/* Animated rim: zoom in/out and color shift */}
@@ -58,6 +58,16 @@ function HomePage() {
             <rect x="10.5" y="6.5" width="3" height="2" rx="1" fill="#ef4444" />
           </svg>
         </span>
+      </Link>
+      {/* Garage Pro Button - Between Search and Dropdown */}
+      <Link
+        to={AbsoluteScreenPath.GaragePro}
+        className="fixed right-32 bottom-16 z-50 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-lg"
+      >
+        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+        Garage Pro
       </Link>
     </div>
   );

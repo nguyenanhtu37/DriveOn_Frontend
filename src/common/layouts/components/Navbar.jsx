@@ -1,4 +1,4 @@
-import { AlignJustify, Home, SearchIcon } from "lucide-react";
+import { AlignJustify, Home, SearchIcon, Star } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -107,6 +107,11 @@ function Navbar() {
           <NavItem to="/search">
             <SearchIcon size={16} className="text-inherit" />
             Search
+          </NavItem>
+          <div className="w-12" /> {/* Spacer */}
+          <NavItem to={AbsoluteScreenPath.GaragePro} className="ml-8">
+            <Star size={16} className="text-inherit" />
+            Garage Pro
           </NavItem>
         </div>
 

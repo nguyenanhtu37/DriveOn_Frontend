@@ -1,17 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useVehicles } from '@/common/hooks/useVehicle';
 import { getBrands } from '@/app/services/brand';
 import { DeleteConfirmationModal } from '@/components/vehicle/DeleteConfirm';
+import { toast } from '@/hooks/use-toast';
 
 const VehicleCard = ({ vehicle, onEdit }) => {
   const navigate = useNavigate();
-  const { deleteVehicle, fetchVehicles } = useVehicles();
+  const { deleteVehicle } = useVehicles();
   const [brands, setBrands] = useState([]);
   const [loadingBrands, setLoadingBrands] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Safely destructure vehicle with default values
+  // Memoize vehicle data
   const {
     _id,
     carBrand = '',
@@ -21,55 +24,74 @@ const VehicleCard = ({ vehicle, onEdit }) => {
     carColor = '',
     maintenanceHistory = [],
     carImages = '',
-  } = vehicle || {};
+  } = useMemo(() => vehicle || {}, [vehicle]);
 
-  // Debug carImage
-  console.log('VehicleCard - Vehicle:', { _id, carName, carImages });
+  // Memoize brand name
+  const brandName = useMemo(() => {
+    const brand = brands.find((b) => b._id.toString() === carBrand.toString());
+    return brand ? brand.brandName : 'N/A';
+  }, [brands, carBrand]);
+
+  // Memoize status
+  const status = useMemo(() => 
+    Array.isArray(maintenanceHistory) && maintenanceHistory.length > 0 ? 'Maintenance' : 'Active',
+    [maintenanceHistory]
+  );
+
+  const handleView = useCallback(() => navigate(`/vehicle/${_id}`), [navigate, _id]);
+  const handleEdit = useCallback(() => onEdit(_id), [onEdit, _id]);
+  const handleDelete = useCallback(() => setIsConfirmDeleteOpen(true), []);
+  const handleConfirmDelete = useCallback(async () => {
+    setIsDeleting(true);
+    try {
+      console.log('Attempting to delete vehicle:', _id); // Debug log
+      const response = await deleteVehicle(_id);
+      console.log('Delete response:', response); // Debug log
+      
+      setIsConfirmDeleteOpen(false);
+      toast({
+        title: "Success",
+        description: "Vehicle deleted successfully",
+      });
+    } catch (err) {
+      console.error('Delete error:', err); // Debug log
+      setIsConfirmDeleteOpen(false);
+      toast({
+        title: "Error",
+        description: err.message || "Failed to delete vehicle",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [deleteVehicle, _id]);
 
   // Fetch brands on mount
   useEffect(() => {
     const fetchBrandData = async () => {
+      if (brands.length > 0) return;
       setLoadingBrands(true);
       try {
         const brandData = await getBrands();
         setBrands(brandData);
       } catch (err) {
         console.error('Error fetching brands:', err);
+        toast({
+          title: "Error",
+          description: "Failed to load brand information",
+          variant: "destructive",
+        });
       } finally {
         setLoadingBrands(false);
       }
     };
     fetchBrandData();
-  }, []);
+  }, [brands.length]);
 
-  // Find the brandName by matching carBrand (ObjectId) with brands array
-  const brand = brands.find((b) => b._id.toString() === carBrand.toString());
-  const brandName = brand ? brand.brandName : 'N/A';
-
-  // Check if maintenanceHistory is an array and has length > 0
-  const status = Array.isArray(maintenanceHistory) && maintenanceHistory.length > 0 ? 'Maintenance' : 'Active';
-
-  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-
-  const handleView = () => navigate(`/vehicle/${_id}`);
-  const handleEdit = () => onEdit(_id);
-
-  const handleDelete = async () => {
-    setIsConfirmDeleteOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    try {
-      await deleteVehicle(_id);
-      await fetchVehicles();
-      alert('Vehicle deleted successfully');
-      setIsConfirmDeleteOpen(false);
-      navigate(0);
-    } catch (err) {
-      alert('Error deleting vehicle: ' + err.message);
-      setIsConfirmDeleteOpen(false);
-    }
-  };
+  // Skip rendering if vehicle is deleted
+  if (vehicle?.isDeleted) {
+    return null;
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
@@ -82,9 +104,9 @@ const VehicleCard = ({ vehicle, onEdit }) => {
             className="w-full h-full object-cover rounded-lg"
             onError={(e) => {
               console.error('Image failed to load:', carImages);
-              e.target.style.display = 'none'; // Hide broken image
+              e.target.style.display = 'none';
             }}
-            onLoad={() => console.log('Image loaded successfully:', carImages)}
+            loading="lazy"
           />
         ) : (
           <div className="text-gray-400 flex flex-col items-center">
@@ -152,6 +174,8 @@ const VehicleCard = ({ vehicle, onEdit }) => {
         isOpen={isConfirmDeleteOpen}
         onClose={() => setIsConfirmDeleteOpen(false)}
         onConfirm={handleConfirmDelete}
+        isLoading={isDeleting}
+        vehicleName={carName}
       />
     </div>
   );

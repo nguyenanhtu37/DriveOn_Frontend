@@ -1,4 +1,4 @@
-import {  useState, useRef } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { useUserStore } from "@/app/stores/view/user";
 import { useGeolocation } from "@/common/hooks/useGeolocation";
@@ -16,7 +16,6 @@ import Loader from "@/components/Emergency/Loader";
 import GarageCard from "@/components/Emergency/GarageCard";
 import osm from "@/constants/osm-provider";
 import PopupGarage from "@/components/PopupGarage";
-// import { useGetEmergency } from "@/app/stores/entity/emergency";
 
 const garageIcon = L.icon({
   iconUrl: "/garageMarker.png",
@@ -35,55 +34,52 @@ const userIcon = L.icon({
 const locationDanang = [16.047079, 108.20623];
 
 // Fetch driving route from OSRM API
-async function fetchRoute(from, to) {
-  // from: [lat, lng], to: [lat, lng]
-  const url = `https://router.project-osrm.org/route/v1/driving/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson`;
-  const res = await fetch(url);
-  const data = await res.json();
-  if (data.routes && data.routes.length > 0) {
-    return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+const fetchRoute = async (from, to) => {
+  try {
+    const url = `https://router.project-osrm.org/route/v1/driving/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.routes && data.routes.length > 0) {
+      return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching route:', error);
+    return null;
   }
-  return null;
-}
+};
 
 const RescueGarages = () => {
   const { location } = useUserStore();
-  const [geoError] = useState(null);
+  const [geoError, setGeoError] = useState(null);
   const [directionCoords, setDirectionCoords] = useState(null);
-  const [selectedGarage, setSelectedGarage] = useState(null);
   const mapRef = useRef(null);
+
+  // Initialize geolocation
   useGeolocation();
 
-  const isValidLocation =
+  const isValidLocation = useMemo(() => 
     Array.isArray(location) &&
     location.length === 2 &&
-    location.every((coord) => !isNaN(coord));
+    location.every((coord) => !isNaN(coord)),
+    [location]
+  );
 
   const {
     data: garages = [],
     isLoading,
     error,
-
+    refetch
   } = useQuery({
     queryKey: ['rescue-garages', location],
     queryFn: async () => {
       if (!isValidLocation) throw new Error('Invalid location');
 
       const [latitude, longitude] = location;
-      const response = await fetchRescueGarages(latitude, longitude);
+      const data = await fetchRescueGarages(latitude, longitude);
 
-      let data = [];
-      if (Array.isArray(response)) {
-        data = response;
-      } else if (response && Array.isArray(response.data)) {
-        data = response.data;
-      } else if (response && Array.isArray(response.garages)) {
-        data = response.garages;
-      } else {
-        throw new Error('Invalid API response format');
-      }
-
-      return data.filter(
+      // Validate garage data
+      const validGarages = data.filter(
         (garage) =>
           garage &&
           typeof garage === 'object' &&
@@ -97,31 +93,62 @@ const RescueGarages = () => {
           !isNaN(garage.location.coordinates[0]) &&
           !isNaN(garage.location.coordinates[1])
       );
+
+      if (validGarages.length === 0) {
+        throw new Error('No emergency garages found in your area');
+      }
+
+      return validGarages;
     },
-    enabled: isValidLocation, // chỉ gọi khi location hợp lệ
-    staleTime: 1000 * 60, // cache 1 phút (có thể điều chỉnh)
+    enabled: isValidLocation,
+    staleTime: 1000 * 60, // Cache for 1 minute
+    retry: 2, // Retry failed requests twice
   });
+
+  const handleRetry = useCallback(() => {
+    setGeoError(null);
+    refetch();
+  }, [refetch]);
+
+  const handleGarageClick = useCallback(async (garage) => {
+    try {
+      const [lat, lng] = location || locationDanang;
+      const route = await fetchRoute(
+        [lat, lng],
+        [
+          garage.location.coordinates[1],
+          garage.location.coordinates[0],
+        ]
+      );
+      setDirectionCoords(
+        route || [
+          [lat, lng],
+          [
+            garage.location.coordinates[1],
+            garage.location.coordinates[0],
+          ],
+        ]
+      );
+    } catch (error) {
+      console.error('Error calculating route:', error);
+      setGeoError('Failed to calculate route. Please try again.');
+    }
+  }, [location]);
+
+  const clearDirections = useCallback(() => {
+    setDirectionCoords(null);
+  }, []);
 
   if (geoError) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <p className="text-red-500 text-lg font-semibold">{geoError}</p>
         <button
-          onClick={() => window.location.reload()}
+          onClick={handleRetry}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
         >
-          Retry
+          Try Again
         </button>
-      </div>
-    );
-  }
-
-  if (!location && !isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500 text-lg font-semibold">
-          Waiting for location access...
-        </p>
       </div>
     );
   }
@@ -137,12 +164,31 @@ const RescueGarages = () => {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <p className="text-red-500 text-lg font-semibold">{error}</p>
+        <p className="text-red-500 text-lg font-semibold">{error.message}</p>
         <button
-          onClick={() => setError(null)}
+          onClick={handleRetry}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
         >
-          Retry
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (!garages.length) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-gray-600 text-lg font-semibold mb-4">
+          No emergency garages found in your area
+        </p>
+        <p className="text-gray-500 text-sm mb-6">
+          Please try again later or contact support
+        </p>
+        <button
+          onClick={handleRetry}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+        >
+          Try Again
         </button>
       </div>
     );
@@ -151,8 +197,7 @@ const RescueGarages = () => {
   const [lat, lng] = location || locationDanang;
 
   return (
-    <div className=" bg-gray-50 flex flex-col">
-
+    <div className="bg-gray-50 flex flex-col">
       <div className="flex flex-col md:flex-row gap-6 p-4 md:p-8">
         {/* Map Section */}
         <div className="w-full md:w-1/2 relative">
@@ -187,25 +232,7 @@ const RescueGarages = () => {
                   ]}
                   icon={garageIcon}
                   eventHandlers={{
-                    click: async () => {
-                      setSelectedGarage(garage);
-                      const route = await fetchRoute(
-                        [lat, lng],
-                        [
-                          garage.location.coordinates[1],
-                          garage.location.coordinates[0],
-                        ]
-                      );
-                      setDirectionCoords(
-                        route || [
-                          [lat, lng],
-                          [
-                            garage.location.coordinates[1],
-                            garage.location.coordinates[0],
-                          ],
-                        ]
-                      );
-                    },
+                    click: () => handleGarageClick(garage),
                   }}
                 >
                   <Popup>
@@ -226,10 +253,7 @@ const RescueGarages = () => {
                   positions={directionCoords}
                   pathOptions={{ color: "#f43f5e", weight: 6, opacity: 0.85 }}
                   eventHandlers={{
-                    click: () => {
-                      setDirectionCoords(null);
-                      setSelectedGarage(null);
-                    },
+                    click: clearDirections,
                   }}
                 />
               )}
@@ -239,10 +263,7 @@ const RescueGarages = () => {
             {directionCoords && (
               <button
                 className="absolute top-4 right-4 z-20 bg-white border border-gray-300 rounded px-3 py-1 text-sm text-gray-700 shadow hover:bg-red-500 hover:text-white transition"
-                onClick={() => {
-                  setDirectionCoords(null);
-                  setSelectedGarage(null);
-                }}
+                onClick={clearDirections}
               >
                 Clear Direction
               </button>
@@ -271,19 +292,7 @@ const RescueGarages = () => {
                     distance={garage.distance}
                     hasEmergency={garage.hasEmergency}
                     description={garage.description}
-                    onGetDirections={async (garageLocation) => {
-                      setSelectedGarage(garageLocation);
-                      const route = await fetchRoute(
-                        [lat, lng],
-                        [garageLocation[1], garageLocation[0]]
-                      );
-                      setDirectionCoords(
-                        route || [
-                          [lat, lng],
-                          [garageLocation[1], garageLocation[0]],
-                        ]
-                      );
-                    }}
+                    onGetDirections={() => handleGarageClick(garage)}
                   />
                 ))}
               </div>
@@ -297,7 +306,6 @@ const RescueGarages = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
