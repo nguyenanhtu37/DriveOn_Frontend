@@ -33,8 +33,6 @@ import { Badge } from "@/components/ui/badge";
 import { twMerge } from "tailwind-merge";
 import { useNavigate } from "react-router-dom";
 import { useSetDialogId } from "@/app/stores/view/dialog";
-import Feedback from "./Feedback";
-import UpdateFeedback from "./UpdateFeedback";
 
 export const GarageAppointmentCard = ({ appointment }) => {
   const navigate = useNavigate();
@@ -278,8 +276,6 @@ export const GarageAppointmentCard = ({ appointment }) => {
           )}
         </CardFooter>
       </Card>
-      <Feedback />
-      <UpdateFeedback />
     </>
   );
 };

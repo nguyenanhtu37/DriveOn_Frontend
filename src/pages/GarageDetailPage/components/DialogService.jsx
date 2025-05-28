@@ -55,7 +55,7 @@ export const DialogService = () => {
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className={"flex flex-row justify-between items-center "}>
           <div className=" gap-x-2 flex items-center">
             <button className=" text-sm font-semibold text-[#1c1c1c] hover:text-[#1c1c1c]/70 transition-colors ease-in-out duration-100 rounded-full border border-[#1c1c1c]/10 p-2">
               <ChevronLeft />

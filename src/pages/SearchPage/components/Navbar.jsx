@@ -77,7 +77,7 @@ function Navbar() {
             ) : (
               <Popover>
                 <PopoverTrigger asChild>
-                  <div className="py-1 px-2 rounded-full ml-2 border border-[#DDDDDD] flex items-center justify-center gap-[12px] cursor-pointer shadow-sm hover:shadow-md transition-all ease-in-out duration-100">
+                  <div className="py-2 px-4 rounded-full ml-2 border border-[#DDDDDD] flex items-center justify-center gap-[12px] cursor-pointer shadow-sm hover:shadow-md transition-all ease-in-out duration-100">
                     <div className="flex justify-center items-center">
                       <AlignJustify size={16} />
                     </div>
@@ -89,7 +89,7 @@ function Navbar() {
                   </div>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-[220px] px-0 py-2"
+                  className="w-[220px] px-0 py-2 rounded-xl shadow-md"
                   align="end"
                   sideOffset={12}
                 >

@@ -115,7 +115,7 @@ const Feedback = () => {
   if (appointment.isLoading || appointmentId == null) return null;
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-none">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-none">
         <DialogHeader className="px-6 pt-6 pb-2 sticky top-0 left-0 right-0 bg-white z-10 border-b">
           <DialogTitle className="text-xl">Service Feedback</DialogTitle>
           <DialogDescription>

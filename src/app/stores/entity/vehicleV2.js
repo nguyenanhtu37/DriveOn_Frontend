@@ -12,7 +12,7 @@ export const useGetMyVehicles = () => {
     data: query.data ?? [],
   };
 };
-  
+
 export const useGetVehicleById = (vehicleId) => {
   const query = useQuery({
     queryKey: ["vehicle", vehicleId],
@@ -50,4 +50,16 @@ export const useDeleteVehicle = () => {
   });
 
   return mutation;
+};
+
+export const useGetHistoryMaintenance = (vehicleId) => {
+  const query = useQuery({
+    queryKey: ["historyMaintenance", vehicleId],
+    queryFn: () => vehicleServiceV2.getHistoryMaintenance(vehicleId),
+  });
+
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
 };

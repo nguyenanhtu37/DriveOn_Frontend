@@ -1,106 +1,79 @@
 import { useGetMyVehicles } from "@/app/stores/entity/vehicleV2";
 import { Loading } from "@/components/Loading";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { CreateVehicle } from "./CreateVehicle";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { VehicleDetail } from "./Details";
 import { EditVehicleDialog } from "./EditVehicle";
-import { DeleteVehicleButton } from "./DeleteButton";
-import { getBrands } from '@/app/services/brand';
+import VehicleCard from "./VehicleCard";
+import { Car } from "lucide-react";
+import { VehicleMaintenanceHistory } from "./VehicleMaintenanceHistory";
 
 export const Vehicle = () => {
   const myVehicles = useGetMyVehicles();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [editVehicle, setEditVehicle] = useState(null);
-  const [brands, setBrands] = useState([]);
-  const [loadingBrands, setLoadingBrands] = useState(false);
-
-  useEffect(() => {
-    const fetchBrandData = async () => {
-      setLoadingBrands(true);
-      try {
-        const brandData = await getBrands();
-        setBrands(brandData);
-      } catch (err) {
-        console.error('Error fetching brands:', err);
-      } finally {
-        setLoadingBrands(false);
-      }
-    };
-    fetchBrandData();
-  }, []);
 
   if (myVehicles.isLoading) return <Loading />;
 
+  const handleViewVehicle = (vehicle) => {
+    setSelectedVehicle(vehicle);
+  };
+
+  const handleEditVehicle = (vehicle) => {
+    setEditVehicle(vehicle);
+  };
+
+  const handleDeleteVehicle = (vehicle) => {
+    console.log("Delete vehicle:", vehicle);
+  };
+
   return (
-    <TabsContent value="vehicles" className="space-y-6 mt-6">
+    <TabsContent value="vehicles" className="space-y-8 mt-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">My Vehicles</h2>
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-primary/10 rounded-lg">
+            <Car className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">My Vehicles</h2>
+          </div>
+        </div>
         <CreateVehicle />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {myVehicles.data.length > 0 ? (
-          myVehicles.data.map((vehicle) => {
-            const brandId = typeof vehicle.carBrand === 'object' ? vehicle.carBrand._id : vehicle.carBrand;
-            const brand = brands.find((b) => b._id === brandId);
-            const brandName = brand ? brand.brandName : 'Unknown';
+      {/* Vehicles Grid */}
+      {myVehicles.data && myVehicles.data.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+          {myVehicles.data.map((vehicle) => (
+            <VehicleCard
+              key={vehicle._id}
+              vehicle={vehicle}
+              onView={handleViewVehicle}
+              onEdit={handleEditVehicle}
+              onDelete={handleDeleteVehicle}
+            />
+          ))}
+        </div>
+      ) : (
+        /* Empty State */
+        <div className="flex flex-col items-center justify-center py-16 px-4">
+          <div className="p-4 bg-gray-100 rounded-full mb-4">
+            <Car className="h-12 w-12 text-gray-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            No vehicles yet
+          </h3>
+          <p className="text-gray-600 text-center mb-6 max-w-md">
+            Get started by adding your first vehicle to keep track of your
+            automotive assets.
+          </p>
+          <CreateVehicle />
+        </div>
+      )}
 
-            return (
-              <Card key={vehicle._id} className="border border-gray-100">
-                <CardHeader className="pb-2 border-l-4 border-l-red-500">
-                  <div className="flex justify-between items-start">
-                    <CardTitle>{vehicle.carName}</CardTitle>
-                  </div>
-                  <CardDescription>Plate: {vehicle.carPlate}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Year of manufacture:</span>
-                      <span className="font-medium">{vehicle.carYear}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Color:</span>
-                      <span className="font-medium">{vehicle.carColor}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Brand:</span>
-                      <span className="font-medium">{loadingBrands ? 'Loading...' : brandName}</span>
-                    </div>
-                    <Button
-                      size="sm"
-                      className="w-full mt-2 bg-white text-red-500 hover:bg-red-50 border border-red-200"
-                      onClick={() => setSelectedVehicle(vehicle)}
-                    >
-                      View Details
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="w-full mt-2 bg-gray-100 text-gray-800 border border-gray-200"
-                      onClick={() => setEditVehicle(vehicle)}
-                    >
-                      Edit
-                    </Button>
-                    <DeleteVehicleButton vehicleId={vehicle._id} />
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
-        ) : (
-          "No vehicles yet"
-        )}
-      </div>
-
+      {/* Modals */}
       {selectedVehicle && (
         <VehicleDetail
           vehicleId={selectedVehicle._id}
@@ -116,6 +89,11 @@ export const Vehicle = () => {
           onClose={() => setEditVehicle(null)}
         />
       )}
+      <VehicleMaintenanceHistory
+        open={selectedVehicle !== null}
+        vehicle={selectedVehicle}
+        onClose={() => setSelectedVehicle(null)}
+      />
     </TabsContent>
   );
 };
