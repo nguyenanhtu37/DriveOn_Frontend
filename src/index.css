@@ -282,11 +282,8 @@ body {
 
 .ab1ac9d9bab12da47298 img {
   border-radius: 50% !important;
-  box-shadow:
-    0 0 0 6px rgba(228, 0, 25, 0.2),          
-    0 6px 24px rgba(228, 0, 25, 0.4),        
-    0 12px 36px rgba(0, 158, 221, 0.35),      
-    0 20px 56px rgba(0, 158, 221, 0.2) !important; 
+  box-shadow: 0 0 0 6px rgba(228, 0, 25, 0.2), 0 6px 24px rgba(228, 0, 25, 0.4),
+    0 12px 36px rgba(0, 158, 221, 0.35), 0 20px 56px rgba(0, 158, 221, 0.2) !important;
   animation: bounce 1.8s infinite;
 }
 
@@ -311,4 +308,9 @@ body {
 
 .fa8097ff55eabaa5782b {
   max-height: 700px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #000 !important;
 }
