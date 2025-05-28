@@ -68,7 +68,7 @@ const GarageDetailPage = () => {
   return (
     <div className="relative bg-gray-50">
       <div className="w-full py-10 px-4 md:px-20">
-        <div className="w-full max-w-[1280px] flex flex-col mx-auto">
+        <div className="w-full max-w-[1440px] flex flex-col mx-auto">
           {/* Hero Section */}
           <div className="max-h-[560px] grid md:grid-cols-2 gap-3 rounded-3xl overflow-hidden shadow-lg">
             <div className="w-full">

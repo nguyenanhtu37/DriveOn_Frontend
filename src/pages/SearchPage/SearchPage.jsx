@@ -20,6 +20,7 @@ const SearchPage = () => {
   const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [direction, setDirection] = useState([]);
+  const [garages, setGarages] = useState([]);
 
   const {
     keyword,
@@ -44,7 +45,7 @@ const SearchPage = () => {
     page: currentPage,
   });
 
-  const garages = searchData.data.results;
+  console.log(isFetched);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -56,6 +57,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (searchData.isSuccess) {
+      setGarages(searchData.data.results);
       setIsFetched(false);
     }
   }, [searchData.data.results, searchData.isSuccess, setIsFetched]);
@@ -84,20 +86,16 @@ const SearchPage = () => {
     if (searchData.isSuccess && garages.length === 0) {
       return (
         <div className="col-span-full flex items-center justify-center h-40">
-          <p className="text-gray-500">Không tìm thấy kết quả phù hợp</p>
+          <p className="text-gray-500">No matching results found</p>
         </div>
       );
     }
 
-    if (searchData.isSuccess) {
-      return garages.map((garage) => (
-        <BlurFade key={garage._id}>
-          <CardPro garage={garage} setDirection={setDirection} />
-        </BlurFade>
-      ));
-    }
-
-    return null;
+    return garages.map((garage) => (
+      <BlurFade key={garage._id}>
+        <CardPro garage={garage} setDirection={setDirection} />
+      </BlurFade>
+    ));
   };
 
   return (
