@@ -311,6 +311,10 @@ body {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  color: #000 !important;
+}
+
+.b47a01a7e24cbec6131b {
+  max-height: 700px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
