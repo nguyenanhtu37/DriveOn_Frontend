@@ -10,7 +10,7 @@ export const addVehicle = async (vehicleData) => {
     }
     return response.data;
   } catch (error) {
-    console.error('Add vehicle error:', error.response?.data || error.message);
+    console.error("Add vehicle error:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to add vehicle");
   }
 };
@@ -21,11 +21,13 @@ export const getVehicles = async () => {
     if (!response.data) {
       throw new Error("Invalid response from server");
     }
-    console.log('Fetched vehicles from API:', response.data); // Debugging
+    console.log("Fetched vehicles from API:", response.data); // Debugging
     return response.data;
   } catch (error) {
-    console.error('Get vehicles error:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch vehicles");
+    console.error("Get vehicles error:", error.response?.data || error.message);
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch vehicles"
+    );
   }
 };
 
@@ -38,12 +40,13 @@ export const getVehicleById = async (vehicleId) => {
     }
     return response.data;
   } catch (error) {
-    console.error('Get vehicle by ID error:', error.response?.data || error.message);
+    console.error(
+      "Get vehicle by ID error:",
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to fetch vehicle");
   }
 };
-
-
 
 export const deleteVehicle = async (vehicleId) => {
   try {
@@ -55,7 +58,12 @@ export const deleteVehicle = async (vehicleId) => {
     console.log("Vehicle deleted successfully:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Delete vehicle error:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to delete vehicle");
+    console.error(
+      "Delete vehicle error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to delete vehicle"
+    );
   }
 };

@@ -45,3 +45,15 @@ export const useGetFeedbackByAppointmentId = (appointmentId) => {
     data: query.data || [],
   };
 };
+
+export const useGetFeedbackForServiceDetail = (serviceId) => {
+  const query = useQuery({
+    queryKey: ["feedback", "service", serviceId],
+    queryFn: () => feedbackServiceV2.getFeedbackForServiceDetail(serviceId),
+    enabled: !!serviceId,
+  });
+  return {
+    ...query,
+    data: query.data || [],
+  };
+};
