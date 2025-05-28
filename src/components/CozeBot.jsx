@@ -14,6 +14,7 @@ const decodeJWT = (token) => {
 const CozeBot = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("Token from localStorage:", token);
     if (!token) return;
 
     const decoded = decodeJWT(token);
