@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router-dom";
 import router from "./app/routes/Route";
@@ -22,6 +23,8 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const location = useLocation();
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", body: "" });
 
@@ -117,7 +120,9 @@ function App() {
           onClose={handleCloseModal}
         />
       )}
-      {localStorage.getItem("token") && <CozeBot />}
+      {localStorage.getItem("token") && location.pathname === "/" && (
+        <CozeBot />
+      )}
     </QueryClientProvider>
   );
 }
