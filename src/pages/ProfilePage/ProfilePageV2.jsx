@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,6 +23,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SidebarProfile } from "./components/SidebarProfile";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import Feedback from "./Tab/UserAppointment/Feedback";
+import UpdateFeedback from "./Tab/UserAppointment/UpdateFeedback";
 
 export const ProfilePageV2 = () => {
   const profile = useGetProfile();
@@ -101,9 +103,9 @@ export const ProfilePageV2 = () => {
                       }
                       alt="User profile"
                     />
-                    <AvatarFallback className="bg-red-500 text-white">
+                    {/* <AvatarFallback className="bg-red-500 text-white">
                       {profile.data?.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
+                    </AvatarFallback> */}
                     <input
                       type="file"
                       accept="image/*"
@@ -125,7 +127,7 @@ export const ProfilePageV2 = () => {
                       </div>
                       <div className="flex items-center gap-1">
                         <Car className="h-4 w-4" />
-                        <span>{profile.data.vehicles.length} Vehicles</span>
+                        <span>{profile.data.vehicles?.length} Vehicles</span>
                       </div>
                     </div>
                   </div>
@@ -218,6 +220,8 @@ export const ProfilePageV2 = () => {
             </Tabs>
           </div>
         </div>
+        <Feedback />
+        <UpdateFeedback />
       </div>
       <SidebarProfile />
     </SidebarProvider>

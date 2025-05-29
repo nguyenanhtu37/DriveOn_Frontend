@@ -1,21 +1,84 @@
+import { io } from "socket.io-client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+const BASE_URL = import.meta.env.VITE_WEBSOCKET_URL;
+
 export const useUserStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
+      garageId: null,
+      setGarageId: (garageId) => set({ garageId }),
       location: null,
       setLocation: (location) => set({ location }),
       setUser: (user) => set({ user }),
       logout: () => set({ user: null, location: null }),
+      socket: null,
+
+      disconnectSocket: () => {
+        if (get().socket?.connected) get().socket.disconnect();
+      },
     }),
     { name: "user-storage", partialize: (state) => ({ user: state.user }) } // Only persist user
   )
 );
 
-export const setUser = (user) => useUserStore.getState().setUser(user);
+export const setUser = (user) => {
+  useUserStore.getState().setUser(user);
+};
 
+export const setGarageId = (garageId) => {
+  useUserStore.getState().setGarageId(garageId);
+};
+
+export const connectSocket = () => {
+  const { user, socket, garageId } = useUserStore.getState();
+
+  // Debug logging
+  console.log("Attempting to connect socket:", {
+    userExists: !!user,
+    userId: user?._id,
+    socketExists: !!socket,
+    socketConnected: socket?.connected,
+  });
+
+  if (!user || socket?.connected) return;
+
+  try {
+    const newSocket = io(BASE_URL, {
+      query: { userId: user._id, garageId: garageId },
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    // Set up basic event listeners
+    newSocket.on("connect", () => {
+      console.log("Socket connected successfully");
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    newSocket.on("disconnect", (reason) => {
+      console.log("Socket disconnected:", reason);
+    });
+
+    useUserStore.setState({ socket: newSocket });
+  } catch (error) {
+    console.error("Error initiating socket connection:", error);
+  }
+};
+
+export const disconnectSocket = () => {
+  const { socket } = useUserStore.getState();
+  if (socket?.connected) {
+    socket.disconnect();
+    useUserStore.setState({ socket: null });
+  }
+};
 export const setLocation = (location) =>
   useUserStore.getState().setLocation(location);
 
@@ -28,4 +91,15 @@ export const userLogout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   localStorage.removeItem("location");
+  disconnectSocket();
+};
+
+export const checkAuth = () => {
+  const user = getUser();
+
+  if (user) {
+    connectSocket();
+  }
+
+  return true;
 };

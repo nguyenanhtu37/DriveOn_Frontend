@@ -8,7 +8,7 @@ import { useTabStore } from "@/app/stores/view/tab";
 function HomePage() {
   const { garageView, setGarageView } = useTabStore();
   return (
-    <div className="relative">
+    <div className="relative min-h-[calc(100vh-4rem)] ">
       <Tabs value={garageView} onValueChange={setGarageView}>
         <TabsList className="fixed z-10 left-1/2 -translate-x-1/2 w-fit bottom-16 grid grid-cols-2 bg-slate-950 text-white">
           <TabsTrigger value="map">Show map</TabsTrigger>
@@ -18,7 +18,9 @@ function HomePage() {
           <GarageList />
         </TabsContent>
         <TabsContent className="mt-0" value="map">
-          <GarageMap />
+          <div className="w-full h-screen">
+            <GarageMap />
+          </div>
         </TabsContent>
       </Tabs>
       {/* New Emergency Button - Right Bottom Corner */}

@@ -1,6 +1,6 @@
 import ItemIcon from "@/components/ItemIcon";
 import { useGetService } from "@/app/stores/entity/service";
-import DialogFilter from "../DialogFilter/DialogFilter";
+import DialogFilter from "../../pages/HomePage/DialogFilter/DialogFilter";
 import { useRef } from "react";
 import { useDraggable } from "react-use-draggable-scroll";
 

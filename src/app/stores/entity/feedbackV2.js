@@ -33,3 +33,27 @@ export const useDeleteFeedback = () => {
   });
   return mutation;
 };
+
+export const useGetFeedbackByAppointmentId = (appointmentId) => {
+  const query = useQuery({
+    queryKey: ["feedback", "appointment", appointmentId],
+    queryFn: () => feedbackServiceV2.getFeedbackByAppointmentId(appointmentId),
+    enabled: !!appointmentId,
+  });
+  return {
+    ...query,
+    data: query.data || [],
+  };
+};
+
+export const useGetFeedbackForServiceDetail = (serviceId) => {
+  const query = useQuery({
+    queryKey: ["feedback", "service", serviceId],
+    queryFn: () => feedbackServiceV2.getFeedbackForServiceDetail(serviceId),
+    enabled: !!serviceId,
+  });
+  return {
+    ...query,
+    data: query.data || [],
+  };
+};

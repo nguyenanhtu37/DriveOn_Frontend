@@ -40,7 +40,7 @@ export const TransactionHistory = () => {
     date: undefined,
     search: undefined,
     subscription: undefined,
-    status: undefined,
+    status: "PAID",
   });
   const [dateRange, setDateRange] = useState(undefined);
 

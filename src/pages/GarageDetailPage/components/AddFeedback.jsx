@@ -24,8 +24,8 @@ export const AddFeedback = () => {
       {
         onSuccess: () => {
           toast({
-            title: "Thành công",
-            description: "Đánh giá của bạn đã được gửi thành công.",
+            title: "Success",
+            description: "Your review has been submitted successfully.",
             duration: 2000,
           });
           setRating(0);
@@ -34,10 +34,12 @@ export const AddFeedback = () => {
           queryClient.invalidateQueries(["feedback", garageId]);
         },
         onError: (error) => {
+          console.log(error);
           toast({
-            title: "Lỗi",
-            description: error?.response?.data?.message || "Đã có lỗi xảy ra.",
+            title: "Error",
+            description: error.response.data.error || "An error occurred.",
             duration: 2000,
+            variant: "destructive",
           });
         },
       }

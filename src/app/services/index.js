@@ -16,3 +16,5 @@ export * as feedbackServiceV2 from "./feedbackV2";
 export * as transactionService from "./transaction";
 export * as adminService from "./admin";
 export * as drivingService from "./driving";
+export * as locationService from "./location";
+export * as searchService from "./search";

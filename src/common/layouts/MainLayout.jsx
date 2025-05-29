@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Header from "../../components/Header";
+import Header from "./components/Header";
 import NavbarMobile from "@/components/NavbarMobile";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { Footer } from "@/components/Footer/Footer";
@@ -24,7 +24,7 @@ function MainLayout() {
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
       <SidebarHome />
-      <div className="min-h-screen min-w-[378px] bg-white max-w-[1920px] mx-auto ">
+      <div className="min-h-screen bg-white min-w-[378px] max-w-[1920px] mx-auto ">
         <Header />
         <Outlet />
         <NavbarMobile />

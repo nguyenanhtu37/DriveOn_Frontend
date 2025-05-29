@@ -8,6 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Modal from "./components/Modal";
 import CustomToast from "./components/CustomToast";
 import { Toaster } from "./components/ui/toaster";
+import { registerSocketListeners } from "./lib/socketListener";
+import { checkAuth, useUserStore } from "./app/stores/view/user";
+import CozeBot from "./components/CozeBot";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -76,6 +79,17 @@ function App() {
     setModalOpen(false);
   };
 
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const { socket } = useUserStore();
+  useEffect(() => {
+    if (socket) {
+      registerSocketListeners(queryClient, socket);
+    }
+  }, [socket]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider
@@ -103,6 +117,7 @@ function App() {
           onClose={handleCloseModal}
         />
       )}
+      {localStorage.getItem("token") && <CozeBot />}
     </QueryClientProvider>
   );
 }

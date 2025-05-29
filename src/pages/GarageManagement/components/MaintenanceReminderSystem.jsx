@@ -20,6 +20,13 @@ import { AppointmentReminderDialog } from "./AppointmentReminderDialog";
 import { CreateAppointment } from "./CreateAppointment";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function MaintenanceReminderSystem() {
   const { garageId } = useParams();
@@ -35,6 +42,8 @@ export default function MaintenanceReminderSystem() {
 
   const [open, setOpen] = useState(false);
 
+  const [isAccepted, setIsAccepted] = useState(true);
+
   const [openCreate, setOpenCreate] = useState(false);
 
   const handleViewDetail = (appointment) => {
@@ -48,7 +57,8 @@ export default function MaintenanceReminderSystem() {
     (appointment) => appointment.isCalled === false
   );
   const processedReminders = appointments.filter(
-    (appointment) => appointment.isCalled === true
+    (appointment) =>
+      appointment.isCalled === true && appointment.isUserAgreed === isAccepted
   );
 
   const handleCallAppointment = (appointment) => {
@@ -169,6 +179,21 @@ export default function MaintenanceReminderSystem() {
               value="processed"
               className=" flex flex-col gap-4 mt-0"
             >
+              <div className=" w-full flex justify-end items-center gap-x-2">
+                <Select
+                  defaultValue={isAccepted}
+                  onValueChange={setIsAccepted}
+                  className="w-auto"
+                >
+                  <SelectTrigger className="w-auto">
+                    <SelectValue placeholder="" />
+                  </SelectTrigger>
+                  <SelectContent align="end">
+                    <SelectItem value={true}>Accepted</SelectItem>
+                    <SelectItem value={false}>Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               {processedReminders.length === 0 && (
                 <div className="flex items-center justify-center w-full h-full p-4 text-muted-foreground">
                   No processed reminders

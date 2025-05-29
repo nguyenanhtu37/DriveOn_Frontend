@@ -3,6 +3,8 @@ import { useApproveGarage, useRejectGarage } from "@/app/stores/entity/garage";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Check, X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export const Cell = ({ children }) => {
   return (
@@ -22,13 +24,47 @@ export const Row = ({
   status,
   onClick,
 }) => {
+  const navigate = useNavigate();
   const { mutate: approveGarage } = useApproveGarage();
   const { mutate: rejectGarage } = useRejectGarage();
   const handleApprove = () => {
-    approveGarage(id);
+    approveGarage(id, {
+      onSuccess: () => {
+        toast({
+          title: "Garage approved successfully",
+          description: "Garage has been approved.",
+          duration: 2000,
+        });
+        navigate("/admin/viewExitsGarage");
+      },
+      onError: (error) => {
+        toast({
+          title: "Error approving garage",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
   };
   const handleReject = () => {
-    rejectGarage(id);
+    rejectGarage(id, {
+      onSuccess: () => {
+        toast({
+          title: "Garage rejected",
+          description: "Garage has been rejected.",
+          duration: 2000,
+        });
+        navigate("/admin/viewExitsGarage");
+      },
+      onError: (error) => {
+        toast({
+          title: "Error rejecting garage",
+          description: error.message,
+          variant: "destructive",
+          duration: 2000,
+        });
+      },
+    });
   };
   let statusClassName;
   if (status === "pending") {

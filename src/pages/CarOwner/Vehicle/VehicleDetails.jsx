@@ -15,18 +15,18 @@ const VehicleDetailsPage = () => {
   const [vehicle, setVehicle] = useState(null);
   const [brands, setBrands] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [ setDeleting] = useState(false);
+  const [setDeleting] = useState(false);
 
   // Fetch vehicle details and brands
   useEffect(() => {
     const fetchData = async () => {
       try {
         const vehicleData = await fetchVehicleById(id);
-        console.log('VehicleDetailsPage - Fetched vehicle:', vehicleData);
+        console.log("VehicleDetailsPage - Fetched vehicle:", vehicleData);
         setVehicle(vehicleData);
 
         const brandData = await getBrands();
-        console.log('Fetched brands:', brandData);
+        console.log("Fetched brands:", brandData);
         setBrands(brandData);
       } catch (err) {
         console.error("Failed to load data:", err);
@@ -36,7 +36,9 @@ const VehicleDetailsPage = () => {
   }, [id, fetchVehicleById]);
 
   // Map carBrand ObjectId to brandName and logo
-  const brand = brands.find((b) => b._id.toString() === vehicle?.carBrand?.toString());
+  const brand = brands.find(
+    (b) => b._id.toString() === vehicle?.carBrand?.toString()
+  );
   const brandName = brand ? brand.brandName : "N/A";
   const brandLogo = brand ? brand.logo : null;
 
@@ -59,8 +61,20 @@ const VehicleDetailsPage = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-primary text-lg flex items-center space-x-2">
-          <svg className="animate-spin h-6 w-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <svg
+            className="animate-spin h-6 w-6 text-primary"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
             <path
               className="opacity-75"
               fill="currentColor"
@@ -76,7 +90,9 @@ const VehicleDetailsPage = () => {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-destructive text-lg bg-destructive/10 p-4 rounded-lg shadow-md">{error}</div>
+        <div className="text-destructive text-lg bg-destructive/10 p-4 rounded-lg shadow-md">
+          {error}
+        </div>
       </div>
     );
   }
@@ -91,7 +107,9 @@ const VehicleDetailsPage = () => {
           >
             <ArrowLeft className="h-5 w-5 text-heading" />
           </button>
-          <h1 className="text-2xl font-semibold text-heading">Vehicle Details</h1>
+          <h1 className="text-2xl font-semibold text-heading">
+            Vehicle Details
+          </h1>
         </div>
       </div>
 
@@ -99,31 +117,39 @@ const VehicleDetailsPage = () => {
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
           <div className="relative h-64 bg-gray-200">
             <img
-              src={vehicle.carImages }
+              src={vehicle.carImages}
               alt={`${vehicle.carName}`}
               className="w-full h-full object-cover"
               onError={(e) => {
-                console.error('Image failed to load:', vehicle.carImages);
+                console.error("Image failed to load:", vehicle.carImages);
                 e.target.src = "/placeholder.svg?height=256&width=800";
               }}
             />
             <div
               className={`absolute top-4 right-4 px-3 py-1 text-sm font-medium text-white rounded-full ${
-                vehicle.maintenanceHistory?.length > 0 ? "bg-yellow-500" : "bg-green-500"
+                vehicle.maintenanceHistory?.length > 0
+                  ? "bg-yellow-500"
+                  : "bg-green-500"
               }`}
             >
-              {vehicle.maintenanceHistory?.length > 0 ? "Maintenance" : "Active"}
+              {vehicle.maintenanceHistory?.length > 0
+                ? "Maintenance"
+                : "Active"}
             </div>
           </div>
 
           <div className="p-8">
             {/* Vehicle Name as Title */}
-            <h2 className="text-3xl font-bold text-heading mb-4">{vehicle.carName}</h2>
+            <h2 className="text-3xl font-bold text-heading mb-4">
+              {vehicle.carName}
+            </h2>
 
             {/* Basic Information Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-heading border-b pb-2">Basic Information</h3>
+                <h3 className="text-xl font-semibold text-heading border-b pb-2">
+                  Basic Information
+                </h3>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <p className="text-sm text-body">Brand</p>
@@ -131,20 +157,28 @@ const VehicleDetailsPage = () => {
                   </div>
                   <div>
                     <p className="text-sm text-body">Year</p>
-                    <p className="font-medium text-heading">{vehicle.carYear || "N/A"}</p>
+                    <p className="font-medium text-heading">
+                      {vehicle.carYear || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-body">License Plate</p>
-                    <p className="font-medium text-heading">{vehicle.carPlate || "N/A"}</p>
+                    <p className="font-medium text-heading">
+                      {vehicle.carPlate || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-body">Color</p>
-                    <p className="font-medium text-heading">{vehicle.carColor || "N/A"}</p>
+                    <p className="font-medium text-heading">
+                      {vehicle.carColor || "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-body">Status</p>
                     <p className="font-medium text-heading capitalize">
-                      {vehicle.maintenanceHistory?.length > 0 ? "Maintenance" : "Active"}
+                      {vehicle.maintenanceHistory?.length > 0
+                        ? "Maintenance"
+                        : "Active"}
                     </p>
                   </div>
                 </div>
@@ -165,14 +199,18 @@ const VehicleDetailsPage = () => {
 
             {/* Dates & Service Information Section */}
             <div className="mt-8 space-y-6">
-              <h3 className="text-xl font-semibold text-heading border-b pb-2">Dates & Service Information</h3>
+              <h3 className="text-xl font-semibold text-heading border-b pb-2">
+                Dates & Service Information
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
                   <Calendar className="h-5 w-5 text-primary" />
                   <div>
                     <p className="text-sm text-body">Created</p>
                     <p className="font-medium text-heading">
-                      {vehicle.createdAt ? new Date(vehicle.createdAt).toLocaleDateString() : "N/A"}
+                      {vehicle.createdAt
+                        ? new Date(vehicle.createdAt).toLocaleDateString()
+                        : "N/A"}
                     </p>
                   </div>
                 </div>
@@ -181,7 +219,9 @@ const VehicleDetailsPage = () => {
                   <div>
                     <p className="text-sm text-body">Last Updated</p>
                     <p className="font-medium text-heading">
-                      {vehicle.updatedAt ? new Date(vehicle.updatedAt).toLocaleDateString() : "N/A"}
+                      {vehicle.updatedAt
+                        ? new Date(vehicle.updatedAt).toLocaleDateString()
+                        : "N/A"}
                     </p>
                   </div>
                 </div>
@@ -189,7 +229,9 @@ const VehicleDetailsPage = () => {
                   <Gauge className="h-5 w-5 text-primary" />
                   <div>
                     <p className="text-sm text-body">Maintenance Records</p>
-                    <p className="font-medium text-heading">{vehicle.maintenanceHistory?.length || 0}</p>
+                    <p className="font-medium text-heading">
+                      {vehicle.maintenanceHistory?.length || 0}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -199,7 +241,11 @@ const VehicleDetailsPage = () => {
       </div>
 
       {showDeleteModal && (
-        <DeleteVehicleModal vehicle={vehicle} onConfirm={handleConfirmDelete} onCancel={handleCancelDelete} />
+        <DeleteVehicleModal
+          vehicle={vehicle}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
       )}
     </div>
   );

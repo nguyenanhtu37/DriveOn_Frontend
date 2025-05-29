@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Bell, Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { useGetService } from "@/app/stores/entity/service";
 import CreateService from "../ViewServiceSystem/components/CreateService";
 const TopBar = ({ setSearch, search }) => {
@@ -39,25 +39,6 @@ const TopBar = ({ setSearch, search }) => {
               placeholder="Search services..."
               className="w-full sm:w-[300px] pl-10 pr-4 py-2.5 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-gray-200 rounded-xl text-sm transition-all duration-200 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
             />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-700 border border-gray-200 transition-colors relative"
-            >
-              <SlidersHorizontal size={18} />
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-700 border border-gray-200 transition-colors relative"
-            >
-              <Bell size={18} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-            </motion.button>
           </div>
         </div>
       </div>

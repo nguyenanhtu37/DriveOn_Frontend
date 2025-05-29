@@ -12,8 +12,8 @@ const MENU_ITEMS = [
     label: "Favourited",
     link: AbsoluteScreenPath.FavoriteGarages,
   },
-  { icon: Car, label: "Garage" }, // No link, will open dialog
   { icon: Activity, label: "Emergency", link: AbsoluteScreenPath.Emergency },
+  { icon: Car, label: "Garage" }, // No link, will open dialog
   { icon: CircleUser, label: "Profile", link: AbsoluteScreenPath.ProfilePage },
 ];
 
@@ -44,6 +44,24 @@ function NavbarMobile() {
               <item.icon size={22} aria-hidden="true" />
               <span className="text-[10px] font-medium">{item.label}</span>
             </span>
+          ) : item.label === "Emergency" ? (
+            <NavLink
+              key={index}
+              className={({ isActive }) =>
+                cn(
+                  "w-full flex flex-col gap-1 items-center cursor-pointer transition-colors relative -top-4",
+                  isActive
+                    ? "text-white"
+                    : "text-white"
+                )
+              }
+              to={item.link || ""}
+            >
+              <div className="bg-red-500 rounded-full p-3 shadow-lg">
+                <item.icon size={28} aria-hidden="true" />
+              </div>
+              <span className="text-[10px] font-medium text-red-500">{item.label}</span>
+            </NavLink>
           ) : (
             <NavLink
               key={index}

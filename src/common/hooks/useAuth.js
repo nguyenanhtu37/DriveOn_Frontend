@@ -7,7 +7,12 @@ import {
   requestPasswordReset,
   resetPassword,
 } from "../../app/services/reset-password";
-import { setUser } from "@/app/stores/view/user";
+import {
+  connectSocket,
+  setGarageId,
+  setUser,
+  userLogout,
+} from "@/app/stores/view/user";
 import { requestPermissionAndGetToken } from "../../../firebase-messaging.js";
 
 export const useAuth = () => {
@@ -30,37 +35,35 @@ export const useAuth = () => {
       let deviceToken = null;
       try {
         deviceToken = await requestPermissionAndGetToken();
-        console.log("Device token: ", deviceToken);
       } catch (error) {
         console.error("Failed to get device token: ", error);
       }
 
-      // const response = await login(credentials); // gọi service login
       const response = await login({ ...credentials, deviceToken }); // gọi service login
       setUser(response.user);
-      localStorage.setItem("token", response.token);
+      if (response.garageId) {
+        setGarageId(response.garageId);
+      }
+      connectSocket();
 
-      // DEBUG: In ra roles từ backend
-      // console.log("🚀 Raw roles from response:", response.roles);
+      localStorage.setItem("token", response.token);
 
       let roles = response.user.roles;
 
       setUserRoles(roles);
       setIsLoggedIn(true);
 
-      // ✅ Điều hướng
       if (roles.some((userRole) => userRole.roleName === "admin")) {
         return navigate("/admin");
       }
       if (roles.some((userRole) => userRole.roleName === "staff")) {
-        return navigate(`/garageManagement/${response.user.garageList[0]._id}`);
+        return navigate(`/garageManagement/${response.garageId}`);
       }
-      console.log("➡️ Redirecting to homepage...");
+
       return navigate("/");
     } catch (err) {
       const errorMessage =
-        err.message ||
-        "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.";
+        err.message || "Login failed. Please check your email and password.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -73,6 +76,7 @@ export const useAuth = () => {
     setError(null);
     try {
       const token = localStorage.getItem("token");
+
       if (token) await logout(token);
     } catch (err) {
       setError(err.message || "Đăng xuất thất bại.");
@@ -81,6 +85,7 @@ export const useAuth = () => {
       setIsLoggedIn(false);
       setUserRoles([]);
       setUser(null);
+      userLogout();
       setIsLoading(false);
       navigate("/login");
     }

@@ -1,17 +1,24 @@
 import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageSquare, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AddFeedback } from "./AddFeedback";
-import { format } from "date-fns";
+import FeedbackItem from "./FeedbackItem";
 
 const FeedbackV2 = () => {
   const { garageId } = useParams();
   const feedbacks = useGetFeedbackForGarage(garageId);
-
+  // const { user } = useUserStore();
   const [showAllFeedbacks, setShowAllFeedbacks] = useState(false);
+
+  // const deleteFeedback = useDeleteFeedback();
+  // const handleDeleteFeedback = (feedbackId) => {
+  //   deleteFeedback.mutate(feedbackId, {
+  //     onSuccess: () => {
+  //       feedbacks.refetch();
+  //     },
+  //   });
+  // };
 
   const displayedFeedbacks = showAllFeedbacks
     ? feedbacks.data
@@ -20,7 +27,7 @@ const FeedbackV2 = () => {
     <div className="w-full  py-8 ">
       <div className="w-full flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold ">Customer Reviews</h2>
-        <AddFeedback />
+        {/* <AddFeedback /> */}
       </div>
 
       <div className="flex items-center mb-6">
@@ -43,36 +50,17 @@ const FeedbackV2 = () => {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
             {displayedFeedbacks.map((feedback) => (
-              <div key={feedback._id} className="border-b pb-6">
-                <div className="flex items-center mb-3">
-                  <Avatar className="h-12 w-12 mr-4">
-                    <AvatarImage
-                      src={feedback.user.avatar}
-                      alt={feedback.user.name}
-                    />
-                    <AvatarFallback>
-                      {feedback.user.name.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-medium">{feedback.user.name}</h3>
-                    <div className="flex items-center">
-                      <div className="flex mr-2">
-                        {Array.from({ length: feedback.rating }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className="w-4 h-4 fill-current text-yellow-500"
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        {format(feedback.createdAt, "dd/MM/yyyy")}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-700">{feedback.text}</p>
-              </div>
+              <FeedbackItem
+                key={feedback._id}
+                avatar={feedback.user.avatar}
+                name={feedback.user.name}
+                content={feedback.content}
+                rating={feedback.rating}
+                services={feedback.appointment.service
+                  ?.map((service) => service.name)
+                  .join(", ")}
+                createdAt={feedback.createdAt}
+              />
             ))}
           </div>
 

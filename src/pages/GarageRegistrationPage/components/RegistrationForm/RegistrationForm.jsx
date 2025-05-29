@@ -82,7 +82,6 @@ export default function RegistrationForm() {
         description: "Please check the address and try again.",
         variant: "destructive",
       });
-      console.error("Error fetching geocode:", error);
       setSubmitting(false);
       return;
     }
@@ -98,7 +97,7 @@ export default function RegistrationForm() {
       email: data.email,
       interiorImages: uploadedUrls,
       location: location,
-      address: data.address,
+      address: address,
     };
 
     register.mutate(newGarage, {

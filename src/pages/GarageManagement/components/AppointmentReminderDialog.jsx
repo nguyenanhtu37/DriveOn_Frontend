@@ -184,17 +184,19 @@ export const AppointmentReminderDialog = ({
                 Close Reminder
               </Button>
             )}
-            <Button
-              size="sm"
-              className="bg-red-400 hover:bg-red-500 text-white"
-              onClick={() => {
-                setOpenCreate(true);
-                setOpen(false);
-              }}
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Create Appointment
-            </Button>
+            {!appointment.isUserAgreed && (
+              <Button
+                size="sm"
+                className="bg-red-400 hover:bg-red-500 text-white"
+                onClick={() => {
+                  setOpenCreate(true);
+                  setOpen(false);
+                }}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Create Appointment
+              </Button>
+            )}
           </div>
         </CardFooter>
       </DialogContent>

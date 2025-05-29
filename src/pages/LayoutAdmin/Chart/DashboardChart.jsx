@@ -24,6 +24,7 @@ import {
   CartesianGrid,
   Cell,
   XAxis,
+  YAxis,
 } from "recharts";
 
 const chartConfig = {
@@ -60,10 +61,9 @@ export const DashboardChart = () => {
             className="w-[450px]"
             onValueChange={setActiveTab}
           >
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="garages">Garages</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
-              <TabsTrigger value="feedback">Appointments</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -116,6 +116,15 @@ function GarageChart() {
             axisLine={false}
             tickMargin={8}
             tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
           />
           <ChartTooltip
             cursor={false}

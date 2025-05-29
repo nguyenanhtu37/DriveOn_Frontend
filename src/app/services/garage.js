@@ -83,3 +83,8 @@ export const getDashboardCharts = async (id) => {
   const response = await axios.get(`garage/${id}/dashboardChart`);
   return response.data;
 };
+
+export const viewGarageList = async () => {
+  const response = await axios.get("garage/viewGarageList");
+  return response.data;
+};

@@ -59,6 +59,7 @@ export const useGetAppointmentById = (appointmentId) => {
   const query = useQuery({
     queryKey: ["appointment", appointmentId],
     queryFn: async () => appointmentService.getAppointmentById(appointmentId),
+    enabled: !!appointmentId,
   });
   return {
     ...query,

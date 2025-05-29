@@ -59,8 +59,10 @@ export const createAppointmentReminder = async (data) => {
   return response.data;
 };
 
-export const isCalledAppointment = async (appointmentId) => {
-  await axios.put(`/appointment/isCalled/${appointmentId}`);
+export const isCalledAppointment = async ({ appointmentId, isUserAgreed }) => {
+  await axios.put(`/appointment/isCalled/${appointmentId}`, {
+    isUserAgreed,
+  });
 };
 
 export const createAppointmentByStaff = async (data) => {

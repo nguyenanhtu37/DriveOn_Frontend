@@ -1,4 +1,7 @@
-import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
+import {
+  // useDeleteFeedback,
+  useGetFeedbackForGarage,
+} from "@/app/stores/entity/feedbackV2";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +15,7 @@ import {
   Filter,
   ChevronDown,
   ChevronUp,
+  // X,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
@@ -308,7 +312,7 @@ export const Feedback = () => {
                 className="px-6"
                 onClick={() => setShowAllFeedbacks(true)}
               >
-                Hiển thị tất cả {filteredFeedbacks.length} đánh giá
+                Show all {filteredFeedbacks.length} reviews
                 <ChevronDown className="ml-2 w-4 h-4" />
               </Button>
             </div>
@@ -321,7 +325,7 @@ export const Feedback = () => {
                 className="px-6"
                 onClick={() => setShowAllFeedbacks(false)}
               >
-                Thu gọn
+                Collapse
                 <ChevronUp className="ml-2 w-4 h-4" />
               </Button>
             </div>

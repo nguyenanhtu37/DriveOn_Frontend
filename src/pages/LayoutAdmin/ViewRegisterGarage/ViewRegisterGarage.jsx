@@ -46,7 +46,7 @@ export const ViewRegisterGarage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {listRegisterGarage.data.map((item, index) => (
+              {listRegisterGarage?.data.map((item, index) => (
                 <Row
                   index={index}
                   key={item._id}

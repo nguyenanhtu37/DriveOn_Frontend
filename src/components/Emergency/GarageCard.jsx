@@ -7,7 +7,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "lucide-react";
 
-
 const GarageCard = ({
   id,
   garageName,
@@ -36,7 +35,8 @@ const GarageCard = ({
     return (
       <Card
         className="w-full h-full mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-xl rounded-lg border-0 relative"
-      // Removed onClick from Card
+        style={{ height: '100%' }}
+        // Removed onClick from Card
       >
         {/* Premium ribbon */}
         <div className="absolute -right-3 top-4 z-20 rotate-45 transform translate-x-1/2 -translate-y-1/2">
@@ -119,8 +119,7 @@ const GarageCard = ({
               {phone ? (
                 <a
                   href={`tel:${phone}`}
-                  className="inline-flex items-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-center font-semibold shadow
-      block w-full mb-2 md:hidden" // Ẩn trên màn hình >= md (desktop)
+                  className="md:hidden inline-flex items-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-center font-semibold shadow"
                   aria-label={`Call ${garageName || "garage"} at ${phone}`}
                   style={{ wordBreak: "break-all" }}
                 >
@@ -129,8 +128,7 @@ const GarageCard = ({
                 </a>
               ) : (
                 <button
-                  className="inline-block bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed text-center font-semibold
-      block w-full mb-2 md:hidden"
+                  className="md:hidden inline-flex items-center bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed text-center font-semibold"
                   disabled
                 >
                   No Phone
@@ -140,7 +138,7 @@ const GarageCard = ({
                 <Button
                   variant="ghost"
                   className="p-0 text-xs text-gray-500 hover:text-gray-700"
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     onGetDirections(location);
                   }}
@@ -153,7 +151,7 @@ const GarageCard = ({
                 <Button
                   variant="secondary"
                   className="flex items-center gap-2"
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/garageDetail/${id}`);
                   }}
@@ -162,7 +160,6 @@ const GarageCard = ({
                 </Button>
               </div>
             </div>
-
           </div>
         </CardContent>
       </Card>
@@ -173,7 +170,8 @@ const GarageCard = ({
   return (
     <Card
       className="w-full h-full mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-md rounded-lg border-[1px] border-gray-200"
-    // Removed onClick from Card
+      style={{ height: '100%' }}
+      // Removed onClick from Card
     >
       <CardContent className="p-0">
         <div className="relative rounded-t-lg overflow-hidden">
@@ -192,14 +190,10 @@ const GarageCard = ({
 
         <div className="px-4 py-3">
           <div className="flex justify-between items-center mb-2">
-            <h3 className="font-medium text-base text-gray-800">
-              {garageName}
-            </h3>
+            <h3 className="font-medium text-base text-gray-800">{garageName}</h3>
             <div className="flex items-center gap-1 text-sm">
               <FaStar className="h-4 w-4 text-yellow-500" />
-              <span className="text-gray-700">
-                {formatRating(rating)}
-              </span>
+              <span className="text-gray-700">{formatRating(rating)}</span>
             </div>
           </div>
 
@@ -241,7 +235,7 @@ const GarageCard = ({
             {phone ? (
               <a
                 href={`tel:${phone}`}
-                className="inline-flex items-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-center font-semibold shadow"
+                className="md:hidden inline-flex items-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition text-center font-semibold shadow"
                 aria-label={`Call ${garageName || "garage"} at ${phone}`}
                 style={{ wordBreak: "break-all" }}
               >
@@ -250,7 +244,7 @@ const GarageCard = ({
               </a>
             ) : (
               <button
-                className="inline-block bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed text-center font-semibold"
+                className="md:hidden inline-flex items-center bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed text-center font-semibold"
                 disabled
               >
                 No Phone
@@ -260,7 +254,7 @@ const GarageCard = ({
               <Button
                 variant="ghost"
                 className="p-0 text-xs text-gray-500 hover:text-gray-700"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   onGetDirections(location);
                 }}
@@ -273,7 +267,7 @@ const GarageCard = ({
               <Button
                 variant="secondary"
                 className="flex items-center gap-2"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/garageDetail/${id}`);
                 }}
@@ -282,7 +276,6 @@ const GarageCard = ({
               </Button>
             </div>
           </div>
-
         </div>
       </CardContent>
     </Card>

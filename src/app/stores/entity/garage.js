@@ -4,8 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFilterStore } from "@/app/stores/view/filter";
 import { useDebounce } from "react-haiku";
 import { getLocation } from "../view/user";
-import { useNavigate } from "react-router-dom";
-import { AdminScreenPath } from "@/constants/screen";
 
 export const useRegisterGarage = () => {
   const { toast } = useToast();
@@ -46,7 +44,6 @@ export const useGetGarages = () => {
   } = useFilterStore();
 
   const debouncedServiceSystem = useDebounce(serviceSystem, 500);
-  const debouncedLocation = useDebounce(location, 500);
   const debouncedRating = useDebounce(rating, 500);
   const debouncedTagPro = useDebounce(tagPro, 500);
   const debouncedDistance = useDebounce(distance, 500);
@@ -62,7 +59,7 @@ export const useGetGarages = () => {
     queryKey: [
       "garage",
       services,
-      debouncedLocation,
+      location,
       debouncedCloseTime,
       debouncedOpenTime,
       debouncedRating,
@@ -74,12 +71,11 @@ export const useGetGarages = () => {
       if (services) {
         params.append("services", services);
       }
-      if (
-        debouncedLocation.province?.name ||
-        debouncedLocation.district?.name
-      ) {
-        params.append("province", debouncedLocation.province.name);
-        params.append("district", debouncedLocation.district.name);
+      if (location?.province) {
+        params.append("province", location?.province.name);
+      }
+      if (location?.district) {
+        params.append("district", location?.district.name);
       }
       if (debouncedRating) {
         params.append("rating", debouncedRating);
@@ -110,7 +106,7 @@ export const useGetGarages = () => {
 
   return {
     ...query,
-    data: query.data?.data ?? [],
+    data: query.data?.data ?? {},
     meta: query.data?.meta ?? null,
   };
 };
@@ -127,46 +123,15 @@ export const useGetRegisterGarages = () => {
   };
 };
 export const useApproveGarage = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.approveGarage(garageId),
-    onSuccess: () => {
-      navigate(AdminScreenPath.ViewRegisterGarage);
-      queryClient.invalidateQueries(["garage"]);
-      toast({
-        title: "Garage approved successfully",
-        duration: 2000,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Garage approved failed",
-        duration: 2000,
-      });
-    },
   });
 
   return mutation;
 };
 export const useRejectGarage = () => {
-  const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: async (garageId) => garageService.rejectGarage(garageId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["garage"]);
-      toast({
-        title: "Garage rejected successfully",
-        duration: 2000,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Garage rejected failed",
-        duration: 2000,
-      });
-    },
   });
 
   return mutation;
@@ -262,7 +227,7 @@ export const useGetMyGarage = ({ open }) => {
   });
   return {
     ...query,
-    data: query.data ?? {},
+    data: query.data ?? [],
   };
 };
 
@@ -311,6 +276,17 @@ export const useGetDashboardChart = (id) => {
     queryFn: () => garageService.getDashboardCharts(id),
   });
 
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};
+
+export const useViewGarageList = () => {
+  const query = useQuery({
+    queryKey: ["garageList"],
+    queryFn: garageService.viewGarageList,
+  });
   return {
     ...query,
     data: query.data ?? {},

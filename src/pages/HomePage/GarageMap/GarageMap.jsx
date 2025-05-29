@@ -1,4 +1,4 @@
-import { useGetGarages } from "@/app/stores/entity/garage";
+import { useViewGarageList } from "@/app/stores/entity/garage";
 import osm from "@/constants/osm-provider";
 import React, { useEffect } from "react";
 import {
@@ -35,7 +35,18 @@ const userIcon = L.icon({
 });
 const GarageMap = () => {
   const mapRef = React.useRef(null);
-  const garages = useGetGarages();
+  const viewGarageList = useViewGarageList();
+  const listGaragePro = viewGarageList.data?.garagePros ?? [];
+  const listGarageFavorite = viewGarageList.data?.topFavorites ?? [];
+  const listTopRated = viewGarageList.data?.topRated ?? [];
+  const listTopBooked = viewGarageList.data?.mostBooked ?? [];
+
+  const garages = [
+    ...listGaragePro,
+    ...listGarageFavorite,
+    ...listTopRated,
+    ...listTopBooked,
+  ];
   const location = getLocation();
   const { direction, setDirection, clearDirection } = useDirectionStore();
   const getDriving = useGetDriving();
@@ -76,16 +87,16 @@ const GarageMap = () => {
 
   const [lat, lng] = location || locationDanang;
   return (
-    <div className=" relative">
+    <div className=" relative h-full">
       {direction && (
         <div
-          className=" absolute right-4 top-4 bg-white p-2 cursor-pointer rounded-full shadow-md z-50 hover:shadow-lg transition-all duration-300"
+          className=" absolute right-4 top-4 bg-white p-2 cursor-pointer rounded-full shadow-md z-40 hover:shadow-lg transition-all duration-300"
           onClick={clearDirection}
         >
           <X size={16} />
         </div>
       )}
-      <div className="relative w-full h-[calc(100vh-168px)] overflow-hidden z-0">
+      <div className="relative w-full h-full overflow-hidden z-0">
         <ScrollToTop />
         <MapContainer
           ref={mapRef}
@@ -131,7 +142,7 @@ const GarageMap = () => {
             </>
           )}
 
-          {garages.data.map((garage) => (
+          {garages?.map((garage) => (
             <Marker
               key={garage._id}
               position={[
