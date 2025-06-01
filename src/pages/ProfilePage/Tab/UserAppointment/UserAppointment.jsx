@@ -21,8 +21,8 @@ export const UserAppointment = () => {
     return isBefore(parseISO(appointmentDate), today);
   };
 
-  const upcomingAppointments = appointmentData.data
-    .filter(
+  const upcomingAppointments = appointmentData.data.appointments
+    ?.filter(
       (app) =>
         !isPastAppointment(app.start) &&
         app.status !== "Cancelled" &&
@@ -30,12 +30,12 @@ export const UserAppointment = () => {
     )
     .sort((a, b) => new Date(a.start) - new Date(b.start));
 
-  const completedAppointments = appointmentData.data
-    .filter((app) => app.status == "Completed")
+  const completedAppointments = appointmentData.data.appointments
+    ?.filter((app) => app.status == "Completed")
     .sort((a, b) => new Date(b.start) - new Date(a.start));
 
-  const cancelAppointments = appointmentData.data
-    .filter((app) => app.status === "Cancelled")
+  const cancelAppointments = appointmentData.data.appointments
+    ?.filter((app) => app.status === "Cancelled")
     .sort((a, b) => new Date(b.start) - new Date(a.start));
 
   if (appointmentData.isLoading) return <Loading />;
