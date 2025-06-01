@@ -82,6 +82,9 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  .theme {
+    --animate-pulse: pulse var(--duration) ease-out infinite;
+  }
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -306,6 +309,26 @@ body {
   }
 }
 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@theme inline {
+  @keyframes pulse {
+    0%,
+    100% {
+      boxshadow: 0 0 0 0 var(--pulse-color);
+    }
+    50% {
+      boxshadow: 0 0 0 8px var(--pulse-color);
+    }
+  }
+}
 .fa8097ff55eabaa5782b {
   max-height: 700px !important;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 1);

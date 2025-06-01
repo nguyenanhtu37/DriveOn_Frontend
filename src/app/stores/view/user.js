@@ -15,12 +15,17 @@ export const useUserStore = create(
       setUser: (user) => set({ user }),
       logout: () => set({ user: null, location: null }),
       socket: null,
+      sessionId: null,
+      setSessionId: (sessionId) => set({ sessionId }),
 
       disconnectSocket: () => {
         if (get().socket?.connected) get().socket.disconnect();
       },
     }),
-    { name: "user-storage", partialize: (state) => ({ user: state.user }) } // Only persist user
+    {
+      name: "user-storage",
+      partialize: (state) => ({ user: state.user, garageId: state.garageId }),
+    } // Only persist user
   )
 );
 
@@ -33,12 +38,12 @@ export const setGarageId = (garageId) => {
 };
 
 export const connectSocket = () => {
-  const { user, socket, garageId } = useUserStore.getState();
+  const { user, socket, garageId, sessionId } = useUserStore.getState();
 
   // Debug logging
   console.log("Attempting to connect socket:", {
     userExists: !!user,
-    userId: user?._id,
+    userId: user?._id ?? sessionId,
     socketExists: !!socket,
     socketConnected: socket?.connected,
   });
@@ -96,9 +101,17 @@ export const userLogout = () => {
 
 export const checkAuth = () => {
   const user = getUser();
+  const { sessionId } = useUserStore.getState();
 
   if (user) {
     connectSocket();
+  } else {
+    if (!sessionId) {
+      const newSessionId = crypto.randomUUID();
+      useUserStore.getState().setSessionId(newSessionId);
+    } else {
+      console.log("Existing sessionId:", sessionId);
+    }
   }
 
   return true;

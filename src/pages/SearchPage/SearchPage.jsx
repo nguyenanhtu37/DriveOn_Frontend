@@ -125,7 +125,7 @@ const SearchPage = () => {
           </div>
 
           {/* Map panel */}
-          <div className="w-full md:w-1/2 lg:w-2/5 h-[50vh] md:h-full sticky top-0">
+          <div className="w-full md:w-1/2 lg:w-2/5 h-[50vh] md:h-full sticky top-0 py-6">
             <div className="h-full rounded-lg overflow-hidden">
               <SearchMap
                 garages={garages}

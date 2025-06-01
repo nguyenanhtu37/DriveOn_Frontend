@@ -18,3 +18,4 @@ export * as adminService from "./admin";
 export * as drivingService from "./driving";
 export * as locationService from "./location";
 export * as searchService from "./search";
+export * as emergencyService from "./emergency";

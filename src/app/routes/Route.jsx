@@ -43,33 +43,37 @@ import { Dashboard } from "@/pages/LayoutAdmin/Dashboard/Dashboard";
 import ScrollToTop from "@/components/ScrollToTop";
 import { TransactionHistory } from "@/pages/LayoutAdmin/Transaction/TransactionHistory";
 import ExpiredDate from "@/pages/ExpiredDate/ExpiredDate";
-import LandingPage from "@/pages/LandingPage/LandingPage";
 import SearchPage from "@/pages/SearchPage/SearchPage";
+import { Layout } from "@/common/layouts/Layout";
 
 const router = createBrowserRouter(
   [
     {
       element: <ScrollToTop />,
       children: [
-        { path: "landingPage", element: <LandingPage /> },
         {
-          path: AbsoluteScreenPath.Entry,
-          element: <MainLayout />,
+          element: <Layout />,
           children: [
-            { index: true, element: <HomePage /> },
             {
-              path: AbsoluteScreenPath.GarageDetail,
-              element: <GarageDetailPage />,
+              path: AbsoluteScreenPath.Entry,
+              element: <MainLayout />,
+              children: [
+                { index: true, element: <HomePage /> },
+                {
+                  path: AbsoluteScreenPath.GarageDetail,
+                  element: <GarageDetailPage />,
+                },
+                {
+                  path: AbsoluteScreenPath.Emergency,
+                  element: <EmergencyGarageScreen />,
+                },
+              ],
             },
             {
-              path: AbsoluteScreenPath.Emergency,
-              element: <EmergencyGarageScreen />,
+              path: AbsoluteScreenPath.Search,
+              element: <SearchPage />,
             },
           ],
-        },
-        {
-          path: AbsoluteScreenPath.Search,
-          element: <SearchPage />,
         },
         {
           element: (
