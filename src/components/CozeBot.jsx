@@ -1,10 +1,27 @@
 import { useEffect } from "react";
 
+const decodeJWT = (token) => {
+  try {
+    const payloadBase64 = token.split(".")[1];
+    const decodedPayload = JSON.parse(atob(payloadBase64));
+    return decodedPayload;
+  } catch (e) {
+    console.error("Failed to decode token:", e);
+    return null;
+  }
+};
+
 const CozeBot = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("CozeBot token:", token);
+    console.log("Token from localStorage:", token);
     if (!token) return;
+
+    const decoded = decodeJWT(token);
+    if (!decoded) return;
+
+    const { id, email } = decoded;
+    console.log("Decoded JWT:", decoded);
 
     const script = document.createElement("script");
     script.src =
@@ -12,8 +29,6 @@ const CozeBot = () => {
     script.async = true;
 
     script.onload = () => {
-      console.log("Coze SDK script loaded");
-
       if (
         window.CozeWebSDK &&
         typeof window.CozeWebSDK.WebChatClient === "function"
@@ -28,8 +43,8 @@ const CozeBot = () => {
             onRefreshToken: async () => localStorage.getItem("token") || "",
           },
           userInfo: {
-            id: "user",
-            nickname: "User",
+            id: id || "user",
+            nickname: email || "User",
             url: "https://res.cloudinary.com/dt2akiv9y/image/upload/v1743097602/unnamed_ewf2fc.webp",
           },
           ui: {
@@ -42,10 +57,13 @@ const CozeBot = () => {
             chatBot: {
               title: "DriveOn Bot",
               uploadable: true,
-              width: 400,
+              width: 500,
+              inputPlaceholder: "Nói gì đó...",
+              isShowSuggestedReply: false,
             },
             asstBtn: {
               isNeed: true,
+              text: "DriveOn Bot",
             },
             footer: {
               isShow: true,
@@ -62,7 +80,7 @@ const CozeBot = () => {
 
         console.log("Coze WebChatClient initialized", chatClient);
       } else {
-        console.error("ozeWebSDK.WebChatClient not found");
+        console.error("CozeWebSDK.WebChatClient not found");
       }
     };
 
