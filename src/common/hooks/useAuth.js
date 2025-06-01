@@ -41,9 +41,7 @@ export const useAuth = () => {
 
       const response = await login({ ...credentials, deviceToken }); // gọi service login
       setUser(response.user);
-      if (response.garageId) {
-        setGarageId(response.garageId);
-      }
+      setGarageId(response.garageId);
       connectSocket();
 
       localStorage.setItem("token", response.token);

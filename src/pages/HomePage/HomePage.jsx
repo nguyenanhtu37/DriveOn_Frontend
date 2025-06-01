@@ -1,12 +1,19 @@
 import GarageList from "@/pages/HomePage/GarageList/GarageList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
 
 import GarageMap from "./GarageMap/GarageMap";
 import { useTabStore } from "@/app/stores/view/tab";
+import { useSetDialogId } from "@/app/stores/view/dialog";
 
 function HomePage() {
   const { garageView, setGarageView } = useTabStore();
+
+  const setDialog = useSetDialogId();
+
+  const handleClickRecuse = () => {
+    setDialog({ id: "DialogRecuse" });
+  };
+
   return (
     <div className="relative min-h-[calc(100vh-4rem)] ">
       <Tabs value={garageView} onValueChange={setGarageView}>
@@ -24,9 +31,9 @@ function HomePage() {
         </TabsContent>
       </Tabs>
       {/* New Emergency Button - Right Bottom Corner */}
-      <Link
-        to="/emergency"
-        className="fixed right-16 bottom-16 z-50 group hidden md:flex"
+      <div
+        className="fixed right-16 bottom-16 z-50 group hidden md:flex cursor-pointer"
+        onClick={handleClickRecuse}
       >
         {/* Animated rim: zoom in/out and color shift */}
         <span
@@ -58,7 +65,7 @@ function HomePage() {
             <rect x="10.5" y="6.5" width="3" height="2" rx="1" fill="#ef4444" />
           </svg>
         </span>
-      </Link>
+      </div>
     </div>
   );
 }

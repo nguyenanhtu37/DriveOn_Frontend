@@ -82,6 +82,9 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  .theme {
+    --animate-pulse: pulse var(--duration) ease-out infinite;
+  }
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -306,5 +309,25 @@ body {
   }
   80% {
     transform: translateY(0);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@theme inline {
+  @keyframes pulse {
+  0%, 100% {
+    boxShadow: 0 0 0 0 var(--pulse-color);
+    }
+  50% {
+    boxShadow: 0 0 0 8px var(--pulse-color);
+    }
   }
 }

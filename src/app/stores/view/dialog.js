@@ -1,22 +1,14 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-export const useDialogStore = create(
-  persist(
-    (set) => ({
-      dialog: {
-        id: null,
-        data: null,
-      },
-      setDialog: ({ id, data }) => set({ dialog: { id, data } }),
-      setDialogData: (data) =>
-        set((state) => ({ dialog: { ...state.dialog, data } })),
-    }),
-    {
-      name: "dialog-active",
-    }
-  )
-);
+export const useDialogStore = create((set) => ({
+  dialog: {
+    id: null,
+    data: null,
+  },
+  setDialog: ({ id, data }) => set({ dialog: { id, data } }),
+  setDialogData: (data) =>
+    set((state) => ({ dialog: { ...state.dialog, data } })),
+}));
 
 export const useDialogOpen = (id) =>
   useDialogStore((state) => state.dialog.id === id);
