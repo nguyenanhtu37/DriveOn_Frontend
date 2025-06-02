@@ -52,8 +52,15 @@ export const getAppointmentById = async (appointmentId) => {
   return response.data;
 };
 
-export const getAppointmentByUserId = async () => {
-  const response = await axios.get(`/appointment/view-list-user-appointment`);
+export const getAppointmentByUserId = async (payload) => {
+  const response = await axios.get(`/appointment/view-list-user-appointment`, {
+    params: {
+      page: payload.page,
+      limit: payload.limit,
+      status: payload.status,
+      keyword: payload.keyword,
+    },
+  });
   return response.data;
 };
 

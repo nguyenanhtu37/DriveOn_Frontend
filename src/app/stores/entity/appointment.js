@@ -67,14 +67,14 @@ export const useGetAppointmentById = (appointmentId) => {
   };
 };
 
-export const useGetAppointmentByUserId = () => {
+export const useGetAppointmentByUserId = (payload) => {
   const query = useQuery({
-    queryKey: ["appointment", "user"],
-    queryFn: async () => appointmentService.getAppointmentByUserId(),
+    queryKey: ["appointment", "user", payload],
+    queryFn: async () => appointmentService.getAppointmentByUserId(payload),
   });
   return {
     ...query,
-    data: query.data ?? [],
+    data: query.data ?? {},
   };
 };
 
