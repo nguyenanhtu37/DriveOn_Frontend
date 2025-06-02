@@ -11,16 +11,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/hooks/use-toast";
 import { staffSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTrigger } from "@radix-ui/react-dialog";
+import { useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-const AddStaff = () => {
+const AddStaff = ({ setIsOpen }) => {
   const { garageId } = useParams();
+  const queryClient = useQueryClient();
   const form = useForm({
     resolver: zodResolver(staffSchema),
     defaultValues: {
@@ -49,7 +52,26 @@ const AddStaff = () => {
       password: data.password,
     };
     console.log(newStaff);
-    addStaff.mutate({ garageId, newStaff });
+    addStaff.mutate(
+      { garageId, newStaff },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+          queryClient.invalidateQueries(["staff"]);
+          toast({
+            title: "Add Staff successfully",
+            duration: 2000,
+          });
+        },
+        onError: () => {
+          toast({
+            variant: "destructive",
+            title: "Add Staff failed",
+            duration: 2000,
+          });
+        },
+      }
+    );
   };
 
   return (

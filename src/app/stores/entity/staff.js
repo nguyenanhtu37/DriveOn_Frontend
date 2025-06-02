@@ -3,36 +3,19 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useAddStaff = () => {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-
   const mutation = useMutation({
     mutationFn: ({ garageId, newStaff }) => {
       return staffService.addStaff(garageId, newStaff);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["staff"]);
-      toast({
-        title: "Add Staff successfully",
-        duration: 2000, // Toast will close after 5 seconds
-      });
-    },
-    onError: () => {
-      toast({
-        variant: "destructive",
-        title: "Add Staff failed",
-        duration: 2000, // Toast will close after 5 seconds
-      });
     },
   });
 
   return mutation;
 };
 
-export const useGetStaffs = (id) => {
+export const useGetStaffs = (payload) => {
   const query = useQuery({
-    queryKey: ["staff", id],
-    queryFn: () => staffService.getStaffs(id),
+    queryKey: ["staff", payload],
+    queryFn: () => staffService.getStaffs(payload),
   });
 
   return {

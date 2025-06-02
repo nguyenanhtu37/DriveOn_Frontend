@@ -270,10 +270,10 @@ export const useGetDashboardOverview = (id) => {
   };
 };
 
-export const useGetDashboardChart = (id) => {
+export const useGetDashboardChart = (payload) => {
   const query = useQuery({
-    queryKey: ["dashboardChart", id],
-    queryFn: () => garageService.getDashboardCharts(id),
+    queryKey: ["dashboardChart", payload],
+    queryFn: () => garageService.getDashboardCharts(payload),
   });
 
   return {

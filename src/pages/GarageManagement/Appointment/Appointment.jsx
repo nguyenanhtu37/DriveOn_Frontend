@@ -2,7 +2,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentScheduler } from "./Tab/AppointmentScheduler";
-import { AppointmentList } from "./Tab/AppointmentList";
 import { useParams } from "react-router-dom";
 import { useGetGarageDetail } from "@/app/stores/entity/garage";
 import {
@@ -11,27 +10,28 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Filter, LockIcon } from "lucide-react";
+import { Filter, LockIcon, X } from "lucide-react";
 import Reminder from "./Tab/Reminder";
 import { useGetAppointmentByGarageId } from "@/app/stores/entity/appointment";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { InputDate } from "@/components/ui/inputDate";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loading } from "@/components/Loading";
+import { AppointmentTable } from "./Tab/AppointmentTable";
 
 const Appointment = () => {
   const { garageId } = useParams();
   const garage = useGetGarageDetail(garageId);
   const [tabsValue, setTabsValue] = useState("list");
-  const appointmentData = useGetAppointmentByGarageId(garageId);
   const [startDate, setStartDate] = useState();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [endDate, setEndDate] = useState();
   const [filterStatus, setFilterStatus] = useState([]);
   const handleStatusFilter = (status) => {
@@ -43,31 +43,32 @@ const Appointment = () => {
     });
   };
 
-  const filteredAppointments = useMemo(() => {
-    return (
-      appointmentData.data?.filter((appointment) => {
-        const appointMentStartDate = new Date(appointment.start);
-        const appointMentEndDate = new Date(appointment.end);
+  const payload = {
+    garageId: garageId,
+    startDate: startDate ? startDate.toISOString() : null,
+    endDate: endDate ? endDate.toISOString() : null,
+    filterStatus: filterStatus.length > 0 ? filterStatus.join(",") : null,
+    page: page,
+    limit: limit,
+  };
 
-        const adjustedEndDate = endDate
-          ? new Date(new Date(endDate).setHours(23, 59, 59, 999))
-          : null;
+  const appointmentsData = useGetAppointmentByGarageId(payload);
 
-        const isWithinDateRange =
-          (!startDate ||
-            appointMentStartDate.getTime() >= new Date(startDate).getTime()) &&
-          (!adjustedEndDate ||
-            appointMentEndDate.getTime() <= adjustedEndDate.getTime());
-
-        const isStatusIncluded =
-          filterStatus.length === 0 ||
-          filterStatus.includes(appointment.status);
-
-        return isWithinDateRange && isStatusIncluded;
-      }) || []
-    );
-  }, [appointmentData.data, endDate, filterStatus, startDate]);
   const hasPro = garage.data?.tag === "pro" || false;
+
+  useEffect(() => {
+    setPage(1);
+  }, [startDate, endDate, filterStatus]);
+
+  useEffect(() => {
+    if (tabsValue === "schedule") {
+      setLimit(1000);
+      setPage(1);
+    }
+    if (tabsValue === "list") {
+      setLimit(10);
+    }
+  }, [tabsValue]);
 
   return (
     <Tabs
@@ -109,50 +110,38 @@ const Appointment = () => {
       {tabsValue !== "reminder" && (
         <div
           id="appointment-header"
-          className="flex justify-between items-center gap-x-3 w-full"
+          className="flex justify-start items-center gap-x-3 w-full"
         >
-          <div className="flex justify-start items-center gap-x-2 px-2 py-1 rounded-lg bg-white w-full ">
-            <div className=" flex justify-start items-center gap-x-2">
-              <h4 className="text-lg font-semibold">Appointment:</h4>
-              <span className="text-sm text-gray-500">
-                {filteredAppointments.length} appointments
-              </span>
-            </div>
-            {startDate && (
-              <>
-                <div className=" h-4 w-px border border-black"></div>
-                <div className="flex justify-start items-center gap-x-2">
-                  <span className="text-sm text-gray-500">
-                    <b>StartDate:</b> {startDate.toLocaleDateString()}
-                  </span>
-                </div>
-              </>
-            )}
-            {endDate && (
-              <>
-                <div className=" h-4 w-px border border-black"></div>
-                <div className="flex justify-start items-center gap-x-2">
-                  <span className="text-sm text-gray-500">
-                    <b>EndDate:</b> {endDate.toLocaleDateString()}
-                  </span>
-                </div>
-              </>
-            )}
-            <div className=" h-4 w-px border border-black"></div>
-            <div className="flex justify-start items-center gap-x-2 max-w-[320px]">
-              <span className="text-sm text-gray-500 line-clamp-1 ">
-                <b>Status:</b>{" "}
-                {filterStatus.length > 0 ? filterStatus.join(", ") : "All"}
-              </span>
-            </div>
-          </div>
           <Popover>
             <PopoverTrigger asChild>
-              <Button id="sort-button" variant="outline">
+              <div
+                id="sort-button"
+                className="flex items-center gap-x-2 font-semibold text-sm cursor-pointer px-4 py-2 bg-white border  rounded-md hover:bg-gray-50"
+              >
+                {(startDate || endDate) && (
+                  <X
+                    size={14}
+                    className="text-gray-500"
+                    onClick={() => {
+                      setStartDate(null);
+                      setEndDate(null);
+                    }}
+                  />
+                )}
                 Date <Filter size={14} className="text-gray-500" />
-              </Button>
+                {(startDate || endDate) && (
+                  <span className=" text-xs text-gray-500">
+                    {startDate ? `From: ${startDate.toLocaleDateString()}` : ""}
+                    {endDate ? ` To: ${endDate.toLocaleDateString()}` : ""}
+                  </span>
+                )}
+              </div>
             </PopoverTrigger>
-            <PopoverContent id="sort-options" align="end" className="w-[400px]">
+            <PopoverContent
+              id="sort-options"
+              align="start"
+              className="w-[400px]"
+            >
               <div className="grid grid-cols-2 gap-x-4">
                 <div className="flex flex-col items-start gap-y-2">
                   <Label htmlFor="filter-start">Start Date</Label>
@@ -172,11 +161,28 @@ const Appointment = () => {
           </Popover>
           <Popover>
             <PopoverTrigger asChild>
-              <Button id="sort-button" variant="outline">
+              <div
+                id="sort-button"
+                className="flex items-center gap-x-2 font-semibold text-sm cursor-pointer px-4 py-2 bg-white border  rounded-md hover:bg-gray-50"
+              >
+                {filterStatus.length > 0 && (
+                  <X
+                    size={14}
+                    className="text-gray-500"
+                    onClick={() => {
+                      setFilterStatus([]);
+                    }}
+                  />
+                )}
                 Status <Filter size={14} className="text-gray-500" />
-              </Button>
+                {filterStatus.length > 0 && (
+                  <span className="text-xs text-gray-500 text-red-400">
+                    {filterStatus.join(", ")}
+                  </span>
+                )}
+              </div>
             </PopoverTrigger>
-            <PopoverContent id="sort-options" align="end" className="w-40">
+            <PopoverContent id="sort-options" align="start" className="w-40">
               <div className="flex flex-col gap-y-4">
                 <div className="flex items-center gap-x-2">
                   <Checkbox
@@ -224,15 +230,20 @@ const Appointment = () => {
         </div>
       )}
 
-      {appointmentData.isLoading ? (
+      {appointmentsData.isLoading ? (
         <Loading />
-      ) : filteredAppointments.length > 0 ? (
+      ) : appointmentsData.data.appointments.length > 0 ? (
         <>
           <TabsContent value="list">
-            <AppointmentList appointments={filteredAppointments} />
+            <AppointmentTable
+              appointmentsData={appointmentsData}
+              setPage={setPage}
+            />
           </TabsContent>
           <TabsContent value="schedule">
-            <AppointmentScheduler appointments={filteredAppointments} />
+            <AppointmentScheduler
+              appointments={appointmentsData.data.appointments}
+            />
           </TabsContent>
         </>
       ) : (
