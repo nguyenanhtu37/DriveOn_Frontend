@@ -1,15 +1,15 @@
 import { feedbackServiceV2 } from "@/app/services";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-export const useGetFeedbackForGarage = (garageId) => {
+export const useGetFeedbackForGarage = (payload) => {
   const query = useQuery({
-    queryKey: ["feedback", garageId],
-    queryFn: () => feedbackServiceV2.getFeedbackForGarage(garageId),
-    enabled: !!garageId,
+    queryKey: ["feedback", payload],
+    queryFn: () => feedbackServiceV2.getFeedbackForGarage(payload),
+    enabled: !!payload,
   });
   return {
     ...query,
-    data: query.data || [],
+    data: query.data || {},
   };
 };
 
@@ -51,6 +51,18 @@ export const useGetFeedbackForServiceDetail = (serviceId) => {
     queryKey: ["feedback", "service", serviceId],
     queryFn: () => feedbackServiceV2.getFeedbackForServiceDetail(serviceId),
     enabled: !!serviceId,
+  });
+  return {
+    ...query,
+    data: query.data || [],
+  };
+};
+
+export const useGetFeedbackForGarageDetail = (garageId) => {
+  const query = useQuery({
+    queryKey: ["feedback", "garageDetail", garageId],
+    queryFn: () => feedbackServiceV2.getFeedbackForGarageDetail(garageId),
+    enabled: !!garageId,
   });
   return {
     ...query,

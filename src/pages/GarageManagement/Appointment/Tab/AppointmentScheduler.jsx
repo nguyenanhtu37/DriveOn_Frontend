@@ -1,6 +1,7 @@
 import Calendar from "@/components/Calendar";
 
 import TagAppointment from "@/components/TagAppointment";
+import { Card } from "@/components/ui/card";
 import { useMemo } from "react";
 
 export const AppointmentScheduler = ({ appointments }) => {
@@ -18,8 +19,7 @@ export const AppointmentScheduler = ({ appointments }) => {
   }, [appointments]);
 
   return (
-    <div className="h-screen p-4 bg-white">
-      <h1 className="text-2xl font-bold mb-4">Appointment Scheduler</h1>
+    <Card className="h-screen p-4 bg-white">
       <Calendar
         events={formattedAppointments}
         startAccessor="start"
@@ -30,6 +30,6 @@ export const AppointmentScheduler = ({ appointments }) => {
         onView={(view) => console.log(view)}
         components={{ event: TagAppointment }}
       />
-    </div>
+    </Card>
   );
 };

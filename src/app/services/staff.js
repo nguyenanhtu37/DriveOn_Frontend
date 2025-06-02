@@ -5,8 +5,13 @@ export const addStaff = async (garageId, newStaff) => {
   return response.data;
 };
 
-export const getStaffs = async (garageId) => {
-  const response = await axios.get(`garage/${garageId}/staff`);
+export const getStaffs = async (payload) => {
+  const response = await axios.get(`garage/${payload.garageId}/staff`, {
+    params: {
+      page: payload.page,
+      limit: payload.limit,
+    },
+  });
   return response.data;
 };
 

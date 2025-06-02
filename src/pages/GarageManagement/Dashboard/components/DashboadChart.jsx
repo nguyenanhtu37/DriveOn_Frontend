@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -25,6 +26,15 @@ import {
 import { useGetDashboardChart } from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
 import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
+
+import { ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const chartConfig = {
   appointment: {
@@ -63,13 +73,14 @@ const stringToColor = (str) => {
 
 export function DashboardCharts() {
   const [activeTab, setActiveTab] = useState("appointment");
+  const [year, setYear] = useState(new Date().getFullYear());
 
   return (
     <Card className="col-span-4">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Analysis</CardTitle>
+          <div className="flex justify-start items-center gap-x-2">
+            <CardTitle>Analysis data for {year}</CardTitle>
           </div>
           <Tabs
             defaultValue="appointment"
@@ -86,18 +97,43 @@ export function DashboardCharts() {
       </CardHeader>
       <CardContent className="px-2">
         <div className="h-[400px] w-full flex ">
-          {activeTab === "appointment" && <AppointmentChart />}
-          {activeTab === "services" && <ServiceChart />}
-          {activeTab === "feedback" && <FeedbackChart />}
+          {activeTab === "appointment" && <AppointmentChart year={year} />}
+          {activeTab === "services" && <ServiceChart year={year} />}
+          {activeTab === "feedback" && <FeedbackChart year={year} />}
         </div>
       </CardContent>
+      <CardFooter className="flex justify-start items-center gap-x-2">
+        <CardTitle>Select year</CardTitle>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+              {year}
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48 p-0">
+            <ScrollArea className="max-h-60 overflow-y-auto">
+              {Array.from({ length: 10 }, (_, i) => (
+                <DropdownMenuItem
+                  key={i}
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                  onClick={() => setYear(new Date().getFullYear() - i)}
+                >
+                  {new Date().getFullYear() - i}
+                </DropdownMenuItem>
+              ))}
+            </ScrollArea>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </CardFooter>
     </Card>
   );
 }
 
-function AppointmentChart() {
+function AppointmentChart({ year }) {
   const { garageId } = useParams();
-  const charts = useGetDashboardChart(garageId);
+  const payload = { garageId, year };
+  const charts = useGetDashboardChart(payload);
 
   const converted = charts.data.appointments?.map((item) => ({
     month: monthNamesEn[item.month - 1],
@@ -155,33 +191,50 @@ function AppointmentChart() {
   );
 }
 
-function ServiceChart() {
+function ServiceChart({ year }) {
   const { garageId } = useParams();
-  const charts = useGetDashboardChart(garageId);
+  const payload = { garageId, year };
+  const charts = useGetDashboardChart(payload);
 
   const servicesData = useMemo(() => {
-    return charts.data.services?.map((item) => ({
+    if (!charts.data || !Array.isArray(charts.data.services)) return [];
+    return charts.data.services.map((item) => ({
       serviceId: item.serviceId,
       serviceName: item.serviceName,
       totalUses: item.totalUses,
       fill: stringToColor(item.serviceName),
     }));
-  }, [charts.data.services]);
-  console.log(servicesData);
+  }, [charts.data]);
 
   const serviceChartConfig = useMemo(() => {
-    return charts.data.services?.reduce((acc, item) => {
+    if (!charts.data || !Array.isArray(charts.data.services)) return {};
+    return charts.data.services.reduce((acc, item) => {
       acc[item.serviceId] = {
         label: item.serviceName,
         color: stringToColor(item.serviceName),
       };
       return acc;
     }, {});
-  }, [charts.data.services]);
+  }, [charts.data]);
 
   const totalUses = useMemo(() => {
+    if (!servicesData || servicesData.length === 0) return 0;
     return servicesData.reduce((acc, curr) => acc + curr.totalUses, 0);
   }, [servicesData]);
+
+  if (
+    !charts.data ||
+    !Array.isArray(charts.data.services) ||
+    servicesData.length === 0
+  ) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <span className="text-muted-foreground">
+          No service data available.
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full flex flex-col justify-between">
@@ -245,9 +298,10 @@ function ServiceChart() {
 }
 
 const yellowShades = ["#FF6F00", "#FF8F00", "#FFB300", "#FFCC00", "#FFEB3B"];
-function FeedbackChart() {
+function FeedbackChart({ year }) {
   const { garageId } = useParams();
-  const feedbacks = useGetFeedbackForGarage(garageId);
+  const payload = { garageId, year };
+  const feedbacks = useGetFeedbackForGarage(payload);
   const total = feedbacks.data.length;
   const feedbackData = useMemo(() => {
     const countMap = new Map();

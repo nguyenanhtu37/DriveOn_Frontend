@@ -9,14 +9,14 @@ export const useCreateAppointment = () => {
   return mutation;
 };
 
-export const useGetAppointmentByGarageId = (garageId) => {
+export const useGetAppointmentByGarageId = (payload) => {
   const query = useQuery({
-    queryKey: ["appointment", "garage", garageId],
-    queryFn: async () => appointmentService.getAppointmentByGarageId(garageId),
+    queryKey: ["appointment", "garage", payload],
+    queryFn: async () => appointmentService.getAppointmentByGarageId(payload),
   });
   return {
     ...query,
-    data: query.data ?? [],
+    data: query.data ?? {},
   };
 };
 

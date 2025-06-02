@@ -5,8 +5,23 @@ export const createAppointment = async (data) => {
   return response.data;
 };
 
-export const getAppointmentByGarageId = async (garageId) => {
-  const response = await axios.get(`/appointment/garage/${garageId}`);
+export const getAppointmentByGarageId = async ({
+  garageId,
+  startDate,
+  endDate,
+  filterStatus,
+  page,
+  limit,
+}) => {
+  const response = await axios.get(`/appointment/garage/${garageId}`, {
+    params: {
+      startDate: startDate,
+      endDate: endDate,
+      status: filterStatus,
+      page: page,
+      limit: limit,
+    },
+  });
   return response.data;
 };
 
