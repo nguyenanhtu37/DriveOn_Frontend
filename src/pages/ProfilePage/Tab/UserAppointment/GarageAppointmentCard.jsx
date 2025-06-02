@@ -33,9 +33,12 @@ import { Badge } from "@/components/ui/badge";
 import { twMerge } from "tailwind-merge";
 import { useNavigate } from "react-router-dom";
 import { useSetDialogId } from "@/app/stores/view/dialog";
+import { useState } from "react";
 
-export const GarageAppointmentCard = ({ appointment }) => {
+export const GarageAppointmentCard = ({ appointment, setSelected }) => {
   const navigate = useNavigate();
+
+  const [isOpenCancel, setIsOpenCancel] = useState(false);
 
   const handleBookAgain = () => {
     navigate(`/garageDetail/${appointment.garage._id}`);
@@ -56,6 +59,8 @@ export const GarageAppointmentCard = ({ appointment }) => {
     cancelAppointment.mutate(appointment._id, {
       onSuccess: () => {
         queryClient.invalidateQueries(["appointment", "user"]);
+        setIsOpenCancel(false);
+        setSelected(null);
         toast({
           title: "Appointment cancelled",
           description: "Your appointment has been cancelled.",
@@ -237,7 +242,7 @@ export const GarageAppointmentCard = ({ appointment }) => {
           {(appointment.status === "Pending" ||
             appointment.status === "Accepted") && (
             <div className="space-x-2">
-              <Dialog>
+              <Dialog open={isOpenCancel} onOpenChange={setIsOpenCancel}>
                 <DialogTrigger>
                   <Button variant="destructive">Cancel</Button>
                 </DialogTrigger>
