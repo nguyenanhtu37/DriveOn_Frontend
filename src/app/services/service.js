@@ -20,3 +20,10 @@ export const deleteService = async (id) => {
   const response = await axios.delete(`service/${id}`);
   return response.data;
 };
+
+export const getServiceByManage = async (payload) => {
+  const response = await axios.get("service/manage", {
+    params: payload,
+  });
+  return response.data;
+};

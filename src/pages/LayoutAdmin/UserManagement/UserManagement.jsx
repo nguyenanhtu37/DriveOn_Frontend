@@ -4,7 +4,14 @@ import {
   useGetALlUser,
 } from "@/app/stores/entity/user";
 import { Loading } from "@/components/Loading";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import {
   Pagination,
   PaginationContent,
@@ -35,6 +42,9 @@ export const UserManagement = () => {
     }
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
   const enableUser = useEnableUser();
   const disableUser = useDisableUser();
 
@@ -49,6 +59,7 @@ export const UserManagement = () => {
             variant: "default",
             duration: 2000,
           });
+          setIsOpen(false);
         },
         onError: (error) => {
           toast({
@@ -69,6 +80,7 @@ export const UserManagement = () => {
             variant: "default",
             duration: 2000,
           });
+          setIsOpen(false);
         },
         onError: (error) => {
           toast({
@@ -122,9 +134,10 @@ export const UserManagement = () => {
                   <TableCell className="text-center">
                     <Switch
                       checked={user.status === "active"}
-                      onCheckedChange={() =>
-                        handleSwitch(user._id, user.status)
-                      }
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setIsOpen(true);
+                      }}
                       className="data-[state=checked]:bg-green-300 data-[state=unchecked]:bg-input"
                     />
                   </TableCell>
@@ -161,6 +174,46 @@ export const UserManagement = () => {
           </Pagination>
         </CardContent>
       </Card>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            {selectedUser?.status === "active" ? (
+              <h2 className="text-lg font-semibold">Disable user</h2>
+            ) : (
+              <h2 className="text-lg font-semibold">Enable user</h2>
+            )}
+          </DialogHeader>
+          <div className="mb-4">
+            {selectedUser?.status === "active"
+              ? `Are you sure you want to disable user: ${selectedUser?.name}?`
+              : `Are you sure you want to enable user: ${selectedUser?.name}?`}
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              className=" py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
+              onClick={() => {
+                setIsOpen(false);
+                setSelectedUser(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              type="submit"
+              className=" py-2 "
+              onClick={() => {
+                handleSwitch(selectedUser._id, selectedUser.status);
+              }}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
