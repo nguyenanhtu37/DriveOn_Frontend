@@ -26,11 +26,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
 
 export const ViewExitsGarage = () => {
   const [page, setPage] = useState(1);
   const [keySearch, setKeySearch] = useState();
   const [keySearchInput, setKeySearchInput] = useState("");
+
+  const [selectedGarage, setSelectedGarage] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const garageExits = useGetGarageExits({ page, keySearch });
 
@@ -46,13 +55,14 @@ export const ViewExitsGarage = () => {
 
   const enabled = useEnableGarage();
   const disabled = useDisableGarage();
-  const toggleEnabled = (garage) => {
-    const isEnabled = garage.status.includes("enabled");
+  const toggleEnabled = () => {
+    const isEnabled = selectedGarage.status.includes("enabled");
     if (isEnabled) {
-      disabled.mutate(garage._id);
+      disabled.mutate(selectedGarage._id);
     } else {
-      enabled.mutate(garage._id);
+      enabled.mutate(selectedGarage._id);
     }
+    setIsOpen(false);
   };
   if (garageExits.isLoading) return <Loading />;
   return (
@@ -113,7 +123,10 @@ export const ViewExitsGarage = () => {
                   <TableCell className="text-center">
                     <Switch
                       checked={garage.status.includes("enabled")}
-                      onCheckedChange={() => toggleEnabled(garage)}
+                      onClick={() => {
+                        setSelectedGarage(garage);
+                        setIsOpen(true);
+                      }}
                       className="data-[state=checked]:bg-green-300 data-[state=unchecked]:bg-input"
                     />
                   </TableCell>
@@ -153,6 +166,44 @@ export const ViewExitsGarage = () => {
           </Pagination>
         </CardContent>
       </Card>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            {selectedGarage?.status.join(",").includes("enabled") ? (
+              <h2 className="text-lg font-semibold">Disable Garage</h2>
+            ) : (
+              <h2 className="text-lg font-semibold">Enable Garage</h2>
+            )}
+          </DialogHeader>
+          <div className="mb-4">
+            {selectedGarage?.status.join(",").includes("enabled")
+              ? "Are you sure you want to disable this garage?"
+              : "Are you sure you want to enable this garage?"}
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              className=" py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
+              onClick={() => {
+                setIsOpen(false);
+                setSelectedGarage(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              type="submit"
+              className=" py-2 "
+              onClick={toggleEnabled}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

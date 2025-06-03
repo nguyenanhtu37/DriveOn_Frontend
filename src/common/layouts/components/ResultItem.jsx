@@ -29,29 +29,18 @@ export const ResultItem = ({ item, setIsOpen }) => {
           <div className="flex-grow min-w-0">
             <div className="flex justify-between items-start">
               <h3 className="font-bold text-lg truncate">{item.name}</h3>
-              {typeof item.isOpen !== "undefined" && (
-                <Badge
-                  variant={item.isOpen ? "success" : "secondary"}
-                  className="ml-2 flex-shrink-0"
-                >
-                  {item.isOpen ? "Mở cửa" : "Đóng cửa"}
+              {item.type && item.type === "service" && (
+                <Badge variant="secondary" className=" flex-shrink-0">
+                  Service
                 </Badge>
               )}
             </div>
-
-            {item.address ? (
+            {item.address && (
               <div className="flex items-start mt-1 text-muted-foreground">
                 <MapPin className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5" />
                 <p className="text-sm truncate">{item.address}</p>
               </div>
-            ) : (
-              <Badge
-                variant={item.isOpen ? "success" : "secondary"}
-                className=" flex-shrink-0"
-              >
-                Service
-              </Badge>
-            )}
+            )}{" "}
             {item.description && (
               <p className="text-xs mt-2 text-muted-foreground line-clamp-2">
                 {item.description}

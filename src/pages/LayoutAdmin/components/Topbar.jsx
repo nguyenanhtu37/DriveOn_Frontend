@@ -1,9 +1,12 @@
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
-import { useGetService } from "@/app/stores/entity/service";
+import {
+  useGetService,
+  useGetServiceByManage,
+} from "@/app/stores/entity/service";
 import CreateService from "../ViewServiceSystem/components/CreateService";
 const TopBar = ({ setSearch, search }) => {
-  const serviceData = useGetService();
+  const serviceData = useGetServiceByManage();
   return (
     <div className="w-full bg-white p-3  border-b border-gray-100">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
@@ -18,7 +21,7 @@ const TopBar = ({ setSearch, search }) => {
                 Total Services
               </p>
               <p className="text-2xl font-bold text-blue-600">
-                {serviceData.data.length}
+                {serviceData.data.pagination?.totalCount || 0}
                 <span className="text-lg text-blue-400">+</span>
               </p>
             </div>
@@ -34,7 +37,7 @@ const TopBar = ({ setSearch, search }) => {
             </div>
             <input
               value={search}
-              onChange={setSearch}
+              onChange={(e) => setSearch(e.target.value)}
               type="text"
               placeholder="Search services..."
               className="w-full sm:w-[300px] pl-10 pr-4 py-2.5 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-gray-200 rounded-xl text-sm transition-all duration-200 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
