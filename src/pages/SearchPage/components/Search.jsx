@@ -85,7 +85,9 @@ const Search = () => {
   return (
     <div
       ref={boxRef}
-      className={cn(" transition-all w-[65%] lg:w-[55%]  mx-auto  ")}
+      className={cn(
+        " transition-all w-[100%] md:w-[65%] lg:w-[55%]  mx-auto  "
+      )}
     >
       <div
         ref={searchRef}
@@ -119,7 +121,7 @@ const Search = () => {
         </div>
 
         <div
-          className="absolute  h-full  rounded-full bg-white transition-transform ease-in-out duration-100 top-0 z-0"
+          className="absolute h-full rounded-full bg-white transition-transform ease-in-out duration-100 top-0 z-0"
           style={indicatorStyle}
         ></div>
       </div>

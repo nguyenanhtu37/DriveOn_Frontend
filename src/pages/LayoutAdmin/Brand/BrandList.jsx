@@ -8,6 +8,8 @@ const BrandList = () => {
   const { brands, fetchBrands, loading } = useBrands();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [brandToDelete, setBrandToDelete] = useState(null);
 
   const handleAdd = () => {
     setEditingBrand(null);
@@ -19,9 +21,18 @@ const BrandList = () => {
     setDialogOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    await deleteBrand(id);
-    fetchBrands();
+  const handleDeleteClick = (brand) => {
+    setBrandToDelete(brand);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (brandToDelete) {
+      await deleteBrand(brandToDelete._id);
+      fetchBrands();
+      setDeleteDialogOpen(false);
+      setBrandToDelete(null);
+    }
   };
 
   const handleSubmit = async (formData) => {
@@ -38,9 +49,9 @@ const BrandList = () => {
       <div className="max-w-6xl mx-auto py-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
           <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 drop-shadow">
-          <span className="text bg-clip-text bg-gradient-to-r from-black via-gray-400 to-gray-00 text-2xl md:text-2xl ">
-  Brands List
-</span>
+            <span className="text bg-clip-text bg-gradient-to-r from-black via-gray-400 to-gray-00 text-2xl md:text-2xl ">
+              Brands List
+            </span>
           </h1>
           <button
             onClick={handleAdd}
@@ -66,7 +77,7 @@ const BrandList = () => {
                 key={brand._id}
                 brand={brand}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={() => handleDeleteClick(brand)}
               />
             ))}
           </div>
@@ -78,6 +89,31 @@ const BrandList = () => {
             onClose={() => setDialogOpen(false)}
             initialData={editingBrand}
           />
+        )}
+
+        {deleteDialogOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-2xl">
+              <h3 className="text-lg font-semibold mb-4">Confirm Delete</h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete {brandToDelete?.name}? This action cannot be undone.
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setDeleteDialogOpen(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

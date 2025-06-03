@@ -1,7 +1,32 @@
 import { axios } from "@/lib/axios";
 
-const getFeedbackForGarage = async (id) => {
-  const response = await axios.get(`/feedback/garage/${id}`);
+const getFeedbackForGarage = async (payload) => {
+  const response = await axios.get(`/feedback/garage/${payload.garageId}`, {
+    params: {
+      type: payload.type,
+      rating: payload.rating,
+      service: payload.service,
+      keyword: payload.keyword,
+      page: payload.page,
+      limit: payload.limit,
+    },
+  });
+  return response.data;
+};
+
+const getAllFeedbacksByGarage = async (garageId) => {
+  const response = await axios.get(`/feedback/garage/${garageId}/all`);
+  return response.data;
+};
+
+
+
+const getFeedbackForGarageDetail = async ({ garageId, showMore }) => {
+  const response = await axios.get(`/feedback/garageDetail/${garageId}`, {
+    params: {
+      showMoreCount: showMore,
+    },
+  });
   return response.data;
 };
 
@@ -35,9 +60,11 @@ const getFeedbackForServiceDetail = async (serviceId) => {
 
 export {
   getFeedbackForGarage,
+  getAllFeedbacksByGarage,
   addFeedback,
   updateFeedback,
   deleteFeedback,
   getFeedbackByAppointmentId,
   getFeedbackForServiceDetail,
+  getFeedbackForGarageDetail,
 };

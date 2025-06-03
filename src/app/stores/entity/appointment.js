@@ -9,14 +9,14 @@ export const useCreateAppointment = () => {
   return mutation;
 };
 
-export const useGetAppointmentByGarageId = (garageId) => {
+export const useGetAppointmentByGarageId = (payload) => {
   const query = useQuery({
-    queryKey: ["appointment", "garage", garageId],
-    queryFn: async () => appointmentService.getAppointmentByGarageId(garageId),
+    queryKey: ["appointment", "garage", payload],
+    queryFn: async () => appointmentService.getAppointmentByGarageId(payload),
   });
   return {
     ...query,
-    data: query.data ?? [],
+    data: query.data ?? {},
   };
 };
 
@@ -67,14 +67,14 @@ export const useGetAppointmentById = (appointmentId) => {
   };
 };
 
-export const useGetAppointmentByUserId = () => {
+export const useGetAppointmentByUserId = (payload) => {
   const query = useQuery({
-    queryKey: ["appointment", "user"],
-    queryFn: async () => appointmentService.getAppointmentByUserId(),
+    queryKey: ["appointment", "user", payload],
+    queryFn: async () => appointmentService.getAppointmentByUserId(payload),
   });
   return {
     ...query,
-    data: query.data ?? [],
+    data: query.data ?? {},
   };
 };
 

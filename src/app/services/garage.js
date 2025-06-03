@@ -79,12 +79,33 @@ export const getDashboardOverview = async (id) => {
   return response.data;
 };
 
-export const getDashboardCharts = async (id) => {
-  const response = await axios.get(`garage/${id}/dashboardChart`);
+export const getDashboardCharts = async (payload) => {
+  const response = await axios.get(
+    `garage/${payload.garageId}/dashboardChart`,
+    {
+      params: {
+        year: payload.year,
+      },
+    }
+  );
   return response.data;
 };
 
 export const viewGarageList = async () => {
   const response = await axios.get("garage/viewGarageList");
+  return response.data;
+};
+
+export const getGarageDashboardChart = async (garageId, year) => {
+  const response = await axios.get(`/garage/${garageId}/dashboardChart`, {
+    params: { year }
+  });
+  return response.data;
+};
+
+export const getGarageDashboardChartByQuarter = async (garageId, year) => {
+  const response = await axios.get(`/garage/${garageId}/dashboardChartByQuarter`, {
+    params: { year }
+  });
   return response.data;
 };

@@ -5,8 +5,23 @@ export const createAppointment = async (data) => {
   return response.data;
 };
 
-export const getAppointmentByGarageId = async (garageId) => {
-  const response = await axios.get(`/appointment/garage/${garageId}`);
+export const getAppointmentByGarageId = async ({
+  garageId,
+  startDate,
+  endDate,
+  filterStatus,
+  page,
+  limit,
+}) => {
+  const response = await axios.get(`/appointment/garage/${garageId}`, {
+    params: {
+      startDate: startDate,
+      endDate: endDate,
+      status: filterStatus,
+      page: page,
+      limit: limit,
+    },
+  });
   return response.data;
 };
 
@@ -37,8 +52,15 @@ export const getAppointmentById = async (appointmentId) => {
   return response.data;
 };
 
-export const getAppointmentByUserId = async () => {
-  const response = await axios.get(`/appointment/view-list-user-appointment`);
+export const getAppointmentByUserId = async (payload) => {
+  const response = await axios.get(`/appointment/view-list-user-appointment`, {
+    params: {
+      page: payload.page,
+      limit: payload.limit,
+      status: payload.status,
+      keyword: payload.keyword,
+    },
+  });
   return response.data;
 };
 

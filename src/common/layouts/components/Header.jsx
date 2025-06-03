@@ -3,11 +3,10 @@ import Navbar from "./Navbar";
 import SearchKeyword from "./SearchKeyword";
 import { Popover, PopoverAnchor } from "@/components/ui/popover";
 import { useSearchByKeyword } from "@/app/stores/entity/search";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ResultItem } from "./ResultItem";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { useClickOutside, useDebounce } from "react-haiku";
-import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);

@@ -79,9 +79,11 @@ function App() {
     setModalOpen(false);
   };
 
+  const { user } = useUserStore();
+
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [user]);
 
   const { socket } = useUserStore();
   useEffect(() => {

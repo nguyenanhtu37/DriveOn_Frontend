@@ -84,7 +84,7 @@ export const VehicleMaintenanceHistory = ({ vehicle, open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open && maintenanceHistory} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
@@ -117,9 +117,10 @@ export const VehicleMaintenanceHistory = ({ vehicle, open, onClose }) => {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600">
-                  {maintenanceHistory.filter((r) => r.isFeedbacked).length}
+                  {maintenanceHistory.filter((r) => r.isFeedbacked).length} /
+                  {maintenanceHistory.length}
                 </div>
-                <div className="text-sm text-gray-600">Completed</div>
+                <div className="text-sm text-gray-600">Feedbacked</div>
               </CardContent>
             </Card>
           </div>

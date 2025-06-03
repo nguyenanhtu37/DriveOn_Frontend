@@ -34,6 +34,7 @@ import VehicleDetailsPage from "@/pages/CarOwner/Vehicle/VehicleDetails";
 import AppointmentId from "@/pages/GarageManagement/Appointment/AppointmentId";
 import FavoriteGarages from "@/pages/CarOwner/FavoriteGarage/FavoriteGarages";
 import { GarageProUpgrade } from "@/pages/GarageProUpgrade/GarageProUpgrade";
+import GarageProFeatures from "@/pages/GarageProUpgrade/GarageProFeatures";
 import { ProfilePageV2 } from "@/pages/ProfilePage/ProfilePageV2";
 import GarageSetting from "@/pages/GarageManagement/GarageSetting/GarageSetting";
 import { Feedback } from "@/pages/GarageManagement/Feedback/Feedback";
@@ -66,6 +67,10 @@ const router = createBrowserRouter(
                 {
                   path: AbsoluteScreenPath.Emergency,
                   element: <EmergencyGarageScreen />,
+                },
+                {
+                  path: AbsoluteScreenPath.GarageProFeatures,
+                  element: <GarageProFeatures />,
                 },
               ],
             },

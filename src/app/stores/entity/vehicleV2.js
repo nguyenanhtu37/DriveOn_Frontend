@@ -56,6 +56,7 @@ export const useGetHistoryMaintenance = (vehicleId) => {
   const query = useQuery({
     queryKey: ["historyMaintenance", vehicleId],
     queryFn: () => vehicleServiceV2.getHistoryMaintenance(vehicleId),
+    enabled: !!vehicleId,
   });
 
   return {

@@ -1,4 +1,3 @@
-// src/components/vehicle/DeleteVehicleModal.jsx
 import PropTypes from "prop-types";
 import {
   Dialog,
@@ -10,16 +9,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const DeleteVehicleModal = ({ vehicle, onConfirm, onCancel }) => {
+const DeleteFavoriteGarageModal = ({ garage, onConfirm, onCancel }) => {
   return (
     <Dialog open={true} onOpenChange={onCancel}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete Vehicle</DialogTitle>
+          <DialogTitle>Remove from Favorites</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this vehicle:{" "}
+            Are you sure you want to remove this garage from your favorites:{" "}
             <span className="font-medium">
-              {vehicle?.carBrand?.brandName || "N/A"} {vehicle?.carName}
+              {garage?.name}
             </span>
           </DialogDescription>
         </DialogHeader>
@@ -28,7 +27,7 @@ const DeleteVehicleModal = ({ vehicle, onConfirm, onCancel }) => {
             Cancel
           </Button>
           <Button variant="destructive" onClick={onConfirm}>
-            Delete
+            Remove
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -37,15 +36,12 @@ const DeleteVehicleModal = ({ vehicle, onConfirm, onCancel }) => {
 };
 
 // PropTypes for type checking
-DeleteVehicleModal.propTypes = {
-  vehicle: PropTypes.shape({
-    carBrand: PropTypes.shape({
-      brandName: PropTypes.string,
-    }),
-    carName: PropTypes.string,
+DeleteFavoriteGarageModal.propTypes = {
+  garage: PropTypes.shape({
+    name: PropTypes.string.isRequired,
   }).isRequired,
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
 
-export default DeleteVehicleModal;
+export default DeleteFavoriteGarageModal; 

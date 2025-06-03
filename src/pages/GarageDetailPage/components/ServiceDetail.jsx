@@ -33,7 +33,7 @@ const ServiceDetail = () => {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
         hiddenClose={true}
-        className="p-0 max-w-[1200px] min-h-[70vh] max-h-[90vh]"
+        className="p-0  focus:outline-none max-w-[1200px] min-h-[70vh] max-h-[90vh]"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
           {/* Service Information Side */}
