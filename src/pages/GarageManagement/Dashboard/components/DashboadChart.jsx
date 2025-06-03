@@ -23,7 +23,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useGetDashboardChart } from "@/app/stores/entity/garage";
+import { 
+  useGetDashboardChart,
+  useGetGarageDashboardChartByQuarter 
+} from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
 import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
 
@@ -74,31 +77,64 @@ const stringToColor = (str) => {
 export function DashboardCharts() {
   const [activeTab, setActiveTab] = useState("appointment");
   const [year, setYear] = useState(new Date().getFullYear());
+  const [viewMode, setViewMode] = useState("month"); // 'month' or 'quarter'
+
+  const getViewTitle = () => {
+    if (viewMode === "month") {
+      return "Monthly View";
+    }
+    return "Quarterly View";
+  };
 
   return (
     <Card className="col-span-4">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div className="flex justify-start items-center gap-x-2">
+          <div className="flex flex-col gap-y-1">
             <CardTitle>Analysis data for {year}</CardTitle>
+            <CardDescription>{getViewTitle()}</CardDescription>
           </div>
-          <Tabs
-            defaultValue="appointment"
-            className="w-[450px]"
-            onValueChange={setActiveTab}
-          >
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="appointment">Appointments</TabsTrigger>
-              <TabsTrigger value="services">Services</TabsTrigger>
-              <TabsTrigger value="feedback">Feedback</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="flex items-center gap-x-4">
+            <div className="flex items-center gap-x-2 bg-muted p-1 rounded-lg">
+              <button
+                onClick={() => setViewMode("month")}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === "month"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setViewMode("quarter")}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === "quarter"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Quarterly
+              </button>
+            </div>
+            <Tabs
+              defaultValue="appointment"
+              className="w-[450px]"
+              onValueChange={setActiveTab}
+            >
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="appointment">Appointments</TabsTrigger>
+                <TabsTrigger value="services">Services</TabsTrigger>
+                <TabsTrigger value="feedback">Feedback</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="px-2">
         <div className="h-[400px] w-full flex ">
-          {activeTab === "appointment" && <AppointmentChart year={year} />}
-          {activeTab === "services" && <ServiceChart year={year} />}
+          {activeTab === "appointment" && <AppointmentChart year={year} viewMode={viewMode} />}
+          {activeTab === "services" && <ServiceChart year={year} viewMode={viewMode} />}
           {activeTab === "feedback" && <FeedbackChart year={year} />}
         </div>
       </CardContent>
@@ -130,21 +166,36 @@ export function DashboardCharts() {
   );
 }
 
-function AppointmentChart({ year }) {
+function AppointmentChart({ year, viewMode }) {
   const { garageId } = useParams();
-  const payload = { garageId, year };
-  const charts = useGetDashboardChart(payload);
+  const monthlyData = useGetDashboardChart({ garageId, year });
+  const quarterlyData = useGetGarageDashboardChartByQuarter(garageId, year);
 
-  const converted = charts.data.appointments?.map((item) => ({
-    month: monthNamesEn[item.month - 1],
-    Appointment: item.totalAppointments,
-  }));
+  const charts = viewMode === "month" ? monthlyData : quarterlyData;
+
+  const converted = useMemo(() => {
+    if (!charts.data.appointments) return [];
+    
+    if (viewMode === "month") {
+      return charts.data.appointments.map((item) => ({
+        month: monthNamesEn[item.month - 1],
+        Appointment: item.totalAppointments,
+      }));
+    } else {
+      return charts.data.appointments.map((item) => ({
+        month: `Q${item.quarter}`,
+        Appointment: item.totalAppointments,
+      }));
+    }
+  }, [charts.data.appointments, viewMode]);
 
   return (
     <div className="w-full h-full flex flex-col justify-between">
       <CardHeader className="py-1">
         <CardTitle>Appointments</CardTitle>
-        <CardDescription>Completed Appointments Chart by Month</CardDescription>
+        <CardDescription>
+          {viewMode === "month" ? "Monthly" : "Quarterly"} Appointments Chart
+        </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
         <AreaChart
@@ -153,7 +204,7 @@ function AppointmentChart({ year }) {
           margin={{
             left: 12,
             right: 12,
-            top: 20, // Add sufficient top margin to prevent clipping
+            top: 20,
             bottom: 10,
           }}
         >
@@ -163,13 +214,15 @@ function AppointmentChart({ year }) {
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
+            tickFormatter={(value) => value}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
           />
           <YAxis
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={(value) => value}
             width={30}
             domain={["auto", "auto"]}
             allowDataOverflow={false}
@@ -191,10 +244,12 @@ function AppointmentChart({ year }) {
   );
 }
 
-function ServiceChart({ year }) {
+function ServiceChart({ year, viewMode }) {
   const { garageId } = useParams();
-  const payload = { garageId, year };
-  const charts = useGetDashboardChart(payload);
+  const monthlyData = useGetDashboardChart({ garageId, year });
+  const quarterlyData = useGetGarageDashboardChartByQuarter(garageId, year);
+
+  const charts = viewMode === "month" ? monthlyData : quarterlyData;
 
   const servicesData = useMemo(() => {
     if (!charts.data || !Array.isArray(charts.data.services)) return [];
@@ -241,13 +296,12 @@ function ServiceChart({ year }) {
       <CardHeader className="py-1">
         <CardTitle>Service Usage Frequency</CardTitle>
         <CardDescription>
-          This chart shows how frequently each service has been used over a
-          given period, helping identify the most and least popular services.
+          {viewMode === "month" ? "Monthly" : "Quarterly"} Service Usage Chart
         </CardDescription>
       </CardHeader>
       <ChartContainer
         config={serviceChartConfig}
-        className="mx-auto aspect-square w-full  max-h-[350px]"
+        className="mx-auto aspect-square w-full max-h-[350px]"
       >
         <PieChart>
           <ChartTooltip
@@ -300,9 +354,8 @@ function ServiceChart({ year }) {
 const yellowShades = ["#FF6F00", "#FF8F00", "#FFB300", "#FFCC00", "#FFEB3B"];
 function FeedbackChart({ year }) {
   const { garageId } = useParams();
-  const payload = { garageId, year };
-  const feedbacks = useGetFeedbackForGarage(payload);
-  const total = feedbacks.data.length;
+  const feedbacks = useGetFeedbackForGarage({ garageId, year });
+
   const feedbackData = useMemo(() => {
     const countMap = new Map();
 
@@ -332,8 +385,6 @@ function FeedbackChart({ year }) {
       return acc;
     }, {});
   }, [feedbackData]);
-
-  console.log(ratingChartConfig);
 
   return (
     <div className="w-full h-full flex flex-col justify-between">
@@ -374,7 +425,7 @@ function FeedbackChart({ year }) {
                         y={viewBox.cy}
                         className="fill-foreground text-3xl font-bold"
                       >
-                        {total.toLocaleString()}
+                        {feedbacks.data.length.toLocaleString()}
                       </tspan>
                       <tspan
                         x={viewBox.cx}

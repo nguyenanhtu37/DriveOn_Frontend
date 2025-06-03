@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/common/layouts/components/Navbar";
+import { Footer } from "@/components/Footer/Footer";
 
 const FavoriteGarages = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const FavoriteGarages = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Navbar />
       <div className="flex-1 w-full max-w-7xl mx-auto py-8 px-2 sm:px-6 lg:px-8">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
           <ArrowLeft className="mr-2" />
@@ -35,6 +37,7 @@ const FavoriteGarages = () => {
             Your Favorite Garages
           </h2>
         </div>
+
         {loading && (
           <div className="flex flex-col items-center justify-center h-64 bg-white rounded-lg shadow-sm">
             <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
@@ -91,6 +94,7 @@ const FavoriteGarages = () => {
         )}
       </div>
       <NavbarMobile />
+      <Footer />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import {
   useGetGarageStatusCountByMonth,
+  useGetGarageStatusCountByQuarter,
   useGetServiceUsageCounts,
 } from "@/app/stores/entity/admin";
 import {
@@ -7,6 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import {
   ChartContainer,
@@ -26,6 +28,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const chartConfig = {
   garage: {
@@ -49,13 +59,27 @@ const monthNamesEn = [
   "December",
 ];
 
+const quarterNames = ["Q1", "Q2", "Q3", "Q4"];
+
 export const DashboardChart = () => {
   const [activeTab, setActiveTab] = useState("garages");
+  const [viewType, setViewType] = useState("month");
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   return (
     <div className="col-span-4">
       <CardHeader>
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          <Tabs
+            defaultValue="month"
+            className="w-[200px]"
+            onValueChange={setViewType}
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="month">Monthly</TabsTrigger>
+              <TabsTrigger value="quarter">Quarterly</TabsTrigger>
+            </TabsList>
+          </Tabs>
           <Tabs
             defaultValue="garages"
             className="w-[450px]"
@@ -70,18 +94,47 @@ export const DashboardChart = () => {
       </CardHeader>
       <CardContent>
         <div className="h-[400px] w-full flex ">
-          {activeTab === "garages" && <GarageChart />}
+          {activeTab === "garages" && viewType === "month" && (
+            <GarageChart year={selectedYear} />
+          )}
+          {activeTab === "garages" && viewType === "quarter" && (
+            <GarageQuarterChart year={selectedYear} />
+          )}
           {activeTab === "services" && <ServiceChart />}
           {/* {activeTab === "services" && <ServiceChart />}
           {activeTab === "feedback" && <FeedbackChart />} */}
         </div>
       </CardContent>
+      <CardFooter className="flex justify-start items-center gap-x-2">
+        <CardTitle>Select year</CardTitle>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+              {selectedYear}
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48 p-0">
+            <ScrollArea className="max-h-60 overflow-y-auto">
+              {Array.from({ length: 10 }, (_, i) => (
+                <DropdownMenuItem
+                  key={i}
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                  onClick={() => setSelectedYear(new Date().getFullYear() - i)}
+                >
+                  {new Date().getFullYear() - i}
+                </DropdownMenuItem>
+              ))}
+            </ScrollArea>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </CardFooter>
     </div>
   );
 };
 
-function GarageChart() {
-  const garages = useGetGarageStatusCountByMonth();
+function GarageChart({ year }) {
+  const garages = useGetGarageStatusCountByMonth(year);
 
   const converted = useMemo(
     () =>
@@ -97,7 +150,7 @@ function GarageChart() {
       <CardHeader className="py-1">
         <CardTitle>Garages</CardTitle>
         <CardDescription>
-          Number of garages participating monthly
+          Number of garages participating monthly in {year}
         </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
@@ -142,6 +195,67 @@ function GarageChart() {
     </div>
   );
 }
+
+function GarageQuarterChart({ year }) {
+  const garages = useGetGarageStatusCountByQuarter(year);
+
+  const converted = useMemo(
+    () =>
+      garages.data?.map((garage) => ({
+        quarter: quarterNames[garage.quarter - 1],
+        Garages: garage.garages,
+      })),
+    [garages.data]
+  );
+
+  return (
+    <div className="w-full h-full flex flex-col justify-between">
+      <CardHeader className="py-1">
+        <CardTitle>Garages</CardTitle>
+        <CardDescription>
+          Number of garages participating quarterly in {year}
+        </CardDescription>
+      </CardHeader>
+      <ChartContainer config={chartConfig} className="w-full h-[300px]">
+        <BarChart
+          accessibilityLayer
+          data={converted}
+          margin={{
+            left: 12,
+            right: 12,
+          }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="quarter"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+          />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent indicator="dot" />}
+          />
+          <Bar
+            dataKey="Garages"
+            fill="var(--accent-color)"
+            radius={[4, 4, 0, 0]}
+          />
+        </BarChart>
+      </ChartContainer>
+    </div>
+  );
+}
+
 const stringToColor = (str) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {

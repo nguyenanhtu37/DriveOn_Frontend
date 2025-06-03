@@ -95,3 +95,17 @@ export const viewGarageList = async () => {
   const response = await axios.get("garage/viewGarageList");
   return response.data;
 };
+
+export const getGarageDashboardChart = async (garageId, year) => {
+  const response = await axios.get(`/garage/${garageId}/dashboardChart`, {
+    params: { year }
+  });
+  return response.data;
+};
+
+export const getGarageDashboardChartByQuarter = async (garageId, year) => {
+  const response = await axios.get(`/garage/${garageId}/dashboardChartByQuarter`, {
+    params: { year }
+  });
+  return response.data;
+};

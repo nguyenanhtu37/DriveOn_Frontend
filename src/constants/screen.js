@@ -15,6 +15,7 @@ export const AbsoluteScreenPath = {
   VehicleDetail: "/vehicle/:id",
   FavoriteGarages: "/favorite-garages",
   GarageProUpgrade: "/garageProUpgrade",
+  GarageProFeatures: "/garageProFeatures",
   AppointmentDetail: "/appointment-detail",
   Emergency: "/emergency",
   Search: "/search",
