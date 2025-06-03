@@ -1,16 +1,17 @@
 import { AbsoluteScreenPath } from "@/constants/screen";
 import { cn } from "@/lib/utils";
-import { CircleUser, Heart, Car, Home, Activity } from "lucide-react";
+import { CircleUser, Car, Home, Activity, Search } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { DialogMyGarage } from "@/components/DialogMyGagrage/DialogMyGarage";
+import { useSetDialogId } from "@/app/stores/view/dialog";
 
 const MENU_ITEMS = [
   { icon: Home, label: "Home", link: "/" },
   {
-    icon: Heart,
-    label: "Favourited",
-    link: AbsoluteScreenPath.FavoriteGarages,
+    icon: Search,
+    label: "Search",
+    link: AbsoluteScreenPath.Search,
   },
   { icon: Activity, label: "Emergency", link: AbsoluteScreenPath.Emergency },
   { icon: Car, label: "Garage" }, // No link, will open dialog
@@ -19,6 +20,12 @@ const MENU_ITEMS = [
 
 function NavbarMobile() {
   const [openGarageDialog, setOpenGarageDialog] = useState(false);
+
+  const setDialog = useSetDialogId();
+
+  const handleClickRecuse = () => {
+    setDialog({ id: "DialogRecuse" });
+  };
 
   return (
     <>
@@ -50,17 +57,17 @@ function NavbarMobile() {
               className={({ isActive }) =>
                 cn(
                   "w-full flex flex-col gap-1 items-center cursor-pointer transition-colors relative -top-4",
-                  isActive
-                    ? "text-white"
-                    : "text-white"
+                  isActive ? "text-white" : "text-white"
                 )
               }
-              to={item.link || ""}
+              onClick={handleClickRecuse}
             >
               <div className="bg-red-500 rounded-full p-3 shadow-lg">
                 <item.icon size={28} aria-hidden="true" />
               </div>
-              <span className="text-[10px] font-medium text-red-500">{item.label}</span>
+              <span className="text-[10px] font-medium text-red-500">
+                {item.label}
+              </span>
             </NavLink>
           ) : (
             <NavLink
