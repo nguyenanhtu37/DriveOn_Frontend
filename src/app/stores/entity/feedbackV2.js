@@ -13,15 +13,15 @@ export const useGetFeedbackForGarage = (payload) => {
   };
 };
 
-export const useGetAllFeedbacksByGarage = (garageId) => {
+export const useGetAllFeedbacksByGarage = (garageId, year, quarter) => {
   const query = useQuery({
-    queryKey: ["feedback", "all", garageId],
-    queryFn: () => feedbackServiceV2.getAllFeedbacksByGarage(garageId),
+    queryKey: ["feedback", "all", garageId, year, quarter],
+    queryFn: () => feedbackServiceV2.getAllFeedbacksByGarage(garageId, year, quarter),
     enabled: !!garageId,
   });
   return {
     ...query,
-    data: query.data || {},
+    data: query.data || [],
   };
 };
 

@@ -5,8 +5,11 @@ import {
   Star,
   PenToolIcon as Tool,
   Wrench,
+  CheckCircle2,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { FaStar, FaMapMarkerAlt } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,10 +23,148 @@ import {
 import { Link } from "react-router-dom";
 import { PaymentDialog } from "./PaymentDialog";
 import { getUser } from "@/app/stores/view/user";
+import { useViewGarageList } from "@/app/stores/entity/garage";
+import { cn } from "@/lib/utils";
+
+// Marquee Component
+const Marquee = ({ children, pauseOnHover = true, className }) => {
+  const duration = "30s";
+  
+  return (
+    <div
+      className={cn(
+        "flex w-full overflow-hidden",
+        className
+      )}
+    >
+      <style>
+        {`
+          @keyframes marquee {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .marquee-content {
+            animation: marquee ${duration} linear infinite;
+            animation-play-state: ${pauseOnHover ? 'running' : 'paused'};
+            display: flex;
+            width: max-content;
+          }
+        `}
+      </style>
+      <div className="marquee-content">
+        {children}
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const ProGarageCard = ({ garage, onClick }) => {
+  const formatRating = (rating) =>
+    typeof rating === "number" ? rating.toFixed(1) : "--";
+
+  return (
+    <motion.div
+      whileHover={{ y: -5 }}
+      className="relative w-[300px] bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+      onClick={onClick}
+    >
+      {/* Border Beam Effect */}
+      <div className="absolute inset-0 rounded-xl overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute inset-[1px] bg-white rounded-xl"></div>
+      </div>
+
+      {/* Animated Border Beam */}
+      <div className="absolute inset-0 rounded-xl overflow-hidden pointer-events-none">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/50 to-transparent animate-[border-beam_8s_linear_infinite]"></div>
+        </div>
+      </div>
+
+      {/* Content Container */}
+      <div className="relative z-10">
+        {/* Premium Badge */}
+        <div className="absolute top-4 right-4 z-20">
+          <div className="bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-1 rounded-full shadow-lg">
+            <span className="text-sm font-bold">PRO</span>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div className="relative h-40 overflow-hidden">
+          <img
+            src={garage.interiorImages?.[0] || "/placeholder.svg"}
+            className="w-full h-full object-cover"
+            alt={garage.name}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          
+          {/* Rating Badge */}
+          <div className="absolute bottom-3 right-3">
+            <div className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
+              <FaStar className="h-3 w-3 text-yellow-400" />
+              <span className="font-medium text-sm text-gray-900">{formatRating(garage.ratingAverage)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="p-3">
+          <h3 className="text-lg font-bold text-gray-900 mb-1 line-clamp-1">
+            {garage.name}
+          </h3>
+          <div className="flex items-center gap-1.5 text-gray-600">
+            <FaMapMarkerAlt className="h-3 w-3 flex-shrink-0" />
+            <p className="text-xs line-clamp-1">{garage.address}</p>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        {`
+          @keyframes border-beam {
+            0% {
+              transform: translateX(-100%);
+            }
+            100% {
+              transform: translateX(100%);
+            }
+          }
+        `}
+      </style>
+    </motion.div>
+  );
+};
+
+const features = [
+  {
+    title: "Top Display Priority",
+    description: "Your garage will be featured at the top of search results, increasing visibility and attracting more customers",
+    icon: Star,
+  },
+  {
+    title: "Maintenance Reminder",
+    description: "Automated system to track vehicle maintenance schedules and send timely reminders to customers",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Dedicated Pro Page",
+    description: "Exclusive pro garage page showcasing your services and professional expertise",
+    icon: CheckCircle2,
+  },
+];
 
 export const GarageProUpgrade = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const viewGarageList = useViewGarageList();
+  const listGaragePro = viewGarageList.data?.garagePros || [];
 
   const user = getUser();
   const handleOpen = () => {
@@ -148,6 +289,37 @@ export const GarageProUpgrade = () => {
           </div>
         </section>
 
+        {/* Featured Pro Garages Section */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className="mb-24"
+        >
+          <div className="flex items-center justify-center gap-4 mb-10">
+            <h2 className="text-3xl font-bold text-gray-900">
+              Featured Pro Garages
+            </h2>
+            <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-medium">
+              {listGaragePro.length} Active
+            </span>
+          </div>
+          <div className="relative flex w-screen left-1/2 right-1/2 -translate-x-1/2 flex-col items-center justify-center overflow-hidden bg-white/70 transition-all duration-300">
+            <Marquee pauseOnHover>
+              {listGaragePro.map((garage) => (
+                <div key={garage._id} className="mx-4">
+                  <ProGarageCard
+                    garage={garage}
+                    onClick={() => navigate(`/garageDetail/${garage._id}`)}
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div>
+          </div>
+        </motion.div>
+
         <section className="py-12 md:py-24 lg:py-32">
           <div className=" px-4 md:px-6">
             <motion.div
@@ -168,11 +340,11 @@ export const GarageProUpgrade = () => {
                     <ul className="mt-6 space-y-2">
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />
-                        <span>Basic inventory management</span>
+                        <span>Standard garage listing</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />
-                        <span>Up to 10 vehicles</span>
+                        <span>Basic maintenance tracking</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />
@@ -225,15 +397,15 @@ export const GarageProUpgrade = () => {
                     <ul className="mt-6 space-y-2">
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />
-                        <span>Advance customer support</span>
+                        <span>Top display priority in search results</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />
-                        <span>Top display priority </span>
+                        <span>Automated maintenance reminders</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <Check className="h-4 w-4 text-green-500" />
-                        <span>Manage support call</span>
+                        <span>Dedicated pro garage page</span>
                       </li>
                     </ul>
                   </CardContent>
@@ -251,6 +423,49 @@ export const GarageProUpgrade = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* Features Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24 px-4 md:px-6"
+        >
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ y: -5 }}
+              className="relative bg-white rounded-xl shadow-sm p-8 hover:shadow-lg transition-all duration-300 border border-gray-100 group overflow-hidden"
+            >
+              {/* Magic Card Effect */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-600/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-[1px] bg-white rounded-xl"></div>
+              </div>
+
+              {/* Glow Effect */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500"></div>
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10">
+                <div className="bg-gradient-to-br from-red-50 to-red-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <feature.icon className="h-8 w-8 text-red-500" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-3 group-hover:text-red-600 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 text-lg leading-relaxed">{feature.description}</p>
+              </div>
+
+              {/* Magic Card Border */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 border border-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
 
         <section className="py-12 md:py-24 lg:py-32 bg-slate-100 relative overflow-hidden">
           <motion.div

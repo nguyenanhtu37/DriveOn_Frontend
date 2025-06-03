@@ -14,12 +14,15 @@ const getFeedbackForGarage = async (payload) => {
   return response.data;
 };
 
-const getAllFeedbacksByGarage = async (garageId) => {
-  const response = await axios.get(`/feedback/garage/${garageId}/all`);
+const getAllFeedbacksByGarage = async (garageId, year, quarter) => {
+  const response = await axios.get(`/feedback/garage/${garageId}/all`, {
+    params: {
+      year,
+      quarter
+    }
+  });
   return response.data;
 };
-
-
 
 const getFeedbackForGarageDetail = async ({ garageId, showMore }) => {
   const response = await axios.get(`/feedback/garageDetail/${garageId}`, {
