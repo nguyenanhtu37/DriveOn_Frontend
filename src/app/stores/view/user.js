@@ -97,6 +97,9 @@ export const userLogout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("location");
   disconnectSocket();
+
+  const newSessionId = crypto.randomUUID();
+  useUserStore.getState().setSessionId(newSessionId);
 };
 
 export const checkAuth = () => {

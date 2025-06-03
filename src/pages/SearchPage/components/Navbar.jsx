@@ -57,7 +57,12 @@ function Navbar() {
         {/* Right */}
         <div className="hidden w-1/2 lg:w-1/3 md:flex justify-end items-center z-30">
           <div className="flex items-center gap-2">
-            {/* <SearchServicesByKeyword /> */}
+            <Link
+              to={AbsoluteScreenPath.GarageRegistrationPage}
+              className="py-[9px] px-3 hover:border rounded-full bg-white text-[#222222] text-sm font-medium hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100"
+            >
+              Register Garage
+            </Link>
 
             {!isLoggedIn ? (
               <div className="flex items-center gap-2">

@@ -12,41 +12,10 @@ import { useUserStore } from "@/app/stores/view/user";
 import { Button } from "../../../components/ui/button";
 import { useState } from "react";
 
-import { Badge } from "../../../components/ui/badge";
-import { SearchServicesByKeyword } from "../../../components/SearchServicesByKeyword/SearchServicesByKeyword";
 import "swiper/css";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
-import { SidebarTrigger } from "../../../components/ui/sidebar";
-import { Input } from "../../../components/ui/input";
+
 import NavItem from "./NavItem";
 
-const garageMessages = [
-  {
-    text: "🚗 Join our garage network — register today and grow your reach. 🚗",
-    bgColor: "bg-red-50 hover:bg-red-100",
-  },
-  {
-    text: "🔧 Expand your business — become a trusted garage in our network!",
-    bgColor: "bg-blue-50 hover:bg-blue-100",
-  },
-  {
-    text: "🚗 Get more customers, more visibility — join our garage network today.",
-    bgColor: "bg-green-50 hover:bg-green-100",
-  },
-  {
-    text: "🧰 Trusted by hundreds of garages — yours should be next!",
-    bgColor: "bg-yellow-50 hover:bg-yellow-100",
-  },
-  {
-    text: "🚀 Join now and drive your garage's success forward.",
-    bgColor: "bg-purple-50 hover:bg-purple-100",
-  },
-  {
-    text: "🔧 Ready to grow? Register your garage — it's fast and free!",
-    bgColor: "bg-pink-50 hover:bg-pink-100",
-  },
-];
 function Navbar() {
   const { handleLogout, isLoading, isLoggedIn } = useAuth();
   const { user } = useUserStore();
@@ -78,28 +47,7 @@ function Navbar() {
         </div>
 
         {/* Center */}
-        <div className="hidden xl:flex gap-x-4 w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] justify-center items-center">
-          {/* <Link to={"/garageRegistration"} asChild>
-            <Swiper
-              autoplay={{
-                delay: 3000,
-              }}
-              loop={true}
-              modules={[Autoplay]}
-              direction={"vertical"}
-              className="w-full h-[50px] "
-            >
-              {garageMessages.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <Badge
-                    className={`py-[9px] px-3 text-[#222222] text-md font-medium rounded-full hover:shadow-sm transition-all duration-100 ${item.bgColor}`}
-                  >
-                    {item.text}
-                  </Badge>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Link> */}
+        <div className="hidden md:flex gap-x-4 w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] justify-center items-center">
           <NavItem to="/">
             <Home size={16} className="text-inherit" />
             Home
@@ -119,11 +67,18 @@ function Navbar() {
           <div className="flex items-center gap-2">
             {/* <SearchServicesByKeyword /> */}
 
+            <Link
+              to={AbsoluteScreenPath.GarageRegistrationPage}
+              className="py-[9px] px-3 hover:border rounded-full bg-white text-[#222222] text-sm font-medium hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100"
+            >
+              Register Garage
+            </Link>
+
             {!isLoggedIn ? (
               <div className="flex items-center gap-2">
                 <Link
                   to={AbsoluteScreenPath.Login}
-                  className="py-[9px] px-3 rounded-full bg-white text-[#222222] text-sm font-medium hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100"
+                  className="py-[9px]   px-3 rounded-full bg-white text-[#222222] text-sm font-medium hover:bg-[#f4f4f4] hover:shadow-sm transition-all duration-100"
                 >
                   Login
                 </Link>

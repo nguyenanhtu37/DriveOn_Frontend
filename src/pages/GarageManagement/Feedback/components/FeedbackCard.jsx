@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Star, Calendar, Car, Wrench } from "lucide-react";
+import { Star, Calendar, Car } from "lucide-react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 
@@ -28,7 +28,7 @@ export function FeedbackCard({ feedback }) {
       // For general feedback, show all services
       return {
         type: "general",
-        serviceName: "Đánh giá tổng quát",
+        serviceName: "",
         allServices: feedback.appointment.service,
       };
     }
@@ -74,14 +74,6 @@ export function FeedbackCard({ feedback }) {
 
         <div className="space-y-2">
           <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-            <Wrench className="h-3 w-3" />
-            <span>
-              {getServiceInfo().type === "specific" ? "Service: " : "Rating: "}
-              {getServiceInfo().serviceName}
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
             <Car className="h-3 w-3" />
             <span>
               {feedback.appointment.vehicle.carName} -{" "}
@@ -101,7 +93,7 @@ export function FeedbackCard({ feedback }) {
         <div className="space-y-2">
           <div className="text-xs text-muted-foreground">
             {getServiceInfo().type === "specific"
-              ? "All services in appointment:"
+              ? "Feedback for service:"
               : "Services:"}
           </div>
           <div className="flex flex-wrap gap-1">
