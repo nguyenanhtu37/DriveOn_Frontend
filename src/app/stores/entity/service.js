@@ -79,3 +79,14 @@ export const useDeleteService = () => {
 
   return mutation;
 };
+
+export const useGetServiceByManage = (payload) => {
+  const query = useQuery({
+    queryKey: ["serviceSystem", "manage", payload],
+    queryFn: () => serviceService.getServiceByManage(payload),
+  });
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

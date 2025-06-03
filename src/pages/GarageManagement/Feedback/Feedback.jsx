@@ -2,11 +2,12 @@ import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Settings } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FeedbackFilters } from "./components/FeedbackFilters";
 import { FeedbackCard } from "./components/FeedbackCard";
 import { useGetService } from "@/app/stores/entity/service-detail";
+import { Pagination } from "../components/Pagination";
 
 export const Feedback = () => {
   const { garageId } = useParams();
@@ -14,14 +15,15 @@ export const Feedback = () => {
   const [ratingFilter, setRatingFilter] = useState("all");
   const [serviceFilter, setServiceFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-
+  const [page, setPage] = useState(1);
   const payload = {
     garageId: garageId,
     keyword: searchTerm,
     rating: ratingFilter === "all" ? undefined : ratingFilter,
     service: serviceFilter === "all" ? undefined : serviceFilter,
     type: typeFilter === "all" ? undefined : typeFilter,
-    page: 1,
+    page: page,
+    limit: 9,
   };
 
   const feedbacksData = useGetFeedbackForGarage(payload);
@@ -34,12 +36,29 @@ export const Feedback = () => {
   // Filter feedbacks
   const filteredFeedbacks = feedbacksData.data.feedbacks;
 
+  const { currentPage, totalPages, totalCount, hasNextPage, hasPrevPage } =
+    feedbacksData.data.pagination ?? {
+      currentPage: 1,
+      totalPages: 1,
+      totalCount: 0,
+      hasNextPage: false,
+      hasPrevPage: false,
+    };
+
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+
   const clearFilters = () => {
     setSearchTerm("");
     setRatingFilter("all");
     setServiceFilter("all");
     setTypeFilter("all");
   };
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, ratingFilter, serviceFilter, typeFilter, garageId]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -89,7 +108,7 @@ export const Feedback = () => {
         {/* Feedback List */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Danh sách phản hồi</h2>
+            <h2 className="text-xl font-semibold">Feedbacks</h2>
           </div>
 
           {filteredFeedbacks?.length === 0 ? (
@@ -108,6 +127,14 @@ export const Feedback = () => {
               ))}
             </div>
           )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalCount={totalCount}
+            hasNextPage={hasNextPage}
+            hasPrevPage={hasPrevPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>
