@@ -2,8 +2,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FaStar, FaPhone } from "react-icons/fa";
 import { useState } from "react";
 import DeleteFavoriteGarageModal from "@/components/vehicle/DeleteFavoriteGarageModal";
+import { useNavigate } from "react-router-dom";
 
 const FavoriteGarageCard = ({
+  id,
   garageName,
   address,
   phone,
@@ -12,8 +14,10 @@ const FavoriteGarageCard = ({
   onRemove,
 }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRemove = () => {
+  const handleRemove = (e) => {
+    e.stopPropagation(); // Prevent card click when clicking remove button
     setShowConfirmModal(true);
   };
 
@@ -22,9 +26,16 @@ const FavoriteGarageCard = ({
     setShowConfirmModal(false);
   };
 
+  const handleCardClick = () => {
+    navigate(`/garage/${id}`);
+  };
+
   return (
     <>
-      <Card className="w-full h-full mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-md rounded-lg border border-gray-200">
+      <Card 
+        className="w-full h-full mx-auto overflow-hidden transition-all duration-300 transform hover:shadow-md rounded-lg border border-gray-200 cursor-pointer"
+        onClick={handleCardClick}
+      >
         <CardContent className="p-0">
           <div className="relative rounded-t-lg overflow-hidden">
             <img
