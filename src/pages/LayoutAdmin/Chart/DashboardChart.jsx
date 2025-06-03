@@ -2,6 +2,7 @@ import {
   useGetGarageStatusCountByMonth,
   useGetGarageStatusCountByQuarter,
   useGetServiceUsageCounts,
+  useGetTransactionsByMonthOrQuarter,
 } from "@/app/stores/entity/admin";
 import {
   CardContent,
@@ -27,6 +28,7 @@ import {
   Cell,
   XAxis,
   YAxis,
+  Legend,
 } from "recharts";
 import { ChevronDown } from "lucide-react";
 import {
@@ -40,6 +42,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 const chartConfig = {
   garage: {
     label: "Garages",
+    color: "var(--accent-color)",
+  },
+  transaction: {
+    label: "Transactions",
     color: "var(--accent-color)",
   },
 };
@@ -61,6 +67,33 @@ const monthNamesEn = [
 
 const quarterNames = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
+        <p className="font-semibold text-gray-800 mb-2">{label}</p>
+        <div className="space-y-1">
+          <p className="text-sm">
+            <span className="font-medium text-accent">Transaction Count: </span>
+            <span className="text-gray-700">{payload[0].value}</span>
+          </p>
+          <p className="text-sm">
+            <span className="font-medium text-primary">Total Amount: </span>
+            <span className="text-gray-700">
+              {new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                maximumFractionDigits: 0
+              }).format(payload[1].value)}
+            </span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export const DashboardChart = () => {
   const [activeTab, setActiveTab] = useState("garages");
   const [viewType, setViewType] = useState("month");
@@ -70,7 +103,7 @@ export const DashboardChart = () => {
     <div className="col-span-4">
       <CardHeader>
         <div className="flex items-center justify-between">
-          {activeTab === "garages" ? (
+          {(activeTab === "garages" || activeTab === "transactions") ? (
             <Tabs
               defaultValue="month"
               className="w-[200px]"
@@ -89,9 +122,10 @@ export const DashboardChart = () => {
             className="w-[450px]"
             onValueChange={setActiveTab}
           >
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="garages">Garages</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="transactions">Transactions</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -105,12 +139,16 @@ export const DashboardChart = () => {
             <GarageQuarterChart year={selectedYear} />
           )}
           {activeTab === "services" && <ServiceChart />}
-          {/* {activeTab === "services" && <ServiceChart />}
-          {activeTab === "feedback" && <FeedbackChart />} */}
+          {activeTab === "transactions" && viewType === "month" && (
+            <TransactionChart year={selectedYear} />
+          )}
+          {activeTab === "transactions" && viewType === "quarter" && (
+            <TransactionQuarterChart year={selectedYear} />
+          )}
         </div>
       </CardContent>
       <CardFooter className="flex justify-start items-center gap-x-2">
-        {activeTab === "garages" && (
+        {(activeTab === "garages" || activeTab === "transactions") && (
           <>
             <CardTitle>Select year</CardTitle>
             <DropdownMenu>
@@ -307,6 +345,16 @@ function ServiceChart() {
     }, {});
   }, [servicesData.data]);
 
+  const formatServiceName = (name) => {
+    const words = name.split(' ');
+    if (words.length > 2) {
+      return words.map((word, index) => 
+        index % 2 === 0 ? word : word + '\n'
+      ).join(' ');
+    }
+    return name;
+  };
+
   return (
     <div className="w-full h-full flex flex-col justify-between">
       <CardHeader className="py-1">
@@ -314,23 +362,281 @@ function ServiceChart() {
         <CardDescription>Service statistics in the system</CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
-        <BarChart data={chartData}>
-          <CartesianGrid vertical={false} />
+        <BarChart
+          data={chartData}
+          margin={{
+            left: 12,
+            right: 12,
+            top: 20,
+            bottom: 120,
+          }}
+          barSize={40}
+        >
+          <CartesianGrid 
+            vertical={false} 
+            strokeDasharray="3 3"
+            stroke="var(--border-color)"
+          />
           <XAxis
             dataKey="serviceName"
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) =>
-              value.length > 10 ? value.slice(0, 10) + "..." : value
-            }
+            angle={-45}
+            textAnchor="end"
+            height={100}
+            interval={0}
+            tick={{ 
+              fontSize: 12,
+              fill: "var(--foreground-color)"
+            }}
+            tickFormatter={formatServiceName}
           />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <Bar dataKey="usageCount" fill="#8884d8">
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            width={40}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+            tick={{ 
+              fontSize: 12,
+              fill: "var(--foreground-color)"
+            }}
+          />
+          <ChartTooltip
+            cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+            content={({ active, payload, label }) => {
+              if (active && payload && payload.length) {
+                return (
+                  <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
+                    <p className="font-semibold text-gray-800 mb-2">{label}</p>
+                    <p className="text-sm">
+                      <span className="font-medium text-accent">Usage Count: </span>
+                      <span className="text-gray-700">{payload[0].value}</span>
+                    </p>
+                  </div>
+                );
+              }
+              return null;
+            }}
+          />
+          <Bar 
+            dataKey="usageCount" 
+            fill="#8884d8"
+            radius={[4, 4, 0, 0]}
+          >
             {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
+              <Cell 
+                key={`cell-${index}`} 
+                fill={entry.fill}
+                stroke="var(--border-color)"
+                strokeWidth={1}
+              />
             ))}
           </Bar>
+        </BarChart>
+      </ChartContainer>
+    </div>
+  );
+}
+
+function TransactionChart({ year }) {
+  const transactions = useGetTransactionsByMonthOrQuarter("month", year);
+
+  const converted = useMemo(
+    () =>
+      transactions.data?.map((transaction) => ({
+        month: monthNamesEn[transaction.month - 1],
+        Transactions: transaction.totalTransactions,
+        Amount: transaction.totalAmount,
+      })),
+    [transactions.data]
+  );
+
+  const formatVND = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    }).format(value);
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col justify-between">
+      <CardHeader className="py-1">
+        <CardTitle>Transactions</CardTitle>
+        <CardDescription>
+          Transaction statistics monthly in {year}
+        </CardDescription>
+      </CardHeader>
+      <ChartContainer config={chartConfig} className="w-full h-[300px]">
+        <BarChart
+          data={converted}
+          margin={{
+            left: 12,
+            right: 12,
+            top: 20,
+            bottom: 10,
+          }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="month"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <YAxis
+            yAxisId="left"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={formatVND}
+            width={80}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+          />
+          <ChartTooltip
+            cursor={false}
+            content={<CustomTooltip />}
+          />
+          <Legend 
+            verticalAlign="top" 
+            height={36}
+            formatter={(value) => (
+              <span className="text-sm text-gray-600">{value}</span>
+            )}
+          />
+          <Bar
+            yAxisId="left"
+            dataKey="Transactions"
+            fill="#0ea5e9"
+            name="Transaction Count"
+            radius={[4, 4, 0, 0]}
+          />
+          <Bar
+            yAxisId="right"
+            dataKey="Amount"
+            fill="#f97316"
+            name="Transaction Amount"
+            radius={[4, 4, 0, 0]}
+          />
+        </BarChart>
+      </ChartContainer>
+    </div>
+  );
+}
+
+function TransactionQuarterChart({ year }) {
+  const transactions = useGetTransactionsByMonthOrQuarter("quarter", year);
+
+  const converted = useMemo(
+    () =>
+      transactions.data?.map((transaction) => ({
+        quarter: quarterNames[transaction.quarter - 1],
+        Transactions: transaction.totalTransactions,
+        Amount: transaction.totalAmount,
+      })),
+    [transactions.data]
+  );
+
+  const formatVND = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    }).format(value);
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col justify-between">
+      <CardHeader className="py-1">
+        <CardTitle>Transactions</CardTitle>
+        <CardDescription>
+          Transaction statistics quarterly in {year}
+        </CardDescription>
+      </CardHeader>
+      <ChartContainer config={chartConfig} className="w-full h-[300px]">
+        <BarChart
+          data={converted}
+          margin={{
+            left: 12,
+            right: 12,
+            top: 20,
+            bottom: 10,
+          }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="quarter"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+          />
+          <YAxis
+            yAxisId="left"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={formatVND}
+            width={80}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+          />
+          <ChartTooltip
+            cursor={false}
+            content={<CustomTooltip />}
+          />
+          <Legend 
+            verticalAlign="top" 
+            height={36}
+            formatter={(value) => (
+              <span className="text-sm text-gray-600">{value}</span>
+            )}
+          />
+          <Bar
+            yAxisId="left"
+            dataKey="Transactions"
+            fill="#0ea5e9"
+            name="Transaction Count"
+            radius={[4, 4, 0, 0]}
+          />
+          <Bar
+            yAxisId="right"
+            dataKey="Amount"
+            fill="#f97316"
+            name="Transaction Amount"
+            radius={[4, 4, 0, 0]}
+          />
         </BarChart>
       </ChartContainer>
     </div>

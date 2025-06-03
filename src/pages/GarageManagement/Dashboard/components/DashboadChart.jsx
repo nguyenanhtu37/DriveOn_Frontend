@@ -14,21 +14,22 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import {
-  Area,
-  AreaChart,
   CartesianGrid,
   Label,
   Pie,
   PieChart,
   XAxis,
   YAxis,
+  Bar,
+  BarChart,
+  Legend,
 } from "recharts";
 import { 
   useGetDashboardChart,
   useGetGarageDashboardChartByQuarter 
 } from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
-import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
+import { useGetAllFeedbacksByGarage } from "@/app/stores/entity/feedbackV2";
 
 import { ChevronDown } from "lucide-react";
 import {
@@ -40,9 +41,13 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const chartConfig = {
-  appointment: {
-    label: "Appointment",
-    color: "var(--accent-color)",
+  revenue: {
+    label: "Revenue",
+    color: "#0ea5e9",
+  },
+  appointments: {
+    label: "Appointments",
+    color: "#f97316",
   },
 };
 
@@ -75,7 +80,7 @@ const stringToColor = (str) => {
 };
 
 export function DashboardCharts() {
-  const [activeTab, setActiveTab] = useState("appointment");
+  const [activeTab, setActiveTab] = useState("revenue");
   const [year, setYear] = useState(new Date().getFullYear());
   const [viewMode, setViewMode] = useState("month"); // 'month' or 'quarter'
 
@@ -126,14 +131,14 @@ export function DashboardCharts() {
               </div>
             )}
             <Tabs
-              defaultValue="appointment"
-              className="w-[450px]"
+              defaultValue="revenue"
+              className="w-[550px]"
               onValueChange={setActiveTab}
             >
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="appointment">Appointments</TabsTrigger>
-                <TabsTrigger value="services">Services</TabsTrigger>
-                <TabsTrigger value="feedback">Feedback</TabsTrigger>
+                <TabsTrigger value="revenue" className="text-sm">Revenue & Appointment</TabsTrigger>
+                <TabsTrigger value="services" className="text-sm">Services</TabsTrigger>
+                <TabsTrigger value="feedback" className="text-sm">Customer Ratings</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -141,13 +146,13 @@ export function DashboardCharts() {
       </CardHeader>
       <CardContent className="px-2">
         <div className="h-[400px] w-full flex ">
-          {activeTab === "appointment" && <AppointmentChart year={year} viewMode={viewMode} />}
+          {activeTab === "revenue" && <RevenueChart year={year} viewMode={viewMode} />}
           {activeTab === "services" && <ServiceChart year={year} viewMode={viewMode} />}
-          {activeTab === "feedback" && <FeedbackChart year={year} />}
+          {activeTab === "feedback" && <FeedbackChart />}
         </div>
       </CardContent>
       <CardFooter className="flex justify-start items-center gap-x-2">
-        {activeTab !== 'services' && (
+        {activeTab !== 'services' && activeTab !== 'feedback' && (
           <>
             <CardTitle>Select year</CardTitle>
             <DropdownMenu>
@@ -178,7 +183,7 @@ export function DashboardCharts() {
   );
 }
 
-function AppointmentChart({ year, viewMode }) {
+function RevenueChart({ year, viewMode }) {
   const { garageId } = useParams();
   const monthlyData = useGetDashboardChart({ garageId, year });
   const quarterlyData = useGetGarageDashboardChartByQuarter(garageId, year);
@@ -191,12 +196,14 @@ function AppointmentChart({ year, viewMode }) {
     if (viewMode === "month") {
       return charts.data.appointments.map((item) => ({
         month: monthNamesEn[item.month - 1],
-        Appointment: item.totalAppointments,
+        Revenue: item.revenue || 0,
+        Appointments: item.totalAppointments || 0,
       }));
     } else {
       return charts.data.appointments.map((item) => ({
         month: `Quarter ${item.quarter}`,
-        Appointment: item.totalAppointments,
+        Revenue: item.revenue || 0,
+        Appointments: item.totalAppointments || 0,
       }));
     }
   }, [charts.data.appointments, viewMode]);
@@ -204,14 +211,13 @@ function AppointmentChart({ year, viewMode }) {
   return (
     <div className="w-full h-full flex flex-col justify-between">
       <CardHeader className="py-1">
-        <CardTitle>Appointments</CardTitle>
+        <CardTitle>Revenue & Appointments</CardTitle>
         <CardDescription>
-          {viewMode === "month" ? "Monthly" : "Quarterly"} Appointments Chart
+          {viewMode === "month" ? "Monthly" : "Quarterly"} Revenue and Appointment Chart
         </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
-        <AreaChart
-          accessibilityLayer
+        <BarChart
           data={converted}
           margin={{
             left: 12,
@@ -232,25 +238,105 @@ function AppointmentChart({ year, viewMode }) {
             allowDataOverflow={false}
           />
           <YAxis
+            yAxisId="left"
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            width={30}
+            width={60}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
+            tickFormatter={(value) => {
+              if (value >= 1000000) {
+                return `${(value / 1000000).toFixed(1)}M VND`;
+              } else if (value >= 1000) {
+                return `${(value / 1000).toFixed(1)}K VND`;
+              }
+              return `${value} VND`;
+            }}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            width={60}
             domain={["auto", "auto"]}
             allowDataOverflow={false}
           />
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent indicator="dot" />}
+            content={({ active, payload }) => {
+              if (active && payload && payload.length) {
+                return (
+                  <div className="rounded-lg border bg-background p-2 shadow-sm">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#0ea5e9" }} />
+                        <div className="flex flex-col">
+                          <span className="text-[0.70rem] uppercase text-muted-foreground">
+                            Revenue
+                          </span>
+                          <span className="font-bold text-muted-foreground">
+                            {payload[0].value.toLocaleString()} VND
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#f97316" }} />
+                        <div className="flex flex-col">
+                          <span className="text-[0.70rem] uppercase text-muted-foreground">
+                            Appointments
+                          </span>
+                          <span className="font-bold text-muted-foreground">
+                            {payload[1].value.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-[0.70rem] text-muted-foreground mt-1">
+                        {payload[0].payload.month}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            }}
           />
-          <Area
-            dataKey="Appointment"
-            type="linear"
-            fill="var(--color-appointment)"
-            fillOpacity={0.4}
-            stroke="var(--color-appointment)"
+          <Bar
+            yAxisId="left"
+            dataKey="Revenue"
+            fill="#0ea5e9"
+            fillOpacity={0.8}
+            barSize={20}
           />
-        </AreaChart>
+          <Bar
+            yAxisId="right"
+            dataKey="Appointments"
+            fill="#f97316"
+            fillOpacity={0.8}
+            barSize={20}
+          />
+          <Legend
+            verticalAlign="top"
+            height={36}
+            content={({ payload }) => (
+              <div className="flex justify-center gap-4 mt-2">
+                {payload.map((entry, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: entry.color }}
+                    />
+                    <span className="text-sm text-muted-foreground">
+                      {entry.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          />
+        </BarChart>
       </ChartContainer>
     </div>
   );
@@ -346,56 +432,122 @@ function ServiceChart({ year, viewMode }) {
 }
 
 const yellowShades = ["#FF6F00", "#FF8F00", "#FFB300", "#FFCC00", "#FFEB3B"];
-function FeedbackChart({ year }) {
+function FeedbackChart() {
   const { garageId } = useParams();
-  const feedbacks = useGetFeedbackForGarage({ garageId, year });
+  const feedbacks = useGetAllFeedbacksByGarage(garageId);
 
   const feedbackData = useMemo(() => {
-    const countMap = new Map();
+    // Initialize default data structure with all ratings set to 0
+    const defaultData = Array.from({ length: 5 }, (_, i) => ({
+      star: i + 1,
+      rating: 0,
+      fill: yellowShades[i],
+    }));
 
-    feedbacks.data.forEach((feedback) => {
-      countMap.set(feedback.rating, (countMap.get(feedback.rating) || 0) + 1);
+    // If data is still loading or there's an error, return default data
+    if (feedbacks.isLoading || feedbacks.isError || !feedbacks.data) {
+      return defaultData;
+    }
+
+    const feedbacksArray = feedbacks.data || [];
+    
+    // Count ratings
+    const countMap = new Map();
+    feedbacksArray.forEach((feedback) => {
+      const rating = Number(feedback.rating);
+      if (!isNaN(rating) && rating >= 1 && rating <= 5) {
+        countMap.set(rating, (countMap.get(rating) || 0) + 1);
+      }
     });
 
-    const data = Array.from({ length: 5 }, (_, i) => {
+    // Create data array with actual counts
+    return Array.from({ length: 5 }, (_, i) => {
       const star = i + 1;
-      const rating = countMap.get(star) || 0;
       return {
         star,
-        rating,
+        rating: countMap.get(star) || 0,
         fill: yellowShades[i],
       };
     });
+  }, [feedbacks.data, feedbacks.isLoading, feedbacks.isError]);
 
-    return data;
+  const totalFeedbacks = useMemo(() => {
+    if (!feedbacks.data) return 0;
+    return feedbacks.data.length;
   }, [feedbacks.data]);
 
-  const ratingChartConfig = useMemo(() => {
+  const feedbackChartConfig = useMemo(() => {
     return feedbackData.reduce((acc, item) => {
-      acc[item.star] = {
+      acc[`${item.star} Star`] = {
         label: `${item.star} Star`,
-        color: yellowShades[item.star - 1],
+        color: item.fill,
       };
       return acc;
     }, {});
   }, [feedbackData]);
 
+  if (feedbacks.isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-muted-foreground">Loading feedback data...</div>
+      </div>
+    );
+  }
+
+  if (feedbacks.isError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-destructive">Error loading feedback data</div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full flex flex-col justify-between">
       <CardHeader className="py-1">
-        <CardTitle>Feedback</CardTitle>
+        <CardTitle>Customer Ratings</CardTitle>
         <CardDescription>
-          This chart shows what percentage of users gave each rating.
+          {totalFeedbacks === 0 
+            ? "No customer ratings available"
+            : `Distribution of ${totalFeedbacks} customer ratings`}
         </CardDescription>
       </CardHeader>
       <ChartContainer
-        config={ratingChartConfig}
+        config={feedbackChartConfig}
         className="mx-auto aspect-square w-full max-h-[350px]"
       >
         <PieChart>
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent hideLabel />}
+            content={({ active, payload }) => {
+              if (active && payload && payload.length) {
+                const data = payload[0].payload;
+                const percentage = totalFeedbacks > 0 
+                  ? ((data.rating / totalFeedbacks) * 100).toFixed(1)
+                  : 0;
+                return (
+                  <div className="rounded-lg bg-background/80 backdrop-blur-sm p-3 shadow-lg">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: data.fill }} />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-foreground">
+                            {data.star} Star Rating
+                          </span>
+                          <span className="text-lg font-bold text-foreground">
+                            {data.rating} feedbacks
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            {percentage}% of total
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            }}
           />
           <Pie
             data={feedbackData}
@@ -419,14 +571,14 @@ function FeedbackChart({ year }) {
                         y={viewBox.cy}
                         className="fill-foreground text-3xl font-bold"
                       >
-                        {feedbacks.data.length.toLocaleString()}
+                        {totalFeedbacks.toLocaleString()}
                       </tspan>
                       <tspan
                         x={viewBox.cx}
                         y={(viewBox.cy || 0) + 24}
                         className="fill-muted-foreground"
                       >
-                        Total Feedback
+                        Total Ratings
                       </tspan>
                     </text>
                   );
@@ -434,6 +586,25 @@ function FeedbackChart({ year }) {
               }}
             />
           </Pie>
+          <Legend
+            verticalAlign="bottom"
+            height={36}
+            content={({ payload }) => (
+              <div className="flex justify-center gap-4 mt-2">
+                {payload.map((entry, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: entry.color }}
+                    />
+                    <span className="text-sm text-muted-foreground">
+                      {entry.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          />
         </PieChart>
       </ChartContainer>
     </div>

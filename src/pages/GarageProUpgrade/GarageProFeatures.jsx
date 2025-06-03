@@ -347,9 +347,7 @@ function GarageProFeatures() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">Smart Maintenance System</h3>
-                    <p className="text-gray-600">
-                      Automated maintenance scheduling and reminders to keep your customers' vehicles in top condition
-                    </p>
+                    <p className="text-gray-600">Automated maintenance scheduling and reminders to keep your customers&apos; vehicles in top condition</p>
                   </div>
                 </div>
               </motion.div>

@@ -44,3 +44,14 @@ export const useGetServiceUsageCounts = () => {
     data: query.data ?? [],
   };
 };
+
+export const useGetTransactionsByMonthOrQuarter = (type, year) => {
+  const query = useQuery({
+    queryKey: ["transactionsByMonthOrQuarter", type, year],
+    queryFn: () => adminService.getTransactionsByMonthOrQuarter(type, year),
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};

@@ -29,6 +29,13 @@ export const getTransactionsByMonth = async () => {
   return response.data;
 };
 
+export const getTransactionsByMonthOrQuarter = async (type, year) => {
+  const response = await axios.get("/admin/transactions-by-month", {
+    params: { type, year }
+  });
+  return response.data;
+};
+
 export const getUserCountsByRole = async () => {
   const response = await axios.get("/admin/user-counts-by-role");
   return response.data;

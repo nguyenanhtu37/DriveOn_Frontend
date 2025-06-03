@@ -13,6 +13,18 @@ export const useGetFeedbackForGarage = (payload) => {
   };
 };
 
+export const useGetAllFeedbacksByGarage = (garageId) => {
+  const query = useQuery({
+    queryKey: ["feedback", "all", garageId],
+    queryFn: () => feedbackServiceV2.getAllFeedbacksByGarage(garageId),
+    enabled: !!garageId,
+  });
+  return {
+    ...query,
+    data: query.data || {},
+  };
+};
+
 export const useAddFeedback = () => {
   const mutation = useMutation({
     mutationFn: feedbackServiceV2.addFeedback,
@@ -69,3 +81,4 @@ export const useGetFeedbackForGarageDetail = (garageId) => {
     data: query.data || [],
   };
 };
+  
