@@ -117,7 +117,7 @@ function App() {
           onClose={handleCloseModal}
         />
       )}
-      {localStorage.getItem("token") && <CozeBot />}
+      {/* {localStorage.getItem("token") && <CozeBot />} */}
     </QueryClientProvider>
   );
 }

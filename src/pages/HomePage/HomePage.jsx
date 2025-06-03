@@ -1,4 +1,5 @@
 import GarageList from "@/pages/HomePage/GarageList/GarageList";
+import CozeBot from "@/components/CozeBot";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import GarageMap from "./GarageMap/GarageMap";
@@ -66,6 +67,7 @@ function HomePage() {
           </svg>
         </span>
       </div>
+      {/* {localStorage.getItem("token") && <CozeBot />} */}
     </div>
   );
 }
