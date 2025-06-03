@@ -12,10 +12,21 @@ export const useGetDashboardAdminOverview = () => {
   };
 };
 
-export const useGetGarageStatusCountByMonth = () => {
+export const useGetGarageStatusCountByMonth = (year) => {
   const query = useQuery({
-    queryKey: ["garageStatusCountByMonth"],
-    queryFn: adminService.getGarageStatusCountByMonth,
+    queryKey: ["garageStatusCountByMonth", year],
+    queryFn: () => adminService.getGarageStatusCountByMonth(year),
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};
+
+export const useGetGarageStatusCountByQuarter = (year) => {
+  const query = useQuery({
+    queryKey: ["garageStatusCountByQuarter", year],
+    queryFn: () => adminService.getGarageStatusCountByQuarter(year),
   });
   return {
     ...query,
@@ -27,6 +38,17 @@ export const useGetServiceUsageCounts = () => {
   const query = useQuery({
     queryKey: ["serviceUsageCounts"],
     queryFn: adminService.getServiceUsageCounts,
+  });
+  return {
+    ...query,
+    data: query.data ?? [],
+  };
+};
+
+export const useGetTransactionsByMonthOrQuarter = (type, year) => {
+  const query = useQuery({
+    queryKey: ["transactionsByMonthOrQuarter", type, year],
+    queryFn: () => adminService.getTransactionsByMonthOrQuarter(type, year),
   });
   return {
     ...query,

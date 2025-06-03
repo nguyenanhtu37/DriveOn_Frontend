@@ -5,8 +5,17 @@ export const getDashboardAdminOverview = async () => {
   return response.data;
 };
 
-export const getGarageStatusCountByMonth = async () => {
-  const response = await axios.get("/admin/garage-status-counts");
+export const getGarageStatusCountByMonth = async (year) => {
+  const response = await axios.get("/admin/garage-status-counts", {
+    params: { year }
+  });
+  return response.data;
+};
+
+export const getGarageStatusCountByQuarter = async (year) => {
+  const response = await axios.get("/admin/garage-status-counts-quarter", {
+    params: { year }
+  });
   return response.data;
 };
 
@@ -17,6 +26,13 @@ export const getServiceUsageCounts = async () => {
 
 export const getTransactionsByMonth = async () => {
   const response = await axios.get("/admin/transactions-by-month");
+  return response.data;
+};
+
+export const getTransactionsByMonthOrQuarter = async (type, year) => {
+  const response = await axios.get("/admin/transactions-by-month", {
+    params: { type, year }
+  });
   return response.data;
 };
 

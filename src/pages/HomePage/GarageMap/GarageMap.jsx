@@ -16,7 +16,7 @@ import { getLocation } from "@/app/stores/view/user";
 import ScrollToTop from "@/components/ScrollToTop";
 import { useGetDriving } from "@/app/stores/entity/driving";
 import { useDirectionStore } from "@/app/stores/view/direction";
-import { X } from "lucide-react";
+import { Route } from "lucide-react";
 
 const locationDanang = [16.047079, 108.20623];
 
@@ -90,10 +90,11 @@ const GarageMap = () => {
     <div className=" relative h-full">
       {direction && (
         <div
-          className=" absolute right-4 top-4 bg-white p-2 cursor-pointer rounded-full shadow-md z-40 hover:shadow-lg transition-all duration-300"
+          className=" absolute right-4 top-4 bg-white p-2 cursor-pointer rounded-lg shadow-md z-40 hover:shadow-lg transition-all duration-300 flex items-center gap-2"
           onClick={clearDirection}
         >
-          <X size={16} />
+          <Route size={16} className="text-blue-500" />
+          <span className="text-sm font-medium text-gray-700">Clear Route</span>
         </div>
       )}
       <div className="relative w-full h-full overflow-hidden z-0">

@@ -14,6 +14,13 @@ const getFeedbackForGarage = async (payload) => {
   return response.data;
 };
 
+const getAllFeedbacksByGarage = async (garageId) => {
+  const response = await axios.get(`/feedback/garage/${garageId}/all`);
+  return response.data;
+};
+
+
+
 const getFeedbackForGarageDetail = async ({ garageId, showMore }) => {
   const response = await axios.get(`/feedback/garageDetail/${garageId}`, {
     params: {
@@ -53,6 +60,7 @@ const getFeedbackForServiceDetail = async (serviceId) => {
 
 export {
   getFeedbackForGarage,
+  getAllFeedbacksByGarage,
   addFeedback,
   updateFeedback,
   deleteFeedback,
