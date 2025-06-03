@@ -342,7 +342,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.floating-menu {
+/* .floating-menu {
   position: fixed;
   bottom: 160px;
   right: 60px;
@@ -416,7 +416,7 @@ body {
 
 .chat-input input {
   /* flex: 1; */
-  padding: 8px;
+  /* padding: 8px;
   border: none;
   outline: none;
 }
@@ -586,4 +586,4 @@ body {
 
 .chat-window {
   height: 1000px;
-}
+} */
