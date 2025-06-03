@@ -70,16 +70,20 @@ export const DashboardChart = () => {
     <div className="col-span-4">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <Tabs
-            defaultValue="month"
-            className="w-[200px]"
-            onValueChange={setViewType}
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="month">Monthly</TabsTrigger>
-              <TabsTrigger value="quarter">Quarterly</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          {activeTab === "garages" ? (
+            <Tabs
+              defaultValue="month"
+              className="w-[200px]"
+              onValueChange={setViewType}
+            >
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="month">Monthly</TabsTrigger>
+                <TabsTrigger value="quarter">Quarterly</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          ) : (
+            <div className="w-[200px]" />
+          )}
           <Tabs
             defaultValue="garages"
             className="w-[450px]"
@@ -106,28 +110,32 @@ export const DashboardChart = () => {
         </div>
       </CardContent>
       <CardFooter className="flex justify-start items-center gap-x-2">
-        <CardTitle>Select year</CardTitle>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-              {selectedYear}
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48 p-0">
-            <ScrollArea className="max-h-60 overflow-y-auto">
-              {Array.from({ length: 10 }, (_, i) => (
-                <DropdownMenuItem
-                  key={i}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                  onClick={() => setSelectedYear(new Date().getFullYear() - i)}
-                >
-                  {new Date().getFullYear() - i}
-                </DropdownMenuItem>
-              ))}
-            </ScrollArea>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {activeTab === "garages" && (
+          <>
+            <CardTitle>Select year</CardTitle>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                  {selectedYear}
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48 p-0">
+                <ScrollArea className="max-h-60 overflow-y-auto">
+                  {Array.from({ length: 10 }, (_, i) => (
+                    <DropdownMenuItem
+                      key={i}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                      onClick={() => setSelectedYear(new Date().getFullYear() - i)}
+                    >
+                      {new Date().getFullYear() - i}
+                    </DropdownMenuItem>
+                  ))}
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
+        )}
       </CardFooter>
     </div>
   );
