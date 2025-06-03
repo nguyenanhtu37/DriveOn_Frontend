@@ -67,33 +67,6 @@ const monthNamesEn = [
 
 const quarterNames = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
-        <p className="font-semibold text-gray-800 mb-2">{label}</p>
-        <div className="space-y-1">
-          <p className="text-sm">
-            <span className="font-medium text-accent">Transaction Count: </span>
-            <span className="text-gray-700">{payload[0].value}</span>
-          </p>
-          <p className="text-sm">
-            <span className="font-medium text-primary">Total Amount: </span>
-            <span className="text-gray-700">
-              {new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                maximumFractionDigits: 0
-              }).format(payload[1].value)}
-            </span>
-          </p>
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
-
 export const DashboardChart = () => {
   const [activeTab, setActiveTab] = useState("garages");
   const [viewType, setViewType] = useState("month");
@@ -196,7 +169,7 @@ function GarageChart({ year }) {
       <CardHeader className="py-1">
         <CardTitle>Garages</CardTitle>
         <CardDescription>
-          Number of garages participating monthly in {year}
+        Garages that have been operating on the system in {year}
         </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
@@ -259,7 +232,7 @@ function GarageQuarterChart({ year }) {
       <CardHeader className="py-1">
         <CardTitle>Garages</CardTitle>
         <CardDescription>
-          Number of garages participating quarterly in {year}
+          Number of garages registered quarterly in {year}
         </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
@@ -359,7 +332,7 @@ function ServiceChart() {
     <div className="w-full h-full flex flex-col justify-between">
       <CardHeader className="py-1">
         <CardTitle>Services</CardTitle>
-        <CardDescription>Service statistics in the system</CardDescription>
+        <CardDescription>Service system used by garage</CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
         <BarChart
@@ -463,6 +436,22 @@ function TransactionChart({ year }) {
     }).format(value);
   };
 
+  if (transactions.isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+      </div>
+    );
+  }
+
+  if (transactions.isError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-red-500">Error loading transaction data</div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full flex flex-col justify-between">
       <CardHeader className="py-1">
@@ -512,7 +501,26 @@ function TransactionChart({ year }) {
           />
           <ChartTooltip
             cursor={false}
-            content={<CustomTooltip />}
+            content={({ active, payload, label }) => {
+              if (active && payload && payload.length) {
+                return (
+                  <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
+                    <p className="font-semibold text-gray-800 mb-2">{label}</p>
+                    <div className="space-y-1">
+                      <p className="text-sm">
+                        <span className="font-medium text-accent">Transaction Count: </span>
+                        <span className="text-gray-700">{payload[0].value}</span>
+                      </p>
+                      <p className="text-sm">
+                        <span className="font-medium text-primary">Total Amount: </span>
+                        <span className="text-gray-700">{formatVND(payload[1].value)}</span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            }}
           />
           <Legend 
             verticalAlign="top" 
@@ -562,6 +570,22 @@ function TransactionQuarterChart({ year }) {
       minimumFractionDigits: 0
     }).format(value);
   };
+
+  if (transactions.isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+      </div>
+    );
+  }
+
+  if (transactions.isError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-red-500">Error loading transaction data</div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full flex flex-col justify-between">
@@ -614,7 +638,26 @@ function TransactionQuarterChart({ year }) {
           />
           <ChartTooltip
             cursor={false}
-            content={<CustomTooltip />}
+            content={({ active, payload, label }) => {
+              if (active && payload && payload.length) {
+                return (
+                  <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
+                    <p className="font-semibold text-gray-800 mb-2">{label}</p>
+                    <div className="space-y-1">
+                      <p className="text-sm">
+                        <span className="font-medium text-accent">Transaction Count: </span>
+                        <span className="text-gray-700">{payload[0].value}</span>
+                      </p>
+                      <p className="text-sm">
+                        <span className="font-medium text-primary">Total Amount: </span>
+                        <span className="text-gray-700">{formatVND(payload[1].value)}</span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            }}
           />
           <Legend 
             verticalAlign="top" 

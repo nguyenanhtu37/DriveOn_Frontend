@@ -144,7 +144,7 @@ export const SidebarLeft = () => {
               image="https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
             />
             <div className="flex flex-col">
-              <span className="font-medium text-sm">NgocTam</span>
+              
               <span className="text-xs text-muted-foreground">
                 Administrator
               </span>
