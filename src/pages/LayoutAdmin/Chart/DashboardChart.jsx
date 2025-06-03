@@ -59,7 +59,7 @@ const monthNamesEn = [
   "December",
 ];
 
-const quarterNames = ["Q1", "Q2", "Q3", "Q4"];
+const quarterNames = ["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"];
 
 export const DashboardChart = () => {
   const [activeTab, setActiveTab] = useState("garages");
@@ -217,12 +217,14 @@ function GarageQuarterChart({ year }) {
         </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
-        <BarChart
+        <AreaChart
           accessibilityLayer
           data={converted}
           margin={{
             left: 12,
             right: 12,
+            top: 20,
+            bottom: 10,
           }}
         >
           <CartesianGrid vertical={false} />
@@ -231,12 +233,15 @@ function GarageQuarterChart({ year }) {
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+            tickFormatter={(value) => value}
+            width={30}
+            domain={["auto", "auto"]}
+            allowDataOverflow={false}
           />
           <YAxis
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={(value) => value}
             width={30}
             domain={["auto", "auto"]}
             allowDataOverflow={false}
@@ -245,12 +250,14 @@ function GarageQuarterChart({ year }) {
             cursor={false}
             content={<ChartTooltipContent indicator="dot" />}
           />
-          <Bar
+          <Area
             dataKey="Garages"
+            type="linear"
             fill="var(--accent-color)"
-            radius={[4, 4, 0, 0]}
+            fillOpacity={0.4}
+            stroke="var(--accent-color)"
           />
-        </BarChart>
+        </AreaChart>
       </ChartContainer>
     </div>
   );

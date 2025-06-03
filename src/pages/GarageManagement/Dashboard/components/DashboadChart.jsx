@@ -183,7 +183,7 @@ function AppointmentChart({ year, viewMode }) {
       }));
     } else {
       return charts.data.appointments.map((item) => ({
-        month: `Q${item.quarter}`,
+        month: `Quarter ${item.quarter}`,
         Appointment: item.totalAppointments,
       }));
     }
