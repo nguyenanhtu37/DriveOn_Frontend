@@ -66,7 +66,7 @@ const SearchLocation = React.forwardRef(
           <div
             ref={ref}
             className={cn(
-              "hidden flex-1 md:flex flex-col gap-y-px px-6 py-3  rounded-full bg-transparent hover:bg-box-hover transition-all duration-100 cursor-pointer z-10 ",
+              "flex-1 flex flex-col gap-y-px px-6 py-3  rounded-full bg-transparent hover:bg-box-hover transition-all duration-100 cursor-pointer z-10 ",
               isFocused && "hover:bg-transparent"
             )}
             onClick={() => setSearchFocused("location")}

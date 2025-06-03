@@ -31,17 +31,19 @@ import {
 } from "@/components/ui/select";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { GarageAppointmentCard } from "./GarageAppointmentCard";
+import { Input } from "@/components/ui/input";
 
 export const UserAppointment = () => {
   const [status, setStatus] = useState("Upcoming");
 
   const [selected, setSelected] = useState();
-  // const [keyword, setKeyword] = useState();
+  const [keyword, setKeyword] = useState();
   const [page, setPage] = useState(1);
   const payload = {
     status: status,
     page: page,
     limit: 5,
+    keyword: keyword,
   };
 
   const appointmentData = useGetAppointmentByUserId(payload);
@@ -114,12 +116,12 @@ export const UserAppointment = () => {
                   <CardDescription>Manage all appointments</CardDescription>
                 </div>
                 <div className="flex justify-end items-center gap-x-4">
-                  {/* <Input
+                  <Input
                     placeholder="Search by vehicle name or garage name"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                     className="w-[300px] md:w-[400px]"
-                  /> */}
+                  />
                   <Select value={status} onValueChange={setStatus}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Theme" />

@@ -2,7 +2,7 @@ import { useGetFeedbackForGarage } from "@/app/stores/entity/feedbackV2";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Settings } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { FeedbackFilters } from "./components/FeedbackFilters";
 import { FeedbackCard } from "./components/FeedbackCard";

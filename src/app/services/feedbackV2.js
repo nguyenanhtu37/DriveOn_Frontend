@@ -14,8 +14,12 @@ const getFeedbackForGarage = async (payload) => {
   return response.data;
 };
 
-const getFeedbackForGarageDetail = async (garageId) => {
-  const response = await axios.get(`/feedback/garageDetail/${garageId}`);
+const getFeedbackForGarageDetail = async ({ garageId, showMore }) => {
+  const response = await axios.get(`/feedback/garageDetail/${garageId}`, {
+    params: {
+      showMoreCount: showMore,
+    },
+  });
   return response.data;
 };
 

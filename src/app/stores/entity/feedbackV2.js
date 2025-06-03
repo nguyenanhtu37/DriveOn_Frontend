@@ -58,14 +58,18 @@ export const useGetFeedbackForServiceDetail = (serviceId) => {
   };
 };
 
-export const useGetFeedbackForGarageDetail = (garageId) => {
+export const useGetFeedbackForGarageDetail = ({ garageId, showMore }) => {
   const query = useQuery({
-    queryKey: ["feedback", "garageDetail", garageId],
-    queryFn: () => feedbackServiceV2.getFeedbackForGarageDetail(garageId),
+    queryKey: ["feedback", "garageDetail", garageId, showMore],
+    queryFn: () =>
+      feedbackServiceV2.getFeedbackForGarageDetail({
+        garageId,
+        showMore,
+      }),
     enabled: !!garageId,
   });
   return {
     ...query,
-    data: query.data || [],
+    data: query.data || {},
   };
 };
