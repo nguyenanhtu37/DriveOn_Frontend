@@ -1,4 +1,4 @@
-import { Car, Calendar, Settings, Home, Building, LogOut } from "lucide-react";
+import { Car, Calendar, Settings, Home, Building, LogOut, Heart } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 const menuItems = [
   { id: "vehicles", label: "Vehicles", icon: Car },
   { id: "appointments", label: "Appointments", icon: Calendar },
+  { id: "favorites", label: "Favorites", icon: Heart },
   { id: "settings", label: "Settings", icon: Settings },
   { id: "register-garage", label: "Register Garage", icon: Building },
   { id: "myGarage", label: "My Garage", icon: Home },

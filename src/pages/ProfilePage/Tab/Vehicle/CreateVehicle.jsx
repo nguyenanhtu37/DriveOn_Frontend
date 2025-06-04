@@ -18,7 +18,7 @@ import { toast } from "@/hooks/use-toast";
 import { vehicleSchema } from "@/schema/vehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { Car, Loader2, Upload, X } from "lucide-react";
+import { Car, Loader2, Upload } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-tailwindcss-select";
@@ -225,14 +225,6 @@ export const CreateVehicle = () => {
                           value={progressList[file.name]} 
                           className="mt-1"
                         />
-                        <button
-                          type="button"
-                          onClick={() => removeFile(file)}
-                          className="absolute top-1 right-1 p-1 bg-white/90 hover:bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                          disabled={createVehicle.isLoading}
-                        >
-                          <X size={14} className="text-gray-600" />
-                        </button>
                       </div>
                     ))}
                   </div>
@@ -246,7 +238,6 @@ export const CreateVehicle = () => {
                 <Input
                   id="file"
                   type="file"
-                  multiple
                   accept="image/*"
                   onChange={handleFileChange}
                   className="hidden"
@@ -256,7 +247,7 @@ export const CreateVehicle = () => {
                   htmlFor="file"
                   className="block text-center text-sm text-red-500 hover:text-red-600 cursor-pointer"
                 >
-                  {files.length > 0 ? 'Add more images' : 'Select images'}
+                  {files.length > 0 ? 'Change image' : 'Select image'}
                 </label>
               </CardContent>
             </Card>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Car, EllipsisVertical, Settings, User } from "lucide-react";
+import { ArrowLeft, Car, EllipsisVertical, Settings, User, Heart } from "lucide-react";
 import { Vehicle } from "./Tab/Vehicle/Vehicle";
 import { Setting } from "./Tab/Setting/Setting";
 import { useGetProfile, useUpdateProfile } from "@/app/stores/entity/user";
@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Feedback from "./Tab/UserAppointment/Feedback";
 import UpdateFeedback from "./Tab/UserAppointment/UpdateFeedback";
+import { Favorites } from "./Tab/Favorites/Favorites";
 
 export const ProfilePageV2 = () => {
   const profile = useGetProfile();
@@ -170,7 +171,7 @@ export const ProfilePageV2 = () => {
               </div>
             </div>
             <Tabs value={tab} className="w-full" onValueChange={setTab}>
-              <TabsList className="hidden md:grid grid-cols-5 w-fit ">
+              <TabsList className="hidden md:grid grid-cols-6 w-fit ">
                 <TabsTrigger
                   value="vehicles"
                   className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
@@ -182,6 +183,12 @@ export const ProfilePageV2 = () => {
                   className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
                 >
                   Appointments
+                </TabsTrigger>
+                <TabsTrigger
+                  value="favorites"
+                  className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
+                >
+                  Favorites
                 </TabsTrigger>
                 <TabsTrigger
                   value="settings"
@@ -208,6 +215,9 @@ export const ProfilePageV2 = () => {
 
               {/* Appointments Tab */}
               <UserAppointment />
+
+              {/* Favorites Tab */}
+              <Favorites />
 
               {/* Settings Tab */}
               <Setting />
