@@ -1,36 +1,18 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Bell } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-export const Header = ({ notification, handleOpenNotification }) => {
+export function Header({ notificationComponent }) {
   return (
-    <div className=" sticky top-0 z-30 bg-white flex-1 px-7 py-5 h-fit border-b-[1px] border-black/60 flex items-center justify-between bg-red-100 bg-opacity-50">
-      <div className=" flex w-full justify-between items-center gap-x-2">
-        <SidebarTrigger />
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div
-                className=" relative p-2 rounded-full bg-white shadow-sm hover:bg-box-hover hover:shadow-md cursor-pointer transition-all duration-300 "
-                onClick={handleOpenNotification}
-              >
-                <Bell size={16} />
-                {notification?.length > 0 && (
-                  <div className=" size-3 rounded-full top-0 bg-red-300 absolute right-1"></div>
-                )}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Emergency notifications</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+    <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="flex h-16 items-center justify-between px-6">
+        <div className="flex items-center gap-4">
+          <h1 className="text-xl font-semibold text-gray-900">
+            Garage Management
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Notification Panel */}
+          {notificationComponent}
+        </div>
       </div>
-    </div>
+    </header>
   );
-};
+}
