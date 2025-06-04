@@ -244,12 +244,12 @@ export const GarageProUpgrade = () => {
                   transition={{ delay: 0.3, duration: 0.5 }}
                   className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl"
                 >
-                  Upgrade to
+                  Upgrade to{' '}
                   <motion.span
-                    initial={{ color: "#000" }}
-                    animate={{ color: "#ef4444" }}
+                    initial={{ color: '#000' }}
+                    animate={{ color: '#ef4444' }}
                     transition={{ delay: 0.5, duration: 0.5 }}
-                    className="text-red-500"
+                    className="text-red-500 ml-1"
                   >
                     Garage Pro
                   </motion.span>

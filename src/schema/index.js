@@ -6,10 +6,10 @@ export const formSchema = z.object({
   address: z.string().min(5, "Address must be at least 5 characters"),
   phone: z
     .string()
-    .min(10, "Phone number must be at least 10 characters")
+    .min(10, "Phone number must be at least 10 digits")
     .regex(
-      /^(?:\+84|0)(?:\d{9}|\d{8})$/,
-      "Phone number must contain only digits"
+      /^(84|0[3|5|7|8|9])+([0-9]{8})\b$/,
+      "Invalid phone number. Please enter correct Vietnamese phone number format (eg: 0912345678)"
     ),
   description: z.string().min(10, "Description must be at least 10 characters"),
   openTime: z.string().min(1, "Open time is required"),
@@ -30,10 +30,10 @@ export const staffSchema = z
     name: z.string().min(2, "Garage name must be at least 2 characters"),
     phone: z
       .string()
-      .min(10, "Phone number must be at least 10 characters")
+      .min(10, "Phone number must be at least 10 digits")
       .regex(
-        /^(?:\+84|0)(?:\d{9}|\d{8})$/,
-        "Phone number must contain only digits"
+        /^(84|0[3|5|7|8|9])+([0-9]{8})\b$/,
+        "Invalid phone number. Please enter a valid Vietnamese phone number (e.g., 0912345678)"
       ),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -83,7 +83,7 @@ export const userSchema = z.object({
     .string()
     .regex(
       /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
-      "Phone number must contain only digits"
+      "Invalid phone number. Please enter a valid Vietnamese phone number (e.g., 0912345678)"
     ),
 });
 

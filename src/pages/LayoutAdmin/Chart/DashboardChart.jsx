@@ -169,7 +169,7 @@ function GarageChart({ year }) {
       <CardHeader className="py-1">
         <CardTitle>Garages</CardTitle>
         <CardDescription>
-        Garages that have been operating on the system in {year}
+        Garages that have been operating on the system monthly in {year}
         </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">
@@ -232,7 +232,7 @@ function GarageQuarterChart({ year }) {
       <CardHeader className="py-1">
         <CardTitle>Garages</CardTitle>
         <CardDescription>
-          Number of garages registered quarterly in {year}
+        Garages that have been operating on the system quarterly in {year}
         </CardDescription>
       </CardHeader>
       <ChartContainer config={chartConfig} className="w-full h-[300px]">

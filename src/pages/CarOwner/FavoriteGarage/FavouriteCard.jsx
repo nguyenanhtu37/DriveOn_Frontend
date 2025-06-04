@@ -27,7 +27,7 @@ const FavoriteGarageCard = ({
   };
 
   const handleCardClick = () => {
-    navigate(`/garage/${id}`);
+    navigate(`/garageDetail/${id}`);
   };
 
   return (

@@ -23,10 +23,7 @@ import {
   BarChart,
   Legend,
 } from "recharts";
-import { 
-  useGetDashboardChart,
-  useGetGarageDashboardChartByQuarter 
-} from "@/app/stores/entity/garage";
+import { useGetDashboardChart } from "@/app/stores/entity/garage";
 import { useParams } from "react-router-dom";
 import { useGetAllFeedbacksByGarage } from "@/app/stores/entity/feedbackV2";
 
@@ -103,10 +100,11 @@ const ErrorState = memo(function ErrorState() {
 export function DashboardCharts() {
   const [activeTab, setActiveTab] = useState("revenue");
   const [year, setYear] = useState(new Date().getFullYear());
-  const [viewMode, setViewMode] = useState("month"); // 'month' or 'quarter'
+  const [revenueViewMode, setRevenueViewMode] = useState("month"); // 'month' or 'quarter'
+  const [serviceViewMode] = useState("quarter"); // Always 'quarter' for services
 
   const getViewTitle = () => {
-    if (viewMode === "month") {
+    if (revenueViewMode === "month") {
       return "Monthly View";
     }
     return "Quarterly View";
@@ -129,12 +127,12 @@ export function DashboardCharts() {
             )}
           </div>
           <div className="flex items-center gap-x-4">
-            {activeTab !== 'services' && activeTab !== 'feedback' && (
+            {activeTab === "revenue" && (
               <div className="flex items-center gap-x-2 bg-muted p-1 rounded-lg">
                 <button
-                  onClick={() => setViewMode("month")}
+                  onClick={() => setRevenueViewMode("month")}
                   className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                    viewMode === "month"
+                    revenueViewMode === "month"
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
@@ -142,9 +140,9 @@ export function DashboardCharts() {
                   Monthly
                 </button>
                 <button
-                  onClick={() => setViewMode("quarter")}
+                  onClick={() => setRevenueViewMode("quarter")}
                   className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                    viewMode === "quarter"
+                    revenueViewMode === "quarter"
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
@@ -169,8 +167,8 @@ export function DashboardCharts() {
       </CardHeader>
       <CardContent className="px-2">
         <div className="h-[400px] w-full flex ">
-          {activeTab === "revenue" && <RevenueChart year={year} viewMode={viewMode} />}
-          {activeTab === "services" && <ServiceChart year={year} viewMode={viewMode} />}
+          {activeTab === "revenue" && <RevenueChart year={year} viewMode={revenueViewMode} />}
+          {activeTab === "services" && <ServiceChart year={year} viewMode={serviceViewMode} />}
           {activeTab === "feedback" && <FeedbackChart />}
         </div>
       </CardContent>
@@ -208,31 +206,32 @@ export function DashboardCharts() {
 
 const RevenueChart = memo(function RevenueChart({ year, viewMode }) {
   const { garageId } = useParams();
-  const monthlyData = useGetDashboardChart({ garageId, year });
-  const quarterlyData = useGetGarageDashboardChartByQuarter(garageId, year);
-
-  const charts = viewMode === "month" ? monthlyData : quarterlyData;
+  const chartData = useGetDashboardChart({ 
+    garageId, 
+    year,
+    type: viewMode 
+  });
 
   const converted = useMemo(() => {
-    if (!charts.data?.appointments) return [];
+    if (!chartData.data?.appointments) return [];
     
     if (viewMode === "month") {
-      return charts.data.appointments.map((item) => ({
+      return chartData.data.appointments.map((item) => ({
         month: monthNamesEn[item.month - 1],
         Revenue: item.revenue || 0,
         Appointments: item.totalAppointments || 0,
       }));
     } else {
-      return charts.data.appointments.map((item) => ({
+      return chartData.data.appointments.map((item) => ({
         month: `Quarter ${item.quarter}`,
         Revenue: item.revenue || 0,
         Appointments: item.totalAppointments || 0,
       }));
     }
-  }, [charts.data?.appointments, viewMode]);
+  }, [chartData.data?.appointments, viewMode]);
 
-  if (charts.isLoading) return <LoadingState />;
-  if (charts.isError) return <ErrorState />;
+  if (chartData.isLoading) return <LoadingState />;
+  if (chartData.isError) return <ErrorState />;
 
   return (
     <div className="w-full h-full flex flex-col justify-between">
@@ -373,41 +372,75 @@ const RevenueChart = memo(function RevenueChart({ year, viewMode }) {
 const ServiceChart = memo(function ServiceChart({ year, viewMode }) {
   const { garageId } = useParams();
   const [selectedYear, setSelectedYear] = useState(year);
-  const monthlyData = useGetDashboardChart({ garageId, year: selectedYear });
-  const quarterlyData = useGetGarageDashboardChartByQuarter(garageId, selectedYear);
-
-  // Debug raw data
-  console.log('=== Debug Data ===');
-  console.log('Quarterly Data:', quarterlyData.data);
-
-  const charts = viewMode === "month" ? monthlyData : quarterlyData;
+  const [selectedQuarter, setSelectedQuarter] = useState("total");
+  const chartData = useGetDashboardChart({ 
+    garageId, 
+    year: selectedYear,
+    type: viewMode 
+  });
 
   const servicesData = useMemo(() => {
-    if (!charts.data?.services || !Array.isArray(charts.data.services)) {
+    if (!chartData.data?.services || !Array.isArray(chartData.data.services)) {
       console.log('No valid services data available');
       return [];
     }
 
-    // Tổng hợp dữ liệu từ tất cả các quý
-    const serviceMap = new Map();
+    // Nếu là chế độ quý và đã chọn quý cụ thể
+    if (viewMode === "quarter" && selectedQuarter !== "total") {
+      // Lọc services theo quý đã chọn
+      const quarterServices = chartData.data.services.filter(
+        service => service.quarter === parseInt(selectedQuarter)
+      );
 
-    charts.data.services.forEach(service => {
-      if (!service || !service.serviceName) return;
+      // Gộp dữ liệu cho cùng một service trong quý
+      const serviceMap = new Map();
+      quarterServices.forEach(service => {
+        if (!service.serviceName) return;
 
-      if (!serviceMap.has(service.serviceName)) {
-        serviceMap.set(service.serviceName, {
-          serviceName: service.serviceName,
-          totalUses: 0,
-          fill: stringToColor(service.serviceName)
-        });
-      }
+        if (!serviceMap.has(service.serviceName)) {
+          serviceMap.set(service.serviceName, {
+            serviceName: service.serviceName,
+            totalUses: 0,
+            fill: stringToColor(service.serviceName)
+          });
+        }
 
-      const serviceData = serviceMap.get(service.serviceName);
-      serviceData.totalUses += service.totalUses;
-    });
+        const serviceData = serviceMap.get(service.serviceName);
+        serviceData.totalUses += service.totalUses || 0;
+      });
 
-    return Array.from(serviceMap.values());
-  }, [charts.data?.services]);
+      return Array.from(serviceMap.values());
+    }
+
+    // Nếu là chế độ quý và chọn "total"
+    if (viewMode === "quarter") {
+      // Gộp dữ liệu từ tất cả các quý
+      const serviceMap = new Map();
+      chartData.data.services.forEach(service => {
+        if (!service.serviceName) return;
+
+        if (!serviceMap.has(service.serviceName)) {
+          serviceMap.set(service.serviceName, {
+            serviceName: service.serviceName,
+            totalUses: 0,
+            fill: stringToColor(service.serviceName)
+          });
+        }
+
+        const serviceData = serviceMap.get(service.serviceName);
+        serviceData.totalUses += service.totalUses || 0;
+      });
+
+      return Array.from(serviceMap.values());
+    }
+
+    // Nếu là chế độ tháng
+    return chartData.data.services.map(service => ({
+      serviceName: service.serviceName,
+      totalUses: service.totalUses || 0,
+      fill: stringToColor(service.serviceName)
+    }));
+  }, [chartData.data?.services, selectedQuarter, viewMode]);
 
   const totalUses = useMemo(
     () => servicesData.reduce((acc, curr) => acc + (curr?.totalUses || 0), 0),
@@ -431,16 +464,9 @@ const ServiceChart = memo(function ServiceChart({ year, viewMode }) {
     }, {});
   }, [servicesData]);
 
-  if (charts.isLoading) return <LoadingState />;
-  if (charts.isError) return <ErrorState />;
+  if (chartData.isLoading) return <LoadingState />;
+  if (chartData.isError) return <ErrorState />;
 
-  // Debug final state
-  console.log('View Mode:', viewMode);
-  console.log('Total Uses:', totalUses);
-  console.log('Total Services:', totalServices);
-  console.log('Services Data:', servicesData);
-
-  // If no data available, show message
   if (servicesData.length === 0) {
     return (
       <div className="w-full h-full flex flex-col justify-between">
@@ -450,8 +476,110 @@ const ServiceChart = memo(function ServiceChart({ year, viewMode }) {
               <CardTitle className="text-xl font-semibold">Service Usage Frequency</CardTitle>
               <CardDescription className="text-base">
                 No services found for {selectedYear}
+                {viewMode === "quarter" && selectedQuarter !== "total" ? ` (Q${selectedQuarter})` : ""}
               </CardDescription>
             </div>
+            <div className="flex items-center gap-x-4">
+              {viewMode === "quarter" && (
+                <div className="flex items-center gap-x-2 bg-muted p-1 rounded-lg">
+                  <button
+                    onClick={() => setSelectedQuarter("total")}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                      selectedQuarter === "total"
+                        ? "bg-background text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    Total
+                  </button>
+                  {[1, 2, 3, 4].map((quarter) => (
+                    <button
+                      key={quarter}
+                      onClick={() => setSelectedQuarter(quarter.toString())}
+                      className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                        selectedQuarter === quarter.toString()
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Q{quarter}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                    {selectedYear}
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48 p-0">
+                  <ScrollArea className="max-h-60 overflow-y-auto">
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <DropdownMenuItem
+                        key={i}
+                        className="w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                        onClick={() => setSelectedYear(new Date().getFullYear() - i)}
+                      >
+                        {new Date().getFullYear() - i}
+                      </DropdownMenuItem>
+                    ))}
+                  </ScrollArea>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </CardHeader>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-muted-foreground text-center">
+            <p className="text-lg font-medium">No data available</p>
+            <p className="text-sm">Please select a different year or quarter</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full flex flex-col justify-between">
+      <CardHeader className="py-1">
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-xl font-semibold">Service Usage Frequency</CardTitle>
+            <CardDescription className="text-base">
+              Total Services: {totalServices} | Total Usage: {totalUses} for {selectedYear}
+              {viewMode === "quarter" && selectedQuarter !== "total" ? ` (Q${selectedQuarter})` : ""}
+            </CardDescription>
+          </div>
+          <div className="flex items-center gap-x-4">
+            {viewMode === "quarter" && (
+              <div className="flex items-center gap-x-2 bg-muted p-1 rounded-lg">
+                <button
+                  onClick={() => setSelectedQuarter("total")}
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                    selectedQuarter === "total"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Total
+                </button>
+                {[1, 2, 3, 4].map((quarter) => (
+                  <button
+                    key={quarter}
+                    onClick={() => setSelectedQuarter(quarter.toString())}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                      selectedQuarter === quarter.toString()
+                        ? "bg-background text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    Q{quarter}
+                  </button>
+                ))}
+              </div>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
@@ -474,48 +602,6 @@ const ServiceChart = memo(function ServiceChart({ year, viewMode }) {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </CardHeader>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-muted-foreground text-center">
-            <p className="text-lg font-medium">No data available</p>
-            <p className="text-sm">Please select a different year</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="w-full h-full flex flex-col justify-between">
-      <CardHeader className="py-1">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-xl font-semibold">Service Usage Frequency</CardTitle>
-            <CardDescription className="text-base">
-              Total Services: {totalServices} | Total Usage: {totalUses} for {selectedYear}
-            </CardDescription>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-                {selectedYear}
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48 p-0">
-              <ScrollArea className="max-h-60 overflow-y-auto">
-                {Array.from({ length: 10 }, (_, i) => (
-                  <DropdownMenuItem
-                    key={i}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                    onClick={() => setSelectedYear(new Date().getFullYear() - i)}
-                  >
-                    {new Date().getFullYear() - i}
-                  </DropdownMenuItem>
-                ))}
-              </ScrollArea>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </CardHeader>
       <ChartContainer
@@ -585,7 +671,9 @@ const ServiceChart = memo(function ServiceChart({ year, viewMode }) {
                         y={(viewBox.cy || 0) + 24}
                         className="fill-muted-foreground"
                       >
-                        Total Usage
+                        {viewMode === "quarter" 
+                          ? (selectedQuarter === "total" ? "Total Usage" : `Q${selectedQuarter} Usage`)
+                          : "Total Usage"}
                       </tspan>
                     </text>
                   );

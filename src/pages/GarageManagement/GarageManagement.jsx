@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, useParams } from "react-router-dom";
 import { SidebarGarage } from "./components/SidebarGarage";
-import { Header } from "../LayoutAdmin/components/Header";
+import { Header } from "./components/Header";
 import { NotificationEmergency } from "./components/NotificationEmergency";
 import { useUserStore } from "@/app/stores/view/user";
 import { useEffect, useState } from "react";

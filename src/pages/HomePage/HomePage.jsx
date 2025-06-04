@@ -1,8 +1,8 @@
 import GarageList from "@/pages/HomePage/GarageList/GarageList";
-import CozeBot from "@/components/CozeBot";
+// import CozeBot from "@/components/CozeBot";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { MessageCircle } from "lucide-react";
+// import { MessageCircle } from "lucide-react";
 
 import GarageMap from "./GarageMap/GarageMap";
 import { useTabStore } from "@/app/stores/view/tab";
@@ -17,9 +17,9 @@ function HomePage() {
     setDialog({ id: "DialogRecuse" });
   };
 
-  const handleClickChatbot = () => {
-    setDialog({ id: "DialogChatbot" });
-  };
+  // const handleClickChatbot = () => {
+    // setDialog({ id: "DialogChatbot" });
+  // };
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] ">
@@ -47,17 +47,24 @@ function HomePage() {
             >
               {/* Animated rim: zoom in/out and color shift */}
               <span
-                className="absolute inset-0 w-full h-full rounded-full pointer-events-none z-[-1] animate-emergency-zoom"
+                className="absolute inset-0 w-full h-full rounded-full pointer-events-none z-[-1]"
                 style={{
                   background:
-                    "radial-gradient(circle, rgba(239,68,68,0.22) 40%, rgba(251,146,60,0.13) 70%, transparent 100%)",
-                  transition: "filter 0.3s",
+                    "radial-gradient(circle, rgba(239,68,68,0.3) 40%, rgba(251,146,60,0.2) 70%, transparent 100%)",
+                  transition: "all 0.3s ease-in-out",
+                  animation: "emergencyPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
                 }}
               />
               {/* Circle Button */}
-              <span className="relative flex items-center justify-center bg-gradient-to-br from-red-600 via-red-500 to-orange-400 group-hover:from-red-700 group-hover:via-red-600 group-hover:to-orange-500 text-white font-bold w-20 h-20 rounded-full shadow-xl text-2xl transition-all duration-300 ring-2 ring-red-200/40 group-hover:ring-orange-200/40">
+              <span className="relative flex items-center justify-center bg-gradient-to-br from-red-600 via-red-500 to-orange-400 group-hover:from-red-700 group-hover:via-red-600 group-hover:to-orange-500 text-white font-bold w-20 h-20 rounded-full shadow-xl text-2xl transition-all duration-300 ring-2 ring-red-200/40 group-hover:ring-orange-200/40 hover:shadow-2xl hover:shadow-red-500/30 emergency-button">
                 {/* Bigger Emergency Phone Icon, more visible */}
-                <svg width="40" height="40" fill="none" viewBox="0 0 24 24">
+                <svg 
+                  width="40" 
+                  height="40" 
+                  fill="none" 
+                  viewBox="0 0 24 24"
+                  className="transform transition-transform duration-300 emergency-icon"
+                >
                   <circle
                     cx="12"
                     cy="12"
@@ -74,6 +81,7 @@ function HomePage() {
                   />
                   <rect x="10.5" y="6.5" width="3" height="2" rx="1" fill="#ef4444" />
                 </svg>
+                <span className="absolute inset-0 rounded-full emergency-border-beam"></span>
               </span>
             </div>
           </TooltipTrigger>
@@ -83,6 +91,93 @@ function HomePage() {
         </Tooltip>
       </TooltipProvider>
       {/* {localStorage.getItem("token") && <CozeBot />} */}
+      <style>{`
+        @keyframes emergencyPulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.6;
+          }
+          50% {
+            transform: scale(1.15);
+            opacity: 0.9;
+          }
+        }
+
+        @keyframes buttonPulse {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+        }
+
+        .emergency-button {
+          position: relative;
+          overflow: hidden;
+          animation: buttonPulse 2s ease-in-out infinite;
+        }
+
+        .emergency-border-beam {
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(239, 68, 68, 0.4),
+            rgba(251, 146, 60, 0.4),
+            transparent
+          );
+          background-size: 200% 100%;
+          animation: borderBeam 2.5s linear infinite;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .emergency-button::after {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          background: conic-gradient(
+            from 0deg at 50% 50%,
+            transparent 0deg,
+            rgba(239, 68, 68, 0.5) 60deg,
+            rgba(251, 146, 60, 0.5) 120deg,
+            transparent 180deg,
+            transparent 360deg
+          );
+          border-radius: inherit;
+          animation: rotate 3s linear infinite;
+          z-index: -1;
+        }
+
+        .emergency-icon {
+          filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.3));
+        }
+
+        @keyframes rotate {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .emergency-button:hover {
+          animation: buttonPulse 1s ease-in-out infinite;
+        }
+
+        .emergency-button:hover .emergency-icon {
+          filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5));
+        }
+
+        .emergency-button:hover .emergency-border-beam {
+          animation: borderBeam 2s linear infinite;
+        }
+
+        .emergency-button:hover::after {
+          animation: rotate 2s linear infinite;
+        }
+      `}</style>
     </div>
   );
 }
