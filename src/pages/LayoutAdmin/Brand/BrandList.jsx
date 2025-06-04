@@ -5,9 +5,8 @@ import { useGetBrands } from "@/app/stores/entity/brandV2";
 import { addBrand, updateBrand, deleteBrand } from "@/app/services/brand";
 
 const BrandList = () => {
-  const [page, setPage] = useState(1);
   const limit = 12;
-  const { data: brands, pagination, isLoading, refetch } = useGetBrands(page, limit);
+  const { data: brands, isLoading, refetch } = useGetBrands(1, limit);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -46,10 +45,6 @@ const BrandList = () => {
     refetch();
   };
 
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-  };
-
   return (
     <div className="p-0 min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-200">
       <div className="max-w-6xl mx-auto py-10">
@@ -77,39 +72,16 @@ const BrandList = () => {
             <span className="text-gray-400 text-2xl font-semibold">No brands found.</span>
           </div>
         ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
-              {brands.map((brand) => (
-                <BrandCard
-                  key={brand._id}
-                  brand={brand}
-                  onEdit={handleEdit}
-                  onDelete={() => handleDeleteClick(brand)}
-                />
-              ))}
-            </div>
-            
-            {/* Pagination */}
-            <div className="mt-8 flex justify-center items-center gap-2">
-              <button
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page === 1}
-                className="px-4 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-              >
-                Previous
-              </button>
-              <span className="px-4 py-2">
-                Page {page} of {pagination.totalPages}
-              </span>
-              <button
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page >= pagination.totalPages}
-                className="px-4 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-              >
-                Next
-              </button>
-            </div>
-          </>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+            {brands.map((brand) => (
+              <BrandCard
+                key={brand._id}
+                brand={brand}
+                onEdit={handleEdit}
+                onDelete={() => handleDeleteClick(brand)}
+              />
+            ))}
+          </div>
         )}
 
         {dialogOpen && (
