@@ -104,29 +104,23 @@ export const Favorites = () => {
                     className="w-full h-40 object-cover"
                     alt="Garage"
                   />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2 h-8 w-8 text-gray-500 hover:text-red-500 bg-white/80 hover:bg-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setGarageToDelete(garage);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
                 </div>
                 <div className="px-4 py-3">
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="font-medium text-base text-gray-800 line-clamp-1">
                       {garage.name}
                     </h3>
-                    
-                    
-                    
-                    
-                    
-                    
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-gray-500 hover:text-red-500"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setGarageToDelete(garage);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-gray-500">
