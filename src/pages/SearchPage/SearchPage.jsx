@@ -22,6 +22,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { List, MapPin, X } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useSetDialogId } from "@/app/stores/view/dialog";
 
 const SearchPage = () => {
   useGeolocation();
@@ -31,6 +38,12 @@ const SearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [direction, setDirection] = useState();
   const [garages, setGarages] = useState([]);
+
+  const setDialog = useSetDialogId();
+
+  const handleClickRecuse = () => {
+    setDialog({ id: "DialogRecuse" });
+  };
 
   const {
     keyword,
@@ -218,6 +231,66 @@ const SearchPage = () => {
               </Drawer>
             )}
           </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  className="fixed right-16 bottom-16 z-50 group hidden md:flex cursor-pointer"
+                  onClick={handleClickRecuse}
+                >
+                  {/* Animated rim: zoom in/out and color shift */}
+                  <span
+                    className="absolute inset-0 w-full h-full rounded-full pointer-events-none z-[-1]"
+                    style={{
+                      background:
+                        "radial-gradient(circle, rgba(239,68,68,0.3) 40%, rgba(251,146,60,0.2) 70%, transparent 100%)",
+                      transition: "all 0.3s ease-in-out",
+                      animation:
+                        "emergencyPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                    }}
+                  />
+                  {/* Circle Button */}
+                  <span className="relative flex items-center justify-center bg-gradient-to-br from-red-600 via-red-500 to-orange-400 group-hover:from-red-700 group-hover:via-red-600 group-hover:to-orange-500 text-white font-bold w-20 h-20 rounded-full shadow-xl text-2xl transition-all duration-300 ring-2 ring-red-200/40 group-hover:ring-orange-200/40 hover:shadow-2xl hover:shadow-red-500/30 emergency-button">
+                    {/* Bigger Emergency Phone Icon, more visible */}
+                    <svg
+                      width="40"
+                      height="40"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      className="transform transition-transform duration-300 emergency-icon"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11"
+                        fill="#fff"
+                        stroke="#ef4444"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M17.707 15.293l-2.387-2.387a1 1 0 0 0-1.414 0l-.793.793a8.001 8.001 0 0 1-3.172-3.172l.793-.793a1 1 0 0 0 0-1.414l-2.387-2.387a1 1 0 0 0-1.414 0l-.586.586c-.781.781-.781 2.047 0 2.828 2.343 2.343 5.515 5.515 7.858 7.858.781.781 2.047.781 2.828 0l.586-.586a1 1 0 0 0 0-1.414z"
+                        fill="#ef4444"
+                        stroke="#ef4444"
+                        strokeWidth="1.2"
+                      />
+                      <rect
+                        x="10.5"
+                        y="6.5"
+                        width="3"
+                        height="2"
+                        rx="1"
+                        fill="#ef4444"
+                      />
+                    </svg>
+                    <span className="absolute inset-0 rounded-full emergency-border-beam"></span>
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Emergency Assistance</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
 
         {/* Footer and mobile nav */}

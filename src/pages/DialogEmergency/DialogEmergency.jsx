@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FoundGarage } from "./DialogFoundGarage";
+import { FoundGarage } from "./FoundGarage";
 
 const DialogEmergency = () => {
   const [searchProgress, setSearchProgress] = useState(0);
@@ -96,13 +96,13 @@ const DialogEmergency = () => {
     <Dialog open={isOpen}>
       <DialogContent
         hiddenClose={true}
-        className="p-0 max-w-xl bg-white border-none"
+        className="p-0 max-w-xl bg-transparent outline-none border-none"
       >
         {foundGarage ? (
           <FoundGarage foundGarage={foundGarage} handleCancel={handleCancel} />
         ) : (
           <div>
-            <Card className="w-full backdrop-blur-xl bg-white/60 border border-white/20 shadow-2xl">
+            <Card className="w-full bg-white border border-white/20 shadow-2xl">
               <CardContent className="p-8 text-center">
                 <div className="relative mb-8">
                   <div className="w-24 h-24 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto shadow-2xl">
