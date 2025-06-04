@@ -195,7 +195,7 @@ function GarageChart({ year }) {
             tickMargin={8}
             tickFormatter={(value) => value}
             width={30}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <ChartTooltip
@@ -254,7 +254,7 @@ function GarageQuarterChart({ year }) {
             tickMargin={8}
             tickFormatter={(value) => value}
             width={30}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <YAxis
@@ -262,7 +262,7 @@ function GarageQuarterChart({ year }) {
             axisLine={false}
             tickMargin={8}
             width={30}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <ChartTooltip
@@ -370,7 +370,7 @@ function ServiceChart() {
             axisLine={false}
             tickMargin={8}
             width={40}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
             tick={{ 
               fontSize: 12,
@@ -485,7 +485,7 @@ function TransactionChart({ year }) {
             tickMargin={8}
             tickFormatter={(value) => value}
             width={30}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <YAxis
@@ -496,7 +496,7 @@ function TransactionChart({ year }) {
             tickMargin={8}
             tickFormatter={formatVND}
             width={80}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <ChartTooltip
@@ -613,7 +613,7 @@ function TransactionQuarterChart({ year }) {
             tickMargin={8}
             tickFormatter={(value) => value}
             width={30}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <YAxis
@@ -622,7 +622,7 @@ function TransactionQuarterChart({ year }) {
             axisLine={false}
             tickMargin={8}
             width={30}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <YAxis
@@ -633,7 +633,7 @@ function TransactionQuarterChart({ year }) {
             tickMargin={8}
             tickFormatter={formatVND}
             width={80}
-            domain={["auto", "auto"]}
+            domain={[0, "auto"]}
             allowDataOverflow={false}
           />
           <ChartTooltip
