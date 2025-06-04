@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   FormField,
   FormItem,
@@ -29,6 +28,7 @@ const generateTimeOptions = () => {
       times.push({ value: timeString, label: displayTime });
     }
   }
+  times.push({ value: "23:59", label: "11:59 PM" });
   return times;
 };
 
@@ -50,47 +50,11 @@ const days = [
   { value: "Sunday", label: "Sunday", short: "Sun" },
 ];
 
-const quickSelections = [
-  {
-    label: "Weekdays",
-    days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
-    icon: "🏢",
-    color: "red",
-  },
-  {
-    label: "Weekend",
-    days: ["saturday", "sunday"],
-    icon: "🎉",
-    color: "purple",
-  },
-  {
-    label: "All Days",
-    days: [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
-    ],
-    icon: "📅",
-    color: "blue",
-  },
-];
-
 const timeOptions = generateTimeOptions();
 
 export function BusinessDetailsStep({ form }) {
   const openTime = form.watch("openTime");
   const closeTime = form.watch("closeTime");
-
-  const handleQuickSelect = (dayValues) => {
-    const newDays = dayValues
-      .map((value) => days.find((day) => day.value === value))
-      .filter(Boolean);
-    form.setValue("openDays", newDays);
-  };
 
   const isWeekend = (dayValue) => {
     return dayValue === "saturday" || dayValue === "sunday";
