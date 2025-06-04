@@ -73,3 +73,14 @@ export const useGetServiceDetailByKeyword = () => {
   });
   return mutation;
 };
+
+export const useGetServiceForGarageDetail = (payload) => {
+  const query = useQuery({
+    queryKey: ["serviceGarageDetail", payload],
+    queryFn: () => serviceDetailService.viewServiceForGarageDetail(payload),
+  });
+  return {
+    ...query,
+    data: query.data ?? {},
+  };
+};

@@ -1,4 +1,4 @@
-import { useGetService } from "@/app/stores/entity/service-detail";
+import { useGetServiceForGarageDetail } from "@/app/stores/entity/service-detail";
 import { useParams } from "react-router-dom";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,12 +8,18 @@ const Service = () => {
   const { garageId } = useParams();
   const isMobile = useIsMobile();
   const perView = isMobile ? 1.5 : 4;
-  const serviceGarage = useGetService(garageId);
+  const serviceGarage = useGetServiceForGarageDetail({
+    id: garageId,
+    limit: 10,
+    page: 1,
+  });
   const setDialogId = useSetDialogId();
 
   const handleClick = (service) => {
     setDialogId({ id: "ServiceDetail", data: service });
   };
+
+  const services = serviceGarage.data?.serviceDetails;
   if (serviceGarage.isLoading) return;
   return (
     <Swiper
@@ -21,7 +27,7 @@ const Service = () => {
       spaceBetween={15}
       className="mySwiper w-full"
     >
-      {serviceGarage.data.map((service) => (
+      {services?.map((service) => (
         <SwiperSlide key={service._id} onClick={() => handleClick(service)}>
           <div className=" flex flex-col rounded-xl overflow-hidden gap-y-2">
             <img

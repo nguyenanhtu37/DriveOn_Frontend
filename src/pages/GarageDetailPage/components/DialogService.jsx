@@ -5,14 +5,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ArrowRightIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import { useGetService } from "@/app/stores/entity/service-detail";
+import { useGetServiceForGarageDetail } from "@/app/stores/entity/service-detail";
 import { useParams } from "react-router-dom";
 import ServiceCard from "./ServiceCard";
 import { useDialogOpen, useSetDialogId } from "@/app/stores/view/dialog";
+import { useEffect, useState } from "react";
 
 export const DialogService = () => {
   const { garageId } = useParams();
-  const service = useGetService(garageId);
+  const [page, setPage] = useState(1);
+  const payload = {
+    id: garageId,
+    page: page,
+    limit: 6,
+  };
+  const serviceData = useGetServiceForGarageDetail(payload);
   const isOpen = useDialogOpen("GarageService");
   const setDialogId = useSetDialogId();
 
@@ -25,6 +32,27 @@ export const DialogService = () => {
       setDialogId({ id: null, data: null });
     }
   };
+
+  const serviceDetails = serviceData.data?.serviceDetails || [];
+  const { currentPage, hasNextPage, hasPrevPage } = serviceData.data
+    ?.pagination ?? {
+    currentPage: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+  };
+
+  const handleNextPage = () => {
+    setPage((prev) => prev + 1);
+  };
+  const handlePrevPage = () => {
+    setPage((prev) => prev - 1);
+  };
+
+  useEffect(() => {
+    if (serviceData.isSuccess) {
+      setPage(currentPage);
+    }
+  }, [serviceData.isSuccess, currentPage]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -44,23 +72,37 @@ export const DialogService = () => {
                 List services of garage
               </span>
               <span className=" text-sm font-semibold text-[#1c1c1c]">
-                {service.data?.length} services
+                {serviceDetails?.length} services
               </span>
             </div>
           </div>
-          <div className=" w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6">
-            {service.data?.map((item) => (
-              <ServiceCard key={item._id} service={item} />
-            ))}
-          </div>
+          {serviceData.isLoading ? (
+            <div className="w-full flex justify-center p-8">
+              <p>Loading services...</p>
+            </div>
+          ) : (
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6">
+              {serviceDetails?.map((item) => (
+                <ServiceCard key={item._id} service={item} />
+              ))}
+            </div>
+          )}
         </div>
 
         <DialogFooter className={"flex flex-row justify-between items-center "}>
           <div className=" gap-x-2 flex items-center">
-            <button className=" text-sm font-semibold text-[#1c1c1c] hover:text-[#1c1c1c]/70 transition-colors ease-in-out duration-100 rounded-full border border-[#1c1c1c]/10 p-2">
+            <button
+              disabled={!hasPrevPage}
+              onClick={handlePrevPage}
+              className=" text-sm font-semibold text-[#1c1c1c] hover:text-[#1c1c1c]/70 transition-colors ease-in-out duration-100 rounded-full border border-[#1c1c1c]/10 p-2"
+            >
               <ChevronLeft />
             </button>
-            <button className=" text-sm font-semibold text-[#1c1c1c] hover:text-[#1c1c1c]/70 transition-colors ease-in-out duration-100 rounded-full border border-[#1c1c1c]/10 p-2 ">
+            <button
+              disabled={!hasNextPage}
+              onClick={handleNextPage}
+              className=" text-sm font-semibold text-[#1c1c1c] hover:text-[#1c1c1c]/70 transition-colors ease-in-out duration-100 rounded-full border border-[#1c1c1c]/10 p-2 "
+            >
               <ChevronRight />
             </button>
           </div>
