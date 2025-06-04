@@ -159,7 +159,7 @@ export function DashboardCharts() {
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="revenue" className="text-sm">Revenue & Appointment</TabsTrigger>
                 <TabsTrigger value="services" className="text-sm">Services</TabsTrigger>
-                <TabsTrigger value="feedback" className="text-sm">Customer Ratings</TabsTrigger>
+                <TabsTrigger value="feedback" className="text-sm">Feedbacks</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -268,7 +268,7 @@ const RevenueChart = memo(function RevenueChart({ year, viewMode }) {
             axisLine={false}
             tickMargin={8}
             width={60}
-            domain={["auto", "auto"]}
+            domain={[0, 'auto']}
             allowDataOverflow={false}
             tickFormatter={(value) => {
               if (value >= 1000000) {
@@ -286,7 +286,7 @@ const RevenueChart = memo(function RevenueChart({ year, viewMode }) {
             axisLine={false}
             tickMargin={8}
             width={60}
-            domain={["auto", "auto"]}
+            domain={[0, 'auto']}
             allowDataOverflow={false}
           />
           <ChartTooltip
@@ -791,7 +791,7 @@ const FeedbackChart = memo(function FeedbackChart() {
       <CardHeader className="py-1">
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-y-1">
-            <CardTitle className="text-xl font-semibold">Customer Ratings</CardTitle>
+            <CardTitle className="text-xl font-semibold">Feedbacks</CardTitle>
             <CardDescription className="text-base">
               {totalFeedbacks === 0 
                 ? "No customer ratings available"
