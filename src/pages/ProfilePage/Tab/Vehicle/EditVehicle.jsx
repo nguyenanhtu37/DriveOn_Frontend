@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -28,35 +28,27 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
   const queryClient = useQueryClient();
   const [currentImages, setCurrentImages] = useState([]);
 
-  // Prepare brand list and current brand regardless of loading state
-  const brandList = brands.data?.map((brand) => ({
-    value: brand._id,
-    label: brand.brandName,
-  })) || [];
+  const brandList =
+    brands.data?.map((brand) => ({
+      value: brand._id,
+      label: brand.brandName,
+    })) || [];
 
-  const currentBrand = brandList.find((b) =>
-    b.value === vehicle?.carBrand || b.value === vehicle?.carBrand?._id
-  );
+  const currentBrand =
+    brandList.find(
+      (b) => b.value === vehicle?.carBrand || b.value === vehicle?.carBrand?._id
+    ) || null;
 
   const form = useForm({
     resolver: zodResolver(updateVehicleSchema),
     defaultValues: {
-      carBrand: currentBrand || null,
+      carBrand: currentBrand,
       carName: vehicle?.carName || "",
       carPlate: vehicle?.carPlate || "",
       carYear: vehicle?.carYear || "",
       carColor: vehicle?.carColor || "",
     },
   });
-
-  useEffect(() => {
-    if (brandList.length > 0 && vehicle) {
-      const currentBrand = brandList.find(
-        (b) => b.value === vehicle?.carBrand || b.value === vehicle?.carBrand?._id
-      );
-      form.setValue("carBrand", currentBrand || null);
-    }
-  }, [brandList, vehicle, form]);
 
   useEffect(() => {
     if (vehicle?.carImages) {
@@ -66,7 +58,6 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
 
   const isSubmitting = form.formState.isSubmitting || updateVehicle.isLoading;
 
-  // Only return after all hooks are declared
   if (brands.isLoading) return <div>Loading brands...</div>;
   if (brands.isError) return <div>Error loading brands</div>;
   if (!open) return null;
@@ -84,16 +75,13 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
 
     let uploadedUrls = [];
 
-    // Nếu có ảnh mới, upload và chỉ dùng ảnh mới
     if (files.length > 0) {
       const newImages = await handleUpload();
       uploadedUrls = [...newImages];
     } else {
-      // Nếu không có ảnh mới, dùng ảnh cũ còn lại
       uploadedUrls = [...currentImages];
     }
 
-    // Kiểm tra lại lần nữa
     if (uploadedUrls.length === 0) {
       toast({
         title: "At least 1 car photo required",
@@ -147,10 +135,9 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="w-full max-w-md max-h-[90vh] overflow-y-auto p-4 rounded-xl">
+        <DialogTitle className="text-base font-semibold">Edit Vehicle</DialogTitle>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-3 text-sm">
-            <h2 className="text-base font-semibold">Edit Vehicle</h2>
-
             <FormField
               control={form.control}
               name="carBrand"
@@ -164,7 +151,7 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
                       options={brandList}
                       isMultiple={false}
                       primaryColor="red"
-                      placeholder={currentBrand?.label || "Select a brand"}
+                      placeholder="Select a brand"
                     />
                   </FormControl>
                   <FormMessage />
