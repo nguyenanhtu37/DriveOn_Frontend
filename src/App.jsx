@@ -9,8 +9,9 @@ import Modal from "./components/Modal";
 import CustomToast from "./components/CustomToast";
 import { Toaster } from "./components/ui/toaster";
 import { registerSocketListeners } from "./lib/socketListener";
-import { checkAuth, useUserStore } from "./app/stores/view/user";
+import { checkAuth, connectSocket, useUserStore } from "./app/stores/view/user";
 import CozeBot from "./components/CozeBot";
+import { useSocketListeners } from "./hooks/useSocketListeners ";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,18 +80,17 @@ function App() {
     setModalOpen(false);
   };
 
-  const { user } = useUserStore();
+  const { user, sessionId, socket } = useUserStore();
+
+  useEffect(() => {
+    connectSocket();
+  }, [user, sessionId]);
 
   useEffect(() => {
     checkAuth();
-  }, [user]);
+  }, []);
 
-  const { socket } = useUserStore();
-  useEffect(() => {
-    if (socket) {
-      registerSocketListeners(queryClient, socket);
-    }
-  }, [socket]);
+  useSocketListeners(socket, queryClient);
 
   return (
     <QueryClientProvider client={queryClient}>

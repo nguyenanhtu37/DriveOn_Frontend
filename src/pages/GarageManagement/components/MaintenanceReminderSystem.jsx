@@ -52,7 +52,6 @@ export default function MaintenanceReminderSystem() {
     setAppointmentSelected(appointment);
   };
 
-  // reduce the appointment data to 2 arrays: one for upcoming reminders and one for processed reminders with isCalled //
   const upcomingReminders = appointments.filter(
     (appointment) => appointment.isCalled === false
   );
@@ -62,7 +61,8 @@ export default function MaintenanceReminderSystem() {
   );
 
   const handleCallAppointment = (appointment) => {
-    mutation.mutate(appointment._id, {
+    const payload = { appointmentId: appointment._id, isCalled: true };
+    mutation.mutate(payload, {
       onSuccess: () => {
         queryClient.invalidateQueries([
           "appointment",

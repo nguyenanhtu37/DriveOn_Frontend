@@ -24,7 +24,11 @@ export const useUserStore = create(
     }),
     {
       name: "user-storage",
-      partialize: (state) => ({ user: state.user, garageId: state.garageId }),
+      partialize: (state) => ({
+        user: state.user,
+        garageId: state.garageId,
+        sessionId: state.sessionId,
+      }),
     } // Only persist user
   )
 );
@@ -48,11 +52,9 @@ export const connectSocket = () => {
     socketConnected: socket?.connected,
   });
 
-  if (!user || socket?.connected) return;
-
   try {
     const newSocket = io(BASE_URL, {
-      query: { userId: user._id, garageId: garageId },
+      query: { userId: user?._id ?? sessionId, garageId: garageId },
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
@@ -103,18 +105,12 @@ export const userLogout = () => {
 };
 
 export const checkAuth = () => {
-  const user = getUser();
   const { sessionId } = useUserStore.getState();
 
-  if (user) {
-    connectSocket();
-  } else {
-    if (!sessionId) {
-      const newSessionId = crypto.randomUUID();
-      useUserStore.getState().setSessionId(newSessionId);
-    } else {
-      console.log("Existing sessionId:", sessionId);
-    }
+  if (!sessionId) {
+    const newSessionId = crypto.randomUUID();
+    useUserStore.getState().setSessionId(newSessionId);
+    console.log("New sessionId created:", newSessionId);
   }
 
   return true;
