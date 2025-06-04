@@ -18,12 +18,15 @@ import useUpload from "@/app/services/Cloudinary/upload";
 import Select from "react-tailwindcss-select";
 import { toast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
-  const { handleUpload, files } = useUpload();
+  const { handleUpload, files, setFiles, handleFileChange } = useUpload();
   const updateVehicle = useUpdateVehicle();
-  const brands = useGetBrands();
+  const brands = useGetBrands(1, 1000);
   const queryClient = useQueryClient();
+  const [currentImages, setCurrentImages] = useState([]);
 
   // Prepare brand list and current brand regardless of loading state
   const brandList = brands.data?.map((brand) => ({
@@ -46,6 +49,21 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
     },
   });
 
+  useEffect(() => {
+    if (brandList.length > 0 && vehicle) {
+      const currentBrand = brandList.find(
+        (b) => b.value === vehicle?.carBrand || b.value === vehicle?.carBrand?._id
+      );
+      form.setValue("carBrand", currentBrand || null);
+    }
+  }, [brandList, vehicle, form]);
+
+  useEffect(() => {
+    if (vehicle?.carImages) {
+      setCurrentImages(vehicle.carImages);
+    }
+  }, [vehicle]);
+
   const isSubmitting = form.formState.isSubmitting || updateVehicle.isLoading;
 
   // Only return after all hooks are declared
@@ -64,9 +82,26 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
       return;
     }
 
-    let uploadedUrls = Array.isArray(vehicle.carImages) ? vehicle.carImages : [];
+    let uploadedUrls = [];
+
+    // Nếu có ảnh mới, upload và chỉ dùng ảnh mới
     if (files.length > 0) {
-      uploadedUrls = await handleUpload();
+      const newImages = await handleUpload();
+      uploadedUrls = [...newImages];
+    } else {
+      // Nếu không có ảnh mới, dùng ảnh cũ còn lại
+      uploadedUrls = [...currentImages];
+    }
+
+    // Kiểm tra lại lần nữa
+    if (uploadedUrls.length === 0) {
+      toast({
+        title: "At least 1 car photo required",
+        description: "Please select at least 1 vehicle photo.",
+        variant: "destructive",
+        duration: 2000,
+      });
+      return;
     }
 
     const updateData = {
@@ -90,7 +125,6 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
           onClose();
         },
         onError: (error) => {
-          console.error("EditVehicleDialog - Update vehicle error:", error);
           toast({
             title: "Error updating vehicle",
             description: error.message || "Something went wrong",
@@ -100,6 +134,14 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
         },
       }
     );
+  };
+
+  const removeImage = (index) => {
+    setFiles(files.filter((_, i) => i !== index));
+  };
+
+  const removeExistingImage = (index) => {
+    setCurrentImages(currentImages.filter((_, i) => i !== index));
   };
 
   return (
@@ -185,6 +227,61 @@ export const EditVehicleDialog = ({ vehicle, open, onClose }) => {
                 </FormItem>
               )}
             />
+
+            {/* Existing Images */}
+            {currentImages.length > 0 && (
+              <div className="space-y-2">
+                <FormLabel>Current Image</FormLabel>
+                <div className="grid grid-cols-2 gap-2">
+                  {currentImages.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image}
+                        alt={`Vehicle ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeExistingImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* New Images Upload */}
+            <div className="space-y-2">
+              <FormLabel>New Image</FormLabel>
+              <div className="grid grid-cols-2 gap-2">
+                {files.map((file, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <Input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileChange}
+                className="mt-2"
+              />
+            </div>
 
             <div className="flex justify-end gap-2 mt-4">
               <Button

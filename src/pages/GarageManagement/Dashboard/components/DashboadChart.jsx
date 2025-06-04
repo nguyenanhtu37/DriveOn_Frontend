@@ -123,7 +123,7 @@ export function DashboardCharts() {
             ) : activeTab === 'services' ? (
               <CardTitle>Service Analysis</CardTitle>
             ) : (
-              <CardTitle>Customer Ratings</CardTitle>
+              <CardTitle>Feedbacks</CardTitle>
             )}
           </div>
           <div className="flex items-center gap-x-4">
