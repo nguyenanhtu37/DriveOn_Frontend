@@ -53,7 +53,6 @@ export const EditService = ({ serviceDetail, setIsEdit }) => {
       description: serviceDetail.data.description,
       price: String(serviceDetail.data.price / 1000),
       duration: String(serviceDetail.data.duration),
-      warranty: serviceDetail.data.warranty,
       serviceSystem: serviceDetail.data.service._id,
     },
   });
@@ -71,7 +70,6 @@ export const EditService = ({ serviceDetail, setIsEdit }) => {
       images: images.concat(imagesUpload),
     };
 
-    console.log(serviceUpdate);
     editService.mutate(
       { id: serviceDetail.data._id, service: serviceUpdate },
       {
@@ -270,23 +268,6 @@ export const EditService = ({ serviceDetail, setIsEdit }) => {
                         className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 h-12"
                         type="number"
                         min={0}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="warranty"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="text-md">Warranty</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={serviceDetail.data.warranty}
-                        {...field}
-                        className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 h-12"
                       />
                     </FormControl>
                     <FormMessage />
