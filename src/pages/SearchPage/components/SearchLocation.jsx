@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { MapPin, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const SearchLocation = React.forwardRef(
@@ -113,11 +113,8 @@ const SearchLocation = React.forwardRef(
                       setIsFetched(true);
                     }}
                   >
-                    <div className="p-1 bg-blue-100 size-8 rounded-xl overflow-hidden">
-                      <img
-                        src="/public/direction.png"
-                        className="size-full object-cover"
-                      />
+                    <div className="p-1 bg-blue-100 size-8 rounded-xl overflow-hidden flex items-center justify-center">
+                      <MapPin size={20} className="text-blue-600" />
                     </div>
                     <span className="text-md font-medium">Near me</span>
                   </div>
@@ -128,11 +125,8 @@ const SearchLocation = React.forwardRef(
                         className="flex items-center justify-start gap-x-2 px-2 py-4 rounded-md hover:bg-box-hover cursor-pointer"
                         onClick={() => handleClickProvince(province)}
                       >
-                        <div className="p-1 bg-green-100 size-8 rounded-xl overflow-hidden">
-                          <img
-                            src="/public/direction.png"
-                            className="size-full object-cover"
-                          />
+                        <div className="p-1 bg-green-100 size-8 rounded-xl overflow-hidden flex items-center justify-center">
+                          <MapPin size={20} className="text-green-600" />
                         </div>
                         <span className="text-md font-medium">
                           {province.name}

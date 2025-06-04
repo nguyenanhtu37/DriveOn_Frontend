@@ -61,6 +61,15 @@ const Feedback = () => {
     );
   };
 
+  const disableSubmitButton = () => {
+    if (activeTab === "general") {
+      return generalRating === 0;
+    } else if (activeTab === "services") {
+      return serviceFeedbacks.some((sf) => sf.rating === 0);
+    }
+    return true;
+  };
+
   const handleSubmit = () => {
     let payload = {};
     if (activeTab === "general") {
@@ -350,7 +359,9 @@ const Feedback = () => {
           <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Submit Feedback</Button>
+          <Button disabled={disableSubmitButton()} onClick={handleSubmit}>
+            Submit Feedback
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

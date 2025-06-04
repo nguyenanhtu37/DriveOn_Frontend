@@ -68,7 +68,8 @@ export const AppointmentReminderDialog = ({
   const urgencyClass = getUrgencyColor(appointment.daysLeft);
 
   const handleCallAppointment = () => {
-    mutation.mutate(appointment._id, {
+    const payload = { appointmentId: appointment._id, isCalled: true };
+    mutation.mutate(payload, {
       onSuccess: () => {
         queryClient.invalidateQueries([
           "appointment",

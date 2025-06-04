@@ -5,6 +5,19 @@ export const viewServiceGarage = async (garageId) => {
   return response.data;
 };
 
+export const viewServiceForGarageDetail = async (payload) => {
+  const response = await axios.get(
+    `service-detail/garageDetail/${payload.id}`,
+    {
+      params: {
+        limit: payload.limit,
+        page: payload.page,
+      },
+    }
+  );
+  return response.data;
+};
+
 export const addServiceGarage = async (service) => {
   const response = await axios.post(`service-detail/add`, service);
   return response.data;
