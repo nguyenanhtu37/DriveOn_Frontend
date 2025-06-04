@@ -86,7 +86,7 @@ const Search = () => {
     <div
       ref={boxRef}
       className={cn(
-        " transition-all w-[100%] md:w-[65%] lg:w-[55%]  mx-auto  "
+        " transition-all w-[100%] md:w-[65%] lg:w-[55%]  mx-auto mb-2  "
       )}
     >
       <div

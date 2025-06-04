@@ -30,13 +30,15 @@ function Navbar() {
   };
 
   return (
-    <div className="relative w-full flex flex-col items-center  ">
-      <div className="relative w-full h-16 xl:h-20 px-4 md:px-10 flex justify-between items-center transition-all duration-100 ease-in-out">
+    <div className="relative w-full flex flex-col items-center">
+      <div className="relative w-full h-16 xl:h-20 px-4 md:px-10 grid grid-cols-3 items-center transition-all duration-100 ease-in-out">
+        {/* Mobile Sidebar Trigger */}
         <div className="flex md:hidden absolute z-40 top-1/2 left-4 -translate-y-1/2 justify-start items-center">
           {/* <SidebarTrigger /> */}
         </div>
-        {/* Left */}
-        <div className="w-full md:w-1/2 lg:w-1/3 flex justify-center md:justify-start items-center z-30">
+
+        {/* Left (Logo) */}
+        <div className="flex justify-center md:justify-start items-center z-30">
           <Link
             to={AbsoluteScreenPath.Entry}
             className="w-full max-w-[180px] h-8"
@@ -49,13 +51,13 @@ function Navbar() {
           </Link>
         </div>
 
-        {/* Center */}
-        <div className="hidden w-[65%] lg:w-[55%] xl:flex gap-x-4 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] justify-center items-center z-40">
+        {/* Center (Search) */}
+        <div className="hidden md:flex justify-center items-center z-40">
           <SearchKeyword value={keyword} onChange={handleChange} />
         </div>
 
-        {/* Right */}
-        <div className="hidden w-1/2 lg:w-1/3 md:flex justify-end items-center z-30">
+        {/* Right (Buttons or Avatar) */}
+        <div className="hidden md:flex justify-end items-center z-30">
           <div className="flex items-center gap-2">
             <Link
               to={AbsoluteScreenPath.GarageRegistrationPage}
@@ -119,7 +121,6 @@ function Navbar() {
                       {isLoading ? "Logging out..." : "Logout"}
                     </button>
                     <div className="text-sm w-full h-[1px] bg-[#DDDDDD]" />
-
                     <Button
                       className="text-sm w-full rounded-none px-4 py-[11px] text-red-400 hover:bg-[#f7f6f6] hover:text-red-500 ease-in-out font-roboto cursor-pointer"
                       variant="ghost"

@@ -139,9 +139,8 @@ const SearchPage = () => {
 
       <div className="flex flex-col w-full min-w-[378px] max-w-[1920px] mx-auto bg-white">
         {/* Fixed header height */}
-        <div className="h-[160px]">
-          <Header />
-        </div>
+
+        <Header />
 
         {/* Main content area */}
         <div className="flex flex-col md:flex-row min-h-[calc(100vh-160px)]">
@@ -184,11 +183,10 @@ const SearchPage = () => {
               <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
                 <DrawerTrigger asChild>
                   <Button
-                    className="absolute bottom-8 left-1/2 transform -translate-x-1/2 shadow-lg hover:shadow-xl transition-all duration-200 z-10 flex items-center"
-                    size="lg"
+                    className="absolute top-28 left-6 transform shadow-lg hover:shadow-xl transition-all duration-200 z-10 flex flex-col items-center space-y-1"
+                    variant="secondary"
                   >
-                    List view
-                    <List className="w-5 h-5 mr-2" />
+                    <List className="w-5 h-5" />
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent className="max-h-[85vh]">
