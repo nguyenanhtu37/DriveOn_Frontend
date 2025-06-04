@@ -12,17 +12,17 @@ export const formSchema = z.object({
       "Invalid phone number. Please enter correct Vietnamese phone number format (eg: 0912345678)"
     ),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  openTime: z.string().nonempty("Open time is required"),
-  closeTime: z.string().nonempty("Close time is required"),
+  openTime: z.string().min(1, "Open time is required"),
+  closeTime: z.string().min(1, "Close time is required"),
   email: z.string().email("Invalid email address"),
   openDays: z
     .array(
       z.object({
-        value: z.string().nonempty("Day ID is required"),
-        label: z.string().nonempty("Day name is required"),
+        value: z.string(),
+        label: z.string(),
       })
     )
-    .nonempty("At least one open day is required"),
+    .min(1, "At least one open day is required"),
 });
 
 export const staffSchema = z

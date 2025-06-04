@@ -39,10 +39,10 @@ const days = [
 export default function RegistrationForm() {
   const navigate = useNavigate();
   const register = useRegisterGarage();
+  const { setTab } = useTabStore();
   const getLocation = useGetGeocode();
   const [submitting, setSubmitting] = useState(false);
   const { files, progressList, handleFileChange, handleUpload } = useUpload();
-  const { setTab } = useTabStore();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
