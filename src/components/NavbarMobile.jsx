@@ -72,15 +72,13 @@ function NavbarMobile() {
           ) : (
             <NavLink
               key={index}
+              to={item.link}
               className={({ isActive }) =>
                 cn(
                   "w-full flex flex-col gap-1 items-center cursor-pointer transition-colors",
-                  isActive
-                    ? "text-red-500"
-                    : "text-gray-500 hover:text-gray-700"
+                  isActive ? "text-red-500" : "text-gray-500 hover:text-gray-700"
                 )
               }
-              to={item.link || ""}
             >
               <item.icon size={22} aria-hidden="true" />
               <span className="text-[10px] font-medium">{item.label}</span>

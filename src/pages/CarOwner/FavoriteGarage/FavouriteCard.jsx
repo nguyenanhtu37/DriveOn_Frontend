@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { FaStar, FaPhone } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa";
 import { useState } from "react";
 import DeleteFavoriteGarageModal from "@/components/vehicle/DeleteFavoriteGarageModal";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,6 @@ const FavoriteGarageCard = ({
   address,
   phone,
   imgs,
-  rating,
   onRemove,
 }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -27,7 +26,7 @@ const FavoriteGarageCard = ({
   };
 
   const handleCardClick = () => {
-    navigate(`/garageDetail/${id}`);
+    navigate(`/garageDetails/${id}`);
   };
 
   return (
@@ -49,12 +48,12 @@ const FavoriteGarageCard = ({
               <h3 className="font-medium text-base text-gray-800 line-clamp-1">
                 {garageName}
               </h3>
-              {typeof rating === "number" && (
-                <div className="flex items-center gap-1 text-sm">
-                  <FaStar className="h-4 w-4 text-yellow-500" />
-                  <span className="text-gray-700">{rating.toFixed(1)}</span>
-                </div>
-              )}
+             
+             
+             
+             
+             
+             
             </div>
             <p className="text-sm text-gray-500 mb-2 line-clamp-1">{address}</p>
             <div className="flex items-center gap-2 mt-2">
