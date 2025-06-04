@@ -33,12 +33,9 @@ function Navbar() {
     <div className="relative w-full flex flex-col items-center">
       <div className="relative w-full h-16 xl:h-20 px-4 md:px-10 grid grid-cols-3 items-center transition-all duration-100 ease-in-out">
         {/* Mobile Sidebar Trigger */}
-        <div className="flex md:hidden absolute z-40 top-1/2 left-4 -translate-y-1/2 justify-start items-center">
-          {/* <SidebarTrigger /> */}
-        </div>
 
         {/* Left (Logo) */}
-        <div className="flex justify-center md:justify-start items-center z-30">
+        <div className="flex col-span-3 md:col-span-1 justify-center md:justify-start items-center z-30">
           <Link
             to={AbsoluteScreenPath.Entry}
             className="w-full max-w-[180px] h-8"
