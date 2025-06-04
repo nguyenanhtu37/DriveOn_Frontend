@@ -64,6 +64,15 @@ const UpdateFeedback = () => {
     );
   };
 
+  const disableSubmitButton = () => {
+    if (activeTab === "general") {
+      return generalRating === 0;
+    } else if (activeTab === "services") {
+      return serviceFeedbacks.some((sf) => sf.rating === 0);
+    }
+    return true;
+  };
+
   const handleSubmit = () => {
     let data = {};
     if (activeTab === "general") {
@@ -297,7 +306,6 @@ const UpdateFeedback = () => {
                   const serviceFeedback = serviceFeedbacks.find(
                     (sf) => sf.service === service._id
                   );
-                  console.log("Service Feedback:", serviceFeedback);
                   return (
                     <Card key={service._id} className="border">
                       <CardHeader className="pb-3">
@@ -379,7 +387,9 @@ const UpdateFeedback = () => {
           <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Submit Feedback</Button>
+          <Button disabled={disableSubmitButton()} onClick={handleSubmit}>
+            Submit Feedback
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
