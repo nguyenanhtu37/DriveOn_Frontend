@@ -292,27 +292,3 @@ export const useViewGarageList = () => {
     data: query.data ?? {},
   };
 };
-
-export const useGetGarageDashboardChart = (garageId, year) => {
-  const query = useQuery({
-    queryKey: ["garageDashboardChart", garageId, year],
-    queryFn: () => garageService.getGarageDashboardChart(garageId, year),
-    enabled: !!garageId,
-  });
-  return {
-    ...query,
-    data: query.data ?? { appointments: [], services: [] },
-  };
-};
-
-export const useGetGarageDashboardChartByQuarter = (garageId, year) => {
-  const query = useQuery({
-    queryKey: ["garageDashboardChartByQuarter", garageId, year],
-    queryFn: () => garageService.getGarageDashboardChartByQuarter(garageId, year),
-    enabled: !!garageId,
-  });
-  return {
-    ...query,
-    data: query.data ?? { appointments: [], services: [] },
-  };
-};

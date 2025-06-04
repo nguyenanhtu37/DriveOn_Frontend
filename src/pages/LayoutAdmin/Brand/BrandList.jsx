@@ -1,11 +1,13 @@
 import { useState } from "react";
 import BrandCard from "@/components/Brand/BrandCard";
 import BrandFormDialog from "@/components/Brand/BrandFormDialog";
-import useBrands from "@/common/hooks/useBrand";
+import { useGetBrands } from "@/app/stores/entity/brandV2";
 import { addBrand, updateBrand, deleteBrand } from "@/app/services/brand";
 
 const BrandList = () => {
-  const { brands, fetchBrands, loading } = useBrands();
+  const [page, setPage] = useState(1);
+  const limit = 12;
+  const { data: brands, pagination, isLoading, refetch } = useGetBrands(page, limit);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -29,7 +31,7 @@ const BrandList = () => {
   const handleDeleteConfirm = async () => {
     if (brandToDelete) {
       await deleteBrand(brandToDelete._id);
-      fetchBrands();
+      refetch();
       setDeleteDialogOpen(false);
       setBrandToDelete(null);
     }
@@ -41,7 +43,11 @@ const BrandList = () => {
     } else {
       await addBrand(formData);
     }
-    fetchBrands();
+    refetch();
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
   };
 
   return (
@@ -62,7 +68,7 @@ const BrandList = () => {
           </button>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center h-40">
             <span className="text-gray-500 text-xl font-semibold animate-pulse">Loading...</span>
           </div>
@@ -71,16 +77,39 @@ const BrandList = () => {
             <span className="text-gray-400 text-2xl font-semibold">No brands found.</span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
-            {brands.map((brand) => (
-              <BrandCard
-                key={brand._id}
-                brand={brand}
-                onEdit={handleEdit}
-                onDelete={() => handleDeleteClick(brand)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+              {brands.map((brand) => (
+                <BrandCard
+                  key={brand._id}
+                  brand={brand}
+                  onEdit={handleEdit}
+                  onDelete={() => handleDeleteClick(brand)}
+                />
+              ))}
+            </div>
+            
+            {/* Pagination */}
+            <div className="mt-8 flex justify-center items-center gap-2">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page === 1}
+                className="px-4 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              >
+                Previous
+              </button>
+              <span className="px-4 py-2">
+                Page {page} of {pagination.totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page >= pagination.totalPages}
+                className="px-4 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
 
         {dialogOpen && (

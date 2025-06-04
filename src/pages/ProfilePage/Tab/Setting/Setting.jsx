@@ -166,7 +166,7 @@ export const Setting = () => {
                     />
                     {userForm.formState.errors.phone && (
                       <span className="text-sm text-red-400">
-                        {userForm.formState.errors.name.message}
+                        {userForm.formState.errors.phone.message}
                       </span>
                     )}
                   </div>

@@ -4,7 +4,7 @@ import { CheckCircle, Phone, Star } from "lucide-react";
 
 export const FoundGarage = ({ foundGarage, handleCancel }) => {
   return (
-    <div className=" flex items-center justify-center ">
+    <div className="flex items-center justify-center h-screen overflow-y-auto">
       {/* Success background animation */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
