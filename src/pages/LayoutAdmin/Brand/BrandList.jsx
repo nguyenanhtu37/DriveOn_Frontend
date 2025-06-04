@@ -3,10 +3,12 @@ import BrandCard from "@/components/Brand/BrandCard";
 import BrandFormDialog from "@/components/Brand/BrandFormDialog";
 import { useGetBrands } from "@/app/stores/entity/brandV2";
 import { addBrand, updateBrand, deleteBrand } from "@/app/services/brand";
+import { Pagination } from "@/pages/GarageManagement/components/Pagination";
 
 const BrandList = () => {
   const limit = 12;
-  const { data: brands, isLoading, refetch } = useGetBrands(1, limit);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: brands, isLoading, refetch, pagination } = useGetBrands(currentPage, limit);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -45,6 +47,10 @@ const BrandList = () => {
     refetch();
   };
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <div className="p-0 min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-200">
       <div className="max-w-6xl mx-auto py-10">
@@ -72,16 +78,29 @@ const BrandList = () => {
             <span className="text-gray-400 text-2xl font-semibold">No brands found.</span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
-            {brands.map((brand) => (
-              <BrandCard
-                key={brand._id}
-                brand={brand}
-                onEdit={handleEdit}
-                onDelete={() => handleDeleteClick(brand)}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+              {brands.map((brand) => (
+                <BrandCard
+                  key={brand._id}
+                  brand={brand}
+                  onEdit={handleEdit}
+                  onDelete={() => handleDeleteClick(brand)}
+                />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {pagination && pagination.totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={pagination.totalPages}
+                hasNextPage={currentPage < pagination.totalPages}
+                hasPrevPage={currentPage > 1}
+                onPageChange={handlePageChange}
               />
-            ))}
-          </div>
+            )}
+          </>
         )}
 
         {dialogOpen && (
