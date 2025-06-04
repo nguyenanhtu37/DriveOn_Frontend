@@ -4,7 +4,6 @@ import { useAddVehicle } from "@/app/stores/entity/vehicleV2";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import FileIcon from "@/components/ui/FileIcon";
 import {
   Form,
   FormControl,
@@ -19,7 +18,7 @@ import { toast } from "@/hooks/use-toast";
 import { vehicleSchema } from "@/schema/vehicleSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { Car, X } from "lucide-react";
+import { Car, Loader2, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-tailwindcss-select";
@@ -35,57 +34,80 @@ export const CreateVehicle = () => {
     },
   });
   const queryClient = useQueryClient();
-  const { files, progressList, handleFileChange, handleUpload } = useUpload();
+  const { files, progressList, handleFileChange, handleUpload, removeFile } = useUpload();
   const [isOpen, setIsOpen] = useState(false);
   const createVehicle = useAddVehicle();
 
-  const brands = useGetBrands();
-  const brandList = brands.data.map((brand) => ({
+  const brands = useGetBrands(1, 1000);
+  const brandList = brands.data?.map((brand) => ({
     value: brand._id,
     label: brand.brandName,
-  }));
+  })) || [];
 
   const onSubmit = async (data) => {
-    let uploadedUrls = [];
-    if (files.length > 0) {
-      uploadedUrls = await handleUpload();
-    }
+    try {
+      let uploadedUrls = [];
+      if (files.length > 0) {
+        uploadedUrls = await handleUpload();
+      }
 
-    const newVehicle = {
-      carName: data.carName,
-      carPlate: data.carPlate,
-      carYear: data.carYear,
-      carColor: data.carColor,
-      carBrand: data.carBrand.value,
-      carImages: uploadedUrls,
-    };
-    createVehicle.mutate(newVehicle, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["myVehicleV2"]);
-        setIsOpen(false);
-        form.reset();
-        toast({
-          title: "Vehicle created successfully",
-          duration: 2000,
-        });
-      },
-      onError: (error) => {
-        console.error("Error creating vehicle:", error);
-      },
-    });
+      const newVehicle = {
+        carName: data.carName,
+        carPlate: data.carPlate,
+        carYear: data.carYear,
+        carColor: data.carColor,
+        carBrand: data.carBrand.value,
+        carImages: uploadedUrls,
+      };
+      
+      await createVehicle.mutateAsync(newVehicle);
+      queryClient.invalidateQueries(["myVehicleV2"]);
+      setIsOpen(false);
+      form.reset();
+      toast({
+        title: "Vehicle created successfully",
+        description: "Your vehicle has been added to your profile",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error creating vehicle",
+        description: error.message || "Please try again later",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
+    <Dialog 
+      open={isOpen} 
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (!open) {
+          form.reset();
+          // Reset files if needed
+          if (files.length > 0) {
+            files.forEach(file => removeFile(file));
+          }
+        }
+      }}
+    >
+      <DialogTrigger asChild>
         <Button size="sm" className="bg-red-500 hover:bg-red-600">
           <Car className="h-4 w-4 mr-2" /> Add Vehicle
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-md max-h-[90vh] overflow-y-auto p-4 rounded-xl">
+      <DialogContent className="w-full max-w-md max-h-[90vh] overflow-y-auto p-6 rounded-xl">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-3 text-sm">
-            <h2 className="text-base font-semibold">Add New Vehicle</h2>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 text-sm">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Add New Vehicle</h2>
+              {createVehicle.isLoading && (
+                <Loader2 className="h-4 w-4 animate-spin text-red-500" />
+              )}
+            </div>
+
             <FormField
               control={form.control}
               name="carBrand"
@@ -99,12 +121,15 @@ export const CreateVehicle = () => {
                       options={brandList}
                       isMultiple={false}
                       primaryColor="red"
+                      isDisabled={brands.isLoading}
+                      placeholder={brands.isLoading ? "Loading brands..." : "Select a brand"}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="carName"
@@ -112,7 +137,11 @@ export const CreateVehicle = () => {
                 <FormItem>
                   <FormLabel>Car Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Car Name" {...field} />
+                    <Input 
+                      placeholder="Enter Car Name" 
+                      {...field} 
+                      disabled={createVehicle.isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -126,7 +155,11 @@ export const CreateVehicle = () => {
                 <FormItem>
                   <FormLabel>Car Plate</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Car Plate (Examples: 30A-12345)" {...field} />
+                    <Input 
+                      placeholder="Enter Car Plate (Examples: 30A-12345)" 
+                      {...field} 
+                      disabled={createVehicle.isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,7 +173,12 @@ export const CreateVehicle = () => {
                 <FormItem>
                   <FormLabel>Car Year</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Enter Car Year" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="Enter Car Year" 
+                      {...field} 
+                      disabled={createVehicle.isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -154,40 +192,55 @@ export const CreateVehicle = () => {
                 <FormItem>
                   <FormLabel>Car Color</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Car Color" {...field} />
+                    <Input 
+                      placeholder="Enter Car Color" 
+                      {...field} 
+                      disabled={createVehicle.isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            
-
             <Card>
-              <CardContent className="p-4 space-y-2">
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium">Car Images</h3>
+                  
+                  
+                  
+                </div>
+
                 {files.length > 0 ? (
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-3">
                     {files.map((file) => (
-                      <div key={file.name} className="relative">
+                      <div key={file.name} className="relative group">
                         <img
-                          className="w-full h-[80px] object-cover rounded-md"
+                          className="w-full h-[100px] object-cover rounded-md"
                           src={URL.createObjectURL(file)}
                           alt="preview"
                         />
-                        <Progress value={progressList[file.name]} />
+                        <Progress 
+                          value={progressList[file.name]} 
+                          className="mt-1"
+                        />
                         <button
                           type="button"
-                          className="absolute top-0 right-0 p-0.5 bg-white rounded-full shadow-sm"
+                          onClick={() => removeFile(file)}
+                          className="absolute top-1 right-1 p-1 bg-white/90 hover:bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                          disabled={createVehicle.isLoading}
                         >
-                          <X size={12} />
+                          <X size={14} className="text-gray-600" />
                         </button>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center p-4">
-                    <FileIcon className="w-10 h-10" />
-                    <p className="text-xs text-gray-500">Upload car images</p>
+                  <div className="border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center p-6 hover:border-red-200 transition-colors">
+                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-500">Drag and drop images here</p>
+                    <p className="text-xs text-gray-400 mt-1">or click to browse</p>
                   </div>
                 )}
                 <Input
@@ -196,12 +249,32 @@ export const CreateVehicle = () => {
                   multiple
                   accept="image/*"
                   onChange={handleFileChange}
+                  className="hidden"
+                  disabled={createVehicle.isLoading}
                 />
+                <label
+                  htmlFor="file"
+                  className="block text-center text-sm text-red-500 hover:text-red-600 cursor-pointer"
+                >
+                  {files.length > 0 ? 'Add more images' : 'Select images'}
+                </label>
               </CardContent>
             </Card>
 
-            <Button type="submit" size="sm" className="bg-red-500 hover:bg-red-600 mt-2">
-              Submit
+            <Button 
+              type="submit" 
+              size="sm" 
+              className="bg-red-500 hover:bg-red-600 mt-2"
+              disabled={createVehicle.isLoading}
+            >
+              {createVehicle.isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                'Create Vehicle'
+              )}
             </Button>
           </form>
         </Form>
